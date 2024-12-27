@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
 createRoot(document.getElementById("root")!).render(
-  <BrowserRouter basename="/admin">
+  <BrowserRouter>
     <App />
     <ToastContainer />
   </BrowserRouter>
