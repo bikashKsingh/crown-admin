@@ -103,26 +103,47 @@ export function ProductDetails() {
                           </td>
                         </tr> */}
                         <tr>
-                          <td className="py-3">Category</td>
-                          <td className="py-3">
-                            {productDetails?.category?.name}
-                          </td>
-                          <td className="py-3">Sub Cat</td>
-                          <td className="py-3">
-                            {productDetails?.subCategory.name}
+                          <td className="py-3">Categories</td>
+                          <td className="py-3" colSpan={3}>
+                            <div className="d-flex gap-1">
+                              {productDetails?.categories?.map((item: any) => {
+                                return (
+                                  <span className="badge bg-info rounded">
+                                    {item.name}
+                                  </span>
+                                );
+                              })}
+                            </div>
                           </td>
                         </tr>
-
+                        <tr>
+                          <td className="py-3">Sub Categories</td>
+                          <td className="py-3" colSpan={3}>
+                            <div className="d-flex gap-1">
+                              {productDetails?.subCategories?.map(
+                                (item: any) => {
+                                  return (
+                                    <span className="badge bg-info rounded">
+                                      {item.name}
+                                    </span>
+                                  );
+                                }
+                              )}
+                            </div>
+                          </td>
+                        </tr>
                         <tr>
                           <td className="py-3">Sizes</td>
-                          <td className="py-3 d-flex gap-1" colSpan={3}>
-                            {productSizes?.map((item) => {
-                              return (
-                                <span className="badge bg-info rounded">
-                                  {item.title}
-                                </span>
-                              );
-                            })}
+                          <td className="py-3" colSpan={3}>
+                            <div className="d-flex gap-1">
+                              {productSizes?.map((item) => {
+                                return (
+                                  <span className="badge bg-info rounded">
+                                    {item.title}
+                                  </span>
+                                );
+                              })}
+                            </div>
                           </td>
                         </tr>
                         <tr>

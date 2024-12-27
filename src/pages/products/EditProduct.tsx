@@ -58,8 +58,12 @@ export function EditProduct() {
     ) {
       const newValue = {
         ...values,
-        category: values.category?.value,
-        subCategory: values.subCategory?.value,
+        categories: values.categories?.map((item) => {
+          return item.value;
+        }),
+        subCategories: values.subCategories?.map((item) => {
+          return item.value;
+        }),
         type: values.type?.value,
         sizes: values.sizes?.map((item) => item.value),
         images: uploadedImages || [],
@@ -91,18 +95,25 @@ export function EditProduct() {
           delete data.createdAt;
           delete data.updatedAt;
 
-          if (data.category) {
-            data.category = {
-              label: data.category.name,
-              value: data.category._id,
-            };
+          delete data.category;
+          delete data.subCategory;
+
+          if (data.categories?.length) {
+            data.categories = data.categories.map((item: any) => {
+              return {
+                label: item.name,
+                value: item._id,
+              };
+            });
           }
 
-          if (data.subCategory) {
-            data.subCategory = {
-              label: data.subCategory.name,
-              value: data.subCategory._id,
-            };
+          if (data.subCategories?.length) {
+            data.subCategories = data.subCategories.map((item: any) => {
+              return {
+                label: item.name,
+                value: item._id,
+              };
+            });
           }
 
           if (data?.type) {
@@ -157,10 +168,18 @@ export function EditProduct() {
   useEffect(
     function () {
       async function getData() {
-        let url = `/subCategories`;
-        if (values.category?.value) {
-          url += `?category=${values.category?.value}`;
+        let url = `/subCategories?status=true`;
+        if (values.categories?.length == 1) {
+          url += `&category=${values.categories[0]?.value}`;
+        } else if ((values.categories?.length as number) > 1) {
+          if (values.categories != null) {
+            for (let cat of values.categories) {
+              url += `&categories=${cat?.value}`;
+            }
+          }
         }
+
+        console.log(url);
 
         const apiResponse = await get(url, true);
         if (apiResponse?.status == 200) {
@@ -175,7 +194,7 @@ export function EditProduct() {
       }
       getData();
     },
-    [values.category?.value]
+    [values.categories?.length]
   );
 
   // get Types
@@ -497,43 +516,45 @@ export function EditProduct() {
                     />
                   </div> */}
 
-                  {/* Select Category */}
+                  {/* Select Categories */}
                   <div className="form-group col-md-6">
                     <CustomSelect
-                      label="Select Category"
-                      placeholder="Select Category"
-                      name="category"
+                      label="Select Categories"
+                      placeholder="Select Categories"
+                      name="categories"
                       required={true}
                       options={categories}
-                      value={values.category}
-                      error={errors.category}
-                      touched={touched.category}
+                      value={values.categories}
+                      error={errors.categories}
+                      touched={touched.categories}
                       handleChange={(value) => {
-                        setFieldValue("category", value);
+                        setFieldValue("categories", value);
                       }}
                       handleBlur={() => {
-                        setFieldTouched("category", true);
+                        setFieldTouched("categories", true);
                       }}
+                      isMulti={true}
                     />
                   </div>
 
-                  {/* Select Sub Category */}
+                  {/* Select Sub Categories */}
                   <div className="form-group col-md-6">
                     <CustomSelect
-                      label="Select Sub Category"
-                      placeholder="Select Category"
-                      name="subCategory"
+                      label="Select Sub Categories"
+                      placeholder="Select Categories"
+                      name="subCategories"
                       required={true}
                       options={subCategories}
-                      value={values.subCategory}
-                      error={errors.subCategory}
-                      touched={touched.subCategory}
+                      value={values.subCategories}
+                      error={errors.subCategories}
+                      touched={touched.subCategories}
                       handleChange={(value) => {
-                        setFieldValue("subCategory", value);
+                        setFieldValue("subCategories", value);
                       }}
                       handleBlur={() => {
-                        setFieldTouched("subCategory", true);
+                        setFieldTouched("subCategories", true);
                       }}
+                      isMulti={true}
                     />
                   </div>
 

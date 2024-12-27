@@ -3,8 +3,8 @@ import * as Yup from "yup";
 export const productSchema = Yup.object({
   name: Yup.string().required().label("Name"),
   slug: Yup.string().required().label("Slug"),
-  category: Yup.object().required().label("Category"),
-  subCategory: Yup.object().required().label("Sub Category"),
+  categories: Yup.array().required().label("Categories"),
+  subCategories: Yup.array().required().label("Sub Categories"),
   type: Yup.object().required().label("Type"),
   sizes: Yup.array().required().label("Sizes"),
 
@@ -32,8 +32,8 @@ export const productSchema = Yup.object({
 export const productInitialValues: ProductValues = {
   name: "",
   slug: "",
-  category: null,
-  subCategory: null,
+  categories: null,
+  subCategories: null,
   type: null,
   sizes: null,
 
@@ -61,14 +61,18 @@ export const productInitialValues: ProductValues = {
 export interface ProductValues {
   name: string;
   slug: string;
-  category: {
-    label: string;
-    value: string;
-  } | null;
-  subCategory: {
-    label: string;
-    value: string;
-  } | null;
+  categories:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
+  subCategories:
+    | {
+        label: string;
+        value: string;
+      }[]
+    | null;
   type: {
     label: string;
     value: string;
