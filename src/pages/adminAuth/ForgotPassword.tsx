@@ -47,7 +47,7 @@ export function ForgotPassword(): ReactNode {
               <div className="col-lg-4 mx-auto">
                 <div className="auth-form-light text-left py-5 px-4 px-sm-5">
                   <div className="brand-logo text-center authpage-logo">
-                    <img src="/images/black-logo.png" alt="logo" />
+                    <img src="/images/logo.png" alt="logo" />
                   </div>
                   {/* <h4>Hello! let's get started</h4> */}
                   <h6 className="font-weight-light">Forgot Password</h6>
