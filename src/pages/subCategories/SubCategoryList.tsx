@@ -67,7 +67,8 @@ export function SubCategoryList() {
 
   type Record = {
     name: any;
-    category: any;
+    slug: any;
+    categories: any;
     createdAt: any;
     status: any;
     id: any;
@@ -94,8 +95,12 @@ export function SubCategoryList() {
         accessor: "name",
       },
       {
+        Header: "SLUG",
+        accessor: "slug",
+      },
+      {
         Header: "CATEGORY",
-        accessor: "category",
+        accessor: "categories",
       },
 
       {
@@ -162,7 +167,14 @@ export function SubCategoryList() {
     return records.map((data) => {
       return {
         name: data.name,
-        category: data.category?.name,
+        slug: data.slug,
+        categories: data?.categories?.length
+          ? `${data.categories[0]?.name} ${
+              data.categories?.length > 1
+                ? ` + ${data.categories?.length} Others`
+                : ""
+            }`
+          : null,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

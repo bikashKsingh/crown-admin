@@ -162,8 +162,18 @@ export function Sidebar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/types">
-                  Types
+                <Link className="nav-link" to="/finishes">
+                  Finishes
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/sizeFinishes">
+                  Size And Finishe
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/decorSeries">
+                  Decor Series
                 </Link>
               </li>
               <li className="nav-item">

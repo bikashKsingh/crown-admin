@@ -67,6 +67,7 @@ export function CategoryList() {
 
   const columns: Column<{
     name: any;
+    slug: any;
     image: string;
     createdAt: any;
     status: any;
@@ -108,6 +109,10 @@ export function CategoryList() {
       {
         Header: "NAME",
         accessor: "name",
+      },
+      {
+        Header: "SLUG",
+        accessor: "slug",
       },
 
       {
@@ -174,6 +179,7 @@ export function CategoryList() {
     return records.map((data) => {
       return {
         name: data.name,
+        slug: data.slug,
         image: data.image,
         createdAt: data.createdAt,
         status: data.status,
@@ -212,6 +218,7 @@ export function CategoryList() {
       // }
     ) as TableInstanceWithRowSelect<{
       name: any;
+      slug: any;
       image: any;
       createdAt: any;
       status: any;

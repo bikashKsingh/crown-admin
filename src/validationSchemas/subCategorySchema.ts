@@ -3,7 +3,7 @@ import * as Yup from "yup";
 export const categorySchema = Yup.object({
   name: Yup.string().required().label("Name"),
   slug: Yup.string().required().label("Slug"),
-  category: Yup.object().required().label("Category"),
+  categories: Yup.array().required().label("Categories"),
   shortDescription: Yup.string().label("Short Description"),
   metaTitle: Yup.string().label("Meta Title"),
   metaDescription: Yup.string().label("Meta Description"),
@@ -14,7 +14,7 @@ export const categorySchema = Yup.object({
 export const categoryInitialValues: CategoryValues = {
   name: "",
   slug: "",
-  category: null,
+  categories: null,
   shortDescription: "",
   status: "true",
   metaTitle: "",
@@ -25,7 +25,7 @@ export const categoryInitialValues: CategoryValues = {
 export interface CategoryValues {
   name: string;
   slug: string;
-  category: { label: ""; value: "" } | null;
+  categories: { label: ""; value: "" }[] | null;
   shortDescription: string;
   status: string;
   metaTitle: string;

@@ -9,21 +9,16 @@ export function InquiryDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(true);
-  const [userDetails, setUserDetails] = useState<any>({
-    specialities: [],
-    interests: [],
-    kycDocuments: [],
-    certificates: [],
-  });
+  const [inquiryDetails, setInquiryDetails] = useState<any>({});
 
   // get trainer specialities
   useEffect(
     function () {
       async function getData(id: string) {
         setLoading(true);
-        const apiResponse = await get(`/users/${id}`, true);
+        const apiResponse = await get(`/inquiries/${id}`, true);
         if (apiResponse?.status == 200) {
-          setUserDetails(apiResponse?.body);
+          setInquiryDetails(apiResponse?.body);
         }
         setLoading(false);
       }
@@ -46,6 +41,10 @@ export function InquiryDetails() {
     }
   }
 
+  function handleInquiryType(text: string) {
+    return text == "PRODUCT" ? "Product" : text == "CAREER" ? "Career" : "";
+  }
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -53,7 +52,9 @@ export function InquiryDetails() {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex gap-2">
               <GoBackButton />
-              <h4 className="font-weight-bold mb-0">User Details</h4>
+              <h4 className="font-weight-bold mb-0">
+                {handleInquiryType(inquiryDetails?.inquiryType)} Inquiry Details
+              </h4>
             </div>
             {/* <div>
                 <button
@@ -79,46 +80,39 @@ export function InquiryDetails() {
                 <div className="card rounded-2">
                   <div className="card-body">
                     <div className="text-center">
-                      {userDetails.gender == "FEMALE" ? (
-                        <img
-                          className="img"
+                      <div className="d-flex justify-content-center">
+                        <div
+                          className="d-flex justify-content-center align-items-center"
                           style={{
-                            height: 80,
-                            width: 80,
-                            borderRadius: 40,
-                            border: "4px solid green",
+                            height: "60px",
+                            width: "60px",
+                            background: "#1779ba",
+                            borderRadius: "30px",
+                            color: "#fff",
                           }}
-                          src="/images/placeholders/male-user.jpg"
-                        />
-                      ) : (
-                        <img
-                          className="img"
-                          style={{
-                            height: 80,
-                            width: 80,
-                            borderRadius: 40,
-                            border: "4px solid green",
-                          }}
-                          src="/images/placeholders/female-user.jpg"
-                        />
-                      )}
-                      <h6 className="px-0 pt-2">{userDetails?.name}</h6>
+                        >
+                          <span className="" style={{ fontSize: "35px" }}>
+                            {inquiryDetails?.name[0]}
+                          </span>
+                        </div>
+                      </div>
+                      <h6 className="px-0 pt-2">{inquiryDetails?.name}</h6>
                       <p>
                         <span className="badge bg-warning rounded">
-                          {userDetails?.gender}
+                          {inquiryDetails?.gender}
                         </span>
                       </p>
-                      {/* <p>{`${userDetails?.address}, ${userDetails?.locality}, ${userDetails?.city}, ${userDetails?.state}, ${userDetails?.pincode}, ${userDetails?.country}`}</p> */}
+                      {/* <p>{`${inquiryDetails?.address}, ${inquiryDetails?.locality}, ${inquiryDetails?.city}, ${inquiryDetails?.state}, ${inquiryDetails?.pincode}, ${inquiryDetails?.country}`}</p> */}
                       <div className="d-flex gap-2 justify-content-center mt-3">
                         <Link
-                          to={`tel:${userDetails?.mobile}`}
+                          to={`tel:${inquiryDetails?.countryCode}${inquiryDetails?.mobile}`}
                           className="btn btn-info text-light py-2"
                         >
                           <i className="fa fa-phone"></i>
                         </Link>
 
                         <Link
-                          to={`mailto:${userDetails?.email}`}
+                          to={`mailto:${inquiryDetails?.email}`}
                           className="btn btn-danger text-light py-2"
                         >
                           <i className="fa fa-envelope"></i>
@@ -130,10 +124,10 @@ export function InquiryDetails() {
                     <div className="mt-3 border-top">
                       <ul className="list-group list-group-flush">
                         {/* Facebook */}
-                        {userDetails?.facebook ? (
+                        {inquiryDetails?.facebook ? (
                           <li className="list-group-item">
                             <a
-                              href={userDetails?.facebook}
+                              href={inquiryDetails?.facebook}
                               className="social-link-item"
                               target="_blank"
                             >
@@ -142,16 +136,16 @@ export function InquiryDetails() {
                                 Facebook
                               </div>
                               <div className="">
-                                {getSocialUsername(userDetails?.facebook)}
+                                {getSocialUsername(inquiryDetails?.facebook)}
                               </div>
                             </a>
                           </li>
                         ) : null}
                         {/* Instagram */}
-                        {userDetails?.instagram ? (
+                        {inquiryDetails?.instagram ? (
                           <li className="list-group-item">
                             <a
-                              href={userDetails?.instagram}
+                              href={inquiryDetails?.instagram}
                               className="social-link-item"
                               target="_blank"
                             >
@@ -160,17 +154,17 @@ export function InquiryDetails() {
                                 Instagram
                               </div>
                               <div className="">
-                                {getSocialUsername(userDetails?.instagram)}
+                                {getSocialUsername(inquiryDetails?.instagram)}
                               </div>
                             </a>
                           </li>
                         ) : null}
 
                         {/* Twitter */}
-                        {userDetails?.twitter ? (
+                        {inquiryDetails?.twitter ? (
                           <li className="list-group-item">
                             <Link
-                              to={userDetails?.twitter}
+                              to={inquiryDetails?.twitter}
                               className="social-link-item"
                               target="_blank"
                             >
@@ -179,17 +173,17 @@ export function InquiryDetails() {
                                 Twitter
                               </div>
                               <div className="">
-                                {getSocialUsername(userDetails?.twitter)}
+                                {getSocialUsername(inquiryDetails?.twitter)}
                               </div>
                             </Link>
                           </li>
                         ) : null}
 
                         {/* Linkedin */}
-                        {userDetails?.linkedin ? (
+                        {inquiryDetails?.linkedin ? (
                           <li className="list-group-item">
                             <Link
-                              to={userDetails?.linkedin}
+                              to={inquiryDetails?.linkedin}
                               className="social-link-item"
                               target="_blank"
                             >
@@ -198,17 +192,17 @@ export function InquiryDetails() {
                                 Linkedin
                               </div>
                               <div className="">
-                                {getSocialUsername(userDetails?.linkedin)}
+                                {getSocialUsername(inquiryDetails?.linkedin)}
                               </div>
                             </Link>
                           </li>
                         ) : null}
 
                         {/* Youtube */}
-                        {userDetails?.youtube ? (
+                        {inquiryDetails?.youtube ? (
                           <li className="list-group-item">
                             <Link
-                              to={userDetails?.youtube}
+                              to={inquiryDetails?.youtube}
                               className="social-link-item"
                               target="_blank"
                             >
@@ -217,7 +211,7 @@ export function InquiryDetails() {
                                 YouTube
                               </div>
                               <div className="">
-                                {getSocialUsername(userDetails?.youtube)}
+                                {getSocialUsername(inquiryDetails?.youtube)}
                               </div>
                             </Link>
                           </li>
@@ -237,25 +231,19 @@ export function InquiryDetails() {
                       <tbody>
                         <tr>
                           <td scope="row">Name</td>
-                          <td>{userDetails?.name}</td>
+                          <td>{inquiryDetails?.name}</td>
                         </tr>
                         <tr>
                           <td scope="row">Email</td>
-                          <td>{userDetails?.email}</td>
+                          <td>{inquiryDetails?.email}</td>
                         </tr>
                         <tr>
                           <td scope="row">Mobile</td>
-                          <td>{userDetails?.mobile}</td>
+                          <td>{inquiryDetails?.mobile}</td>
                         </tr>
                         <tr>
-                          <td scope="row">DOB</td>
-                          <td>
-                            {moment(userDetails?.dob).format("DD-MM-YYYY")}
-                          </td>
-                        </tr>
-                        <tr>
-                          <td scope="row">Gender</td>
-                          <td>{userDetails?.gender}</td>
+                          <td scope="row">Country</td>
+                          <td>{inquiryDetails?.country}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -265,126 +253,155 @@ export function InquiryDetails() {
             </div>
           </div>
 
-          {/* User Address */}
-          <div className="col-md-12">
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12 d-flex justify-content-between align-items-center">
-                    <h5
-                      className="mb-2 cursor-hand"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#trainerAddress"
-                      aria-expanded="false"
-                      aria-controls="trainerAddress"
-                    >
-                      User Address
-                    </h5>
-                    <button
-                      className="btn btn-light"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#trainerAddress"
-                      aria-expanded="false"
-                      aria-controls="trainerAddress"
-                    >
-                      <i className="fa fa-angle-down text-primary" />
-                    </button>
-                  </div>
+          {/* Product Details */}
+          {inquiryDetails?.inquiryType == "PRODUCT" ? (
+            <div className="col-md-12">
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12 d-flex justify-content-between align-items-center">
+                      <h5
+                        className="mb-2 cursor-hand"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#productDetails"
+                        aria-expanded="false"
+                        aria-controls="productDetails"
+                      >
+                        Product Details
+                      </h5>
+                      <button
+                        className="btn btn-light"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#productDetails"
+                        aria-expanded="false"
+                        aria-controls="productDetails"
+                      >
+                        <i className="fa fa-angle-down text-primary" />
+                      </button>
+                    </div>
 
-                  <div className="collapse mt-2" id="trainerAddress">
-                    <div className="card card-body shadow-none p-2">
-                      <table className="table table-sm">
-                        <tbody>
-                          <tr>
-                            <td scope="row">Address</td>
-                            <td>{userDetails?.address}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">Locality</td>
-                            <td>{userDetails?.locality}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">State</td>
-                            <td>{userDetails?.state}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">City</td>
-                            <td>{userDetails?.city}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">Country</td>
-                            <td>{userDetails?.country}</td>
-                          </tr>
-                          <tr>
-                            <td scope="row">Pincode</td>
-                            <td>{userDetails?.pincode}</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <div className="collapse mt-2 show" id="productDetails">
+                      <div className="card card-body shadow-none p-2">
+                        <div className="row">
+                          <div className="col-md-8 mx-auto">
+                            <div className="row">
+                              <div className="col-md-4 text-center">
+                                <img
+                                  src={inquiryDetails?.product?.defaultImage}
+                                  alt=""
+                                  className="img img-fluid"
+                                />
+                              </div>
+                              <div className="col-md-8 table-responsive align-items-center d-flex">
+                                <table className="table table-bordered">
+                                  <tbody>
+                                    <tr>
+                                      <td>Name</td>
+                                      <td>{inquiryDetails?.product?.name}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Type</td>
+                                      <td>{inquiryDetails?.product?.type}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Finish</td>
+                                      <td>{inquiryDetails?.product?.finish}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Decor Name</td>
+                                      <td>
+                                        {inquiryDetails?.product?.decorName}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Decor Number</td>
+                                      <td>
+                                        {inquiryDetails?.product?.decorNumber}
+                                      </td>
+                                    </tr>
+
+                                    <tr>
+                                      <td colSpan={2} className="text-center">
+                                        <Link
+                                          className="btn btn-info"
+                                          to={`/products/details/${inquiryDetails?.product?._id}`}
+                                        >
+                                          Full Product Details
+                                        </Link>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+          ) : null}
 
-          {/* KYC Documents */}
-          {/* <div className="col-md-12">
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12 d-flex justify-content-between align-items-center">
-                    <h5
-                      className="mb-2 cursor-hand"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#trainerKycDocuments"
-                      aria-expanded="false"
-                      aria-controls="trainerKycDocuments"
-                    >
-                      KYC Documents{" "}
-                    </h5>
-                    <button
-                      className="btn btn-light"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#trainerKycDocuments"
-                      aria-expanded="false"
-                      aria-controls="trainerKycDocuments"
-                    >
-                      <i className="fa fa-angle-down text-primary" />
-                    </button>
-                  </div>
+          {/* Career Details */}
+          {inquiryDetails?.inquiryType == "CAREER" ? (
+            <div className="col-md-12">
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12 d-flex justify-content-between align-items-center">
+                      <h5
+                        className="mb-2 cursor-hand"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#careerDetails"
+                        aria-expanded="false"
+                        aria-controls="careerDetails"
+                      >
+                        Career Details
+                      </h5>
+                      <button
+                        className="btn btn-light"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#careerDetails"
+                        aria-expanded="false"
+                        aria-controls="careerDetails"
+                      >
+                        <i className="fa fa-angle-down text-primary" />
+                      </button>
+                    </div>
 
-                  <div className="collapse mt-2" id="trainerKycDocuments">
-                    <div className="card card-body shadow-none p-2">
-                      <table className="table table-sm">
-                        <tbody>
-                          {userDetails?.kycDocuments?.map((doc: any) => {
-                            return (
-                              <tr>
-                                <td scope="row">{doc?.title}</td>
-                                <td>
-                                  <iframe
-                                    src={doc?.documentFile}
-                                    width="500"
-                                    height="250"
-                                    frameBorder="0"
-                                  >
-                                    Your browser does not support iframes.
-                                  </iframe>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
+                    <div className="collapse mt-2 show" id="careerDetails">
+                      <div className="card card-body shadow-none p-2">
+                        <table className="table table-sm">
+                          <tbody>
+                            <tr>
+                              <td>Position</td>
+                              <td>{inquiryDetails?.position}</td>
+                            </tr>
+                            <tr>
+                              <td scope="row">Resume</td>
+                              <td>
+                                <a
+                                  href={inquiryDetails?.resumeFile}
+                                  target="_blank"
+                                  className="btn btn-info"
+                                >
+                                  Download the PDF
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div> */}
+          ) : null}
 
           {/* Trainer Certificates */}
           {/* <div className="col-md-12">
@@ -417,7 +434,7 @@ export function InquiryDetails() {
                     <div className="card card-body shadow-none p-2">
                       <table className="table table-sm">
                         <tbody>
-                          {userDetails?.certificates?.map(
+                          {inquiryDetails?.certificates?.map(
                             (certificate: any) => {
                               return (
                                 <tr>

@@ -29,7 +29,7 @@ import { API_URL } from "../../constants";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
-export function EditProduct() {
+export function ProductSizes() {
   const navigate = useNavigate();
   const { id } = useParams();
 
@@ -94,7 +94,6 @@ export function EditProduct() {
           delete data._id;
           delete data.createdAt;
           delete data.updatedAt;
-          delete data.sizeFinishes;
 
           delete data.category;
           delete data.subCategory;
@@ -759,6 +758,22 @@ export function EditProduct() {
                         setFieldTouched("sizes", true);
                       }}
                       isMulti={true}
+                    />
+                  </div>
+
+                  {/* Finish */}
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Finish"
+                      name="finish"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="text"
+                      placeholder="Enter finish"
+                      value={values.finish}
+                      required={false}
+                      touched={touched.finish}
+                      error={errors.finish}
                     />
                   </div>
 

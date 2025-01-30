@@ -25,17 +25,45 @@ import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../constants";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import Select from "react-select";
+import { default as ReactSelect, components } from "react-select";
 
 export function AddProduct() {
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([]);
   const [subCategories, setSubCategories] = useState([]);
-  const [types, setTypes] = useState([]);
+  const [decorSeries, setdecorSeries] = useState([]);
   const [sizes, setSizes] = useState([]);
+
   const [uploadedImages, setUploadedImages] = useState<any[]>([]);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  type Size = { size: string; finishes: any[]; error: string };
+  const [sizeInputFields, setSizeInputFields] = useState<Size[]>([
+    {
+      size: "",
+      finishes: [],
+      error: "",
+    },
+  ]);
+
+  const Option = (props: any) => {
+    return (
+      <div style={{ background: "white" }}>
+        <components.Option {...props}>
+          <input
+            type="checkbox"
+            checked={props.isSelected}
+            onChange={() => null}
+            style={{ marginTop: "4px" }}
+          />{" "}
+          <label>{props.label}</label>
+        </components.Option>
+      </div>
+    );
+  };
 
   const {
     values,
@@ -56,10 +84,18 @@ export function AddProduct() {
 
       const newValue = {
         ...values,
-        category: values.category?.value,
-        subCategory: values.subCategory?.value,
-        type: values.type?.value,
-        sizes: values.sizes?.map((item) => item.value),
+        categories: values.categories?.map((item: any) => {
+          return item.value;
+        }),
+        subCategories: values.subCategories?.map((item: any) => {
+          return item.value;
+        }),
+        decorSeries: values.decorSeries?.value,
+
+        sizes: values.sizes?.map((item: any) => {
+          return item.value;
+        }),
+
         images: uploadedImages?.map((item) => item.filepath) || [],
       };
 
@@ -99,9 +135,16 @@ export function AddProduct() {
   useEffect(
     function () {
       async function getData() {
-        let url = `/subCategories`;
-        if (values.category?.value) {
-          url += `?category=${values.category?.value}`;
+        let url = `/subCategories?limit=100`;
+
+        if (values.categories?.length) {
+          if (values.categories?.length == 1) {
+            url += `&category=${values.categories[0]?.value}`;
+          } else {
+            for (let item of values.categories) {
+              url += `&categories=${item.value}`;
+            }
+          }
         }
 
         const apiResponse = await get(url, true);
@@ -117,13 +160,13 @@ export function AddProduct() {
       }
       getData();
     },
-    [values.category?.value]
+    [values.categories]
   );
 
   // get Types
   useEffect(function () {
     async function getData() {
-      let url = `/types`;
+      let url = `/decorSeries`;
 
       const apiResponse = await get(url, true);
 
@@ -134,7 +177,7 @@ export function AddProduct() {
             value: value._id,
           };
         });
-        setTypes(modifiedValue);
+        setdecorSeries(modifiedValue);
       }
     }
     getData();
@@ -183,9 +226,9 @@ export function AddProduct() {
         //   kycDocuments[index]["error"] = "File type is not allowed";
         //   return setKycDocumnets(kycDocsFiles);
         // } else if (inputElementName == "certificateFile") {
-        //   let certificateFields = [...faqsInputFields];
+        //   let certificateFields = [...sizeInputFields];
         //   certificateFields[index]["error"] = "File type is not allowed";
-        //   return setFaqsInputFields(certificateFields);
+        //   return setSizeInputFields(certificateFields);
         // }
       }
     }
@@ -212,10 +255,10 @@ export function AddProduct() {
         //   kycDocuments[index]["file"] = apiData.body[0];
         //   setKycDocumnets(kycDocsFiles);
         // } else if (inputElementName == "certificateFile") {
-        //   let certificateFields = [...faqsInputFields];
+        //   let certificateFields = [...sizeInputFields];
         //   certificateFields[index]["error"] = "";
         //   certificateFields[index]["file"] = apiData.body[0];
-        //   setFaqsInputFields(certificateFields);
+        //   setSizeInputFields(certificateFields);
         // }
       }
     } catch (error: any) {
@@ -247,8 +290,8 @@ export function AddProduct() {
     }
   }
 
-  // handleUploadProfilePic
-  async function handleUploadProfilePic(
+  // handleUploadA4Image
+  async function handleUploadA4Image(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
     const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
@@ -256,8 +299,8 @@ export function AddProduct() {
     const files = event.target.files;
 
     if (!files || files.length === 0) {
-      setFieldTouched("defaultImage", true);
-      setFieldError("defaultImage", "Profile Photo is required field");
+      setFieldTouched("a4Image", true);
+      setFieldError("a4Image", "Profile Photo is required field");
       toast.error("Profile Photo is required field");
       return;
     }
@@ -266,8 +309,8 @@ export function AddProduct() {
     // Check if the file's MIME type is in the allowed list
     let file = files[0];
     if (!mimeTypes.includes(file.type)) {
-      setFieldTouched("defaultImage", true);
-      setFieldError("defaultImage", "Must select the valid image file");
+      setFieldTouched("a4Image", true);
+      setFieldError("a4Image", "Must select the valid image file");
       toast.error("Must select the valid image file");
       return;
     }
@@ -286,20 +329,20 @@ export function AddProduct() {
       const apiData = await apiResponse.json();
 
       if (apiData.status == 200) {
-        setFieldTouched("defaultImage", false);
-        setFieldError("defaultImage", "");
-        setFieldValue("defaultImage", apiData.body[0].filepath);
+        setFieldTouched("a4Image", false);
+        setFieldError("a4Image", "");
+        setFieldValue("a4Image", apiData.body[0].filepath);
       } else {
-        setFieldTouched("defaultImage", false);
-        setFieldError("defaultImage", apiData.message);
+        setFieldTouched("a4Image", false);
+        setFieldError("a4Image", apiData.message);
       }
     } catch (error: any) {
       toast.error(error?.message);
     }
   }
 
-  // handleDeleteProfilePic
-  async function handleDeleteProfilePic(
+  // handleDeleteA4Image
+  async function handleDeleteA4Image(
     event: React.MouseEvent<HTMLButtonElement>,
     fileName: string
   ) {
@@ -308,16 +351,176 @@ export function AddProduct() {
     try {
       const apiResponse = await remove(`/fileUploads/${fileName}`);
       if (apiResponse?.status == 200) {
-        setFieldError("defaultImage", "");
-        setFieldValue("defaultImage", "");
+        setFieldError("a4Image", "");
+        setFieldValue("a4Image", "");
       } else {
-        setFieldError("defaultImage", "");
-        setFieldValue("defaultImage", "");
+        setFieldError("a4Image", "");
+        setFieldValue("a4Image", "");
         toast.error(apiResponse?.message);
       }
 
       const fileInput = document.getElementById(
-        `defaultImageFile`
+        `a4ImageFile`
+      ) as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = ""; // Clear the input field
+      }
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
+  // handleUploadFullSheetImage
+  async function handleUploadFullSheetImage(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+
+    const files = event.target.files;
+
+    if (!files || files.length === 0) {
+      setFieldTouched("fullSheetImage", true);
+      setFieldError("fullSheetImage", "Profile Photo is required field");
+      toast.error("Profile Photo is required field");
+      return;
+    }
+
+    // Validate MIME type and append valid files to FormData
+    // Check if the file's MIME type is in the allowed list
+    let file = files[0];
+    if (!mimeTypes.includes(file.type)) {
+      setFieldTouched("fullSheetImage", true);
+      setFieldError("fullSheetImage", "Must select the valid image file");
+      toast.error("Must select the valid image file");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("files", file);
+
+    try {
+      let url = `${API_URL}/fileUploads`;
+      const apiResponse = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      const apiData = await apiResponse.json();
+
+      if (apiData.status == 200) {
+        setFieldTouched("fullSheetImage", false);
+        setFieldError("fullSheetImage", "");
+        setFieldValue("fullSheetImage", apiData.body[0].filepath);
+      } else {
+        setFieldTouched("fullSheetImage", false);
+        setFieldError("fullSheetImage", apiData.message);
+      }
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
+  // handleDeleteFullSheetImage
+  async function handleDeleteFullSheetImage(
+    event: React.MouseEvent<HTMLButtonElement>,
+    fileName: string
+  ) {
+    event.preventDefault();
+
+    try {
+      const apiResponse = await remove(`/fileUploads/${fileName}`);
+      if (apiResponse?.status == 200) {
+        setFieldError("fullSheetImage", "");
+        setFieldValue("fullSheetImage", "");
+      } else {
+        setFieldError("fullSheetImage", "");
+        setFieldValue("fullSheetImage", "");
+        toast.error(apiResponse?.message);
+      }
+
+      const fileInput = document.getElementById(
+        `fullSheetImageFile`
+      ) as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = ""; // Clear the input field
+      }
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
+  // handleUploadHighResolutionImage
+  async function handleUploadHighResolutionImage(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+
+    const files = event.target.files;
+
+    if (!files || files.length === 0) {
+      setFieldTouched("highResolutionImage", true);
+      setFieldError("highResolutionImage", "Profile Photo is required field");
+      toast.error("Profile Photo is required field");
+      return;
+    }
+
+    // Validate MIME type and append valid files to FormData
+    // Check if the file's MIME type is in the allowed list
+    let file = files[0];
+    if (!mimeTypes.includes(file.type)) {
+      setFieldTouched("highResolutionImage", true);
+      setFieldError("highResolutionImage", "Must select the valid image file");
+      toast.error("Must select the valid image file");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("files", file);
+
+    try {
+      let url = `${API_URL}/fileUploads`;
+      const apiResponse = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      const apiData = await apiResponse.json();
+
+      if (apiData.status == 200) {
+        setFieldTouched("highResolutionImage", false);
+        setFieldError("highResolutionImage", "");
+        setFieldValue("highResolutionImage", apiData.body[0].filepath);
+      } else {
+        setFieldTouched("highResolutionImage", false);
+        setFieldError("highResolutionImage", apiData.message);
+      }
+    } catch (error: any) {
+      toast.error(error?.message);
+    }
+  }
+
+  // handleDeleteHighResolutionImage
+  async function handleDeleteHighResolutionImage(
+    event: React.MouseEvent<HTMLButtonElement>,
+    fileName: string
+  ) {
+    event.preventDefault();
+
+    try {
+      const apiResponse = await remove(`/fileUploads/${fileName}`);
+      if (apiResponse?.status == 200) {
+        setFieldError("highResolutionImage", "");
+        setFieldValue("highResolutionImage", "");
+      } else {
+        setFieldError("highResolutionImage", "");
+        setFieldValue("highResolutionImage", "");
+        toast.error(apiResponse?.message);
+      }
+
+      const fileInput = document.getElementById(
+        `highResolutionImageFile`
       ) as HTMLInputElement;
       if (fileInput) {
         fileInput.value = ""; // Clear the input field
@@ -348,6 +551,18 @@ export function AddProduct() {
     let slug = generateSlug(value);
     setFieldValue("slug", slug);
   }
+
+  const handleAddSizeField = () => {
+    setSizeInputFields([
+      ...sizeInputFields,
+      { size: "", finishes: [], error: "" },
+    ]);
+  };
+  const handleRemoveSizeField = (index: number) => {
+    const updatedInputFields = [...sizeInputFields];
+    updatedInputFields.splice(index, 1);
+    setSizeInputFields(updatedInputFields);
+  };
 
   return (
     <div className="content-wrapper">
@@ -459,17 +674,18 @@ export function AddProduct() {
                     <CustomSelect
                       label="Select Category"
                       placeholder="Select Category"
-                      name="category"
+                      name="categories"
                       required={true}
                       options={categories}
-                      value={values.category}
-                      error={errors.category}
-                      touched={touched.category}
+                      value={values.categories}
+                      error={errors.categories}
+                      touched={touched.categories}
+                      isMulti={true}
                       handleChange={(value) => {
-                        setFieldValue("category", value);
+                        setFieldValue("categories", value);
                       }}
                       handleBlur={() => {
-                        setFieldTouched("category", true);
+                        setFieldTouched("categories", true);
                       }}
                     />
                   </div>
@@ -479,75 +695,39 @@ export function AddProduct() {
                     <CustomSelect
                       label="Select Sub Category"
                       placeholder="Select Category"
-                      name="subCategory"
+                      name="subCategories"
                       required={true}
                       options={subCategories}
-                      value={values.subCategory}
-                      error={errors.subCategory}
-                      touched={touched.subCategory}
-                      handleChange={(value) => {
-                        setFieldValue("subCategory", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("subCategory", true);
-                      }}
-                    />
-                  </div>
-
-                  {/* Select Type */}
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Select Type"
-                      placeholder="Select type"
-                      name="type"
-                      required={true}
-                      options={types}
-                      value={values.type}
-                      error={errors.type}
-                      touched={touched.type}
-                      handleChange={(value) => {
-                        setFieldValue("type", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("type", true);
-                      }}
-                    />
-                  </div>
-
-                  {/* Select Size */}
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Select Size"
-                      placeholder="Select size"
-                      name="sizes"
-                      required={true}
-                      options={sizes}
-                      value={values.sizes}
-                      error={errors.sizes}
-                      touched={touched.sizes}
-                      handleChange={(value) => {
-                        setFieldValue("sizes", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("sizes", true);
-                      }}
+                      value={values.subCategories}
+                      error={errors.subCategories}
+                      touched={touched.subCategories}
                       isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("subCategories", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("subCategories", true);
+                      }}
                     />
                   </div>
 
-                  {/* Finish */}
+                  {/* Select Decor Series */}
                   <div className="form-group col-md-6">
-                    <InputBox
-                      label="Finish"
-                      name="finish"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter finish"
-                      value={values.finish}
-                      required={false}
-                      touched={touched.finish}
-                      error={errors.finish}
+                    <CustomSelect
+                      label="Select Decor Series"
+                      placeholder="Select series"
+                      name="decorSeries"
+                      required={true}
+                      options={decorSeries}
+                      value={values.decorSeries}
+                      error={errors.decorSeries}
+                      touched={touched.decorSeries}
+                      handleChange={(value) => {
+                        setFieldValue("decorSeries", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("decorSeries", true);
+                      }}
                     />
                   </div>
 
@@ -588,6 +768,27 @@ export function AddProduct() {
                     />
                   </div>
 
+                  {/* Ral Number */}
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Ral Number"
+                      name="ralNumber"
+                      handleBlur={handleBlur}
+                      handleChange={(evt) => {
+                        setFieldValue(
+                          "ralNumber",
+                          validateNumber(evt.target.value)
+                        );
+                      }}
+                      type="text"
+                      placeholder="Enter ral number"
+                      value={values.ralNumber}
+                      required={false}
+                      touched={touched.ralNumber}
+                      error={errors.ralNumber}
+                    />
+                  </div>
+
                   {/* Product SKU */}
                   <div className="form-group col-md-6">
                     <InputBox
@@ -601,6 +802,27 @@ export function AddProduct() {
                       required={false}
                       touched={touched.sku}
                       error={errors.sku}
+                    />
+                  </div>
+
+                  {/* Select Size & Finishes */}
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Size"
+                      placeholder="Select size"
+                      name="sizes"
+                      required={true}
+                      options={sizes}
+                      value={values.sizes}
+                      error={errors.sizes}
+                      touched={touched.sizes}
+                      handleChange={(value) => {
+                        setFieldValue("sizes", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("sizes", true);
+                      }}
+                      isMulti={true}
                     />
                   </div>
 
@@ -713,38 +935,40 @@ export function AddProduct() {
                   <div className="col-md-12">
                     <h5 className="mb-3">Product Images</h5>
                   </div>
+                  {/* A4 Image */}
                   <div className="form-group col-md-8">
-                    <label htmlFor={"defaultImageFile"}>
-                      Default Image <span className="text-danger"> *</span>
+                    <label htmlFor={"a4ImageFile"}>
+                      A4 Image (1372X1868){" "}
+                      <span className="text-danger"> *</span>
                     </label>
                     <div className="d-flex gap-2">
                       <input
                         type="file"
-                        name="defaultImageFile"
-                        id="defaultImageFile"
+                        name="a4ImageFile"
+                        id="a4ImageFile"
                         onChange={(evt) => {
-                          handleUploadProfilePic(evt);
+                          handleUploadA4Image(evt);
                         }}
                         className="form-control"
                       />
-                      {values.defaultImage ? (
-                        <Link to={`${values.defaultImage}`} target="_blank">
+                      {values.a4Image ? (
+                        <Link to={`${values.a4Image}`} target="_blank">
                           <img
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.defaultImage}`}
+                            src={`${values.a4Image}`}
                           />
                         </Link>
                       ) : null}
-                      {values.defaultImage ? (
+                      {values.a4Image ? (
                         <button
                           type="button"
                           className="btn p-1"
                           onClick={(evt) => {
-                            handleDeleteProfilePic(
+                            handleDeleteA4Image(
                               evt,
-                              getFileNameFromUrl(values.defaultImage)
+                              getFileNameFromUrl(values.a4Image)
                             );
                           }}
                         >
@@ -752,52 +976,153 @@ export function AddProduct() {
                         </button>
                       ) : null}
                     </div>
-                    {touched.defaultImage && errors.defaultImage ? (
+                    {touched.a4Image && errors.a4Image ? (
                       <p className="custom-form-error text-danger">
-                        {errors.defaultImage}
+                        {errors.a4Image}
                       </p>
                     ) : null}
                   </div>
 
+                  {/*  Full Sheet Image */}
                   <div className="form-group col-md-8">
-                    <label htmlFor={"imagesFile"}>Product Images</label>
+                    <label htmlFor={"fullSheetImageFile"}>
+                      Full Sheet Image (1372X1868){" "}
+                      <span className="text-danger"> *</span>
+                    </label>
                     <div className="d-flex gap-2">
                       <input
                         type="file"
-                        name="imagesFile"
-                        id="imagesFile"
+                        name="fullSheetImageFile"
+                        id="fullSheetImageFile"
                         onChange={(evt) => {
-                          handleUploadFile(evt);
+                          handleUploadFullSheetImage(evt);
                         }}
                         className="form-control"
-                        multiple={true}
                       />
+                      {values.fullSheetImage ? (
+                        <Link to={`${values.fullSheetImage}`} target="_blank">
+                          <img
+                            className="img"
+                            height={43}
+                            width={43}
+                            src={`${values.fullSheetImage}`}
+                          />
+                        </Link>
+                      ) : null}
+                      {values.fullSheetImage ? (
+                        <button
+                          type="button"
+                          className="btn p-1"
+                          onClick={(evt) => {
+                            handleDeleteFullSheetImage(
+                              evt,
+                              getFileNameFromUrl(values.fullSheetImage)
+                            );
+                          }}
+                        >
+                          <i className="fa fa-trash text-danger"></i>
+                        </button>
+                      ) : null}
                     </div>
+                    {touched.fullSheetImage && errors.fullSheetImage ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.fullSheetImage}
+                      </p>
+                    ) : null}
                   </div>
 
-                  <div className="col-md-12">
-                    <div className="d-flex gap-4">
-                      {uploadedImages?.map((file: any, index: number) => {
-                        return (
-                          <div className="p-image">
-                            <button
-                              type="button"
-                              className="btn btn-danger p-image-remove"
-                              onClick={(evt) => {
-                                handleDeleteFile(evt, file.filename, index);
-                              }}
-                            >
-                              X
-                            </button>
-                            <img
-                              className="img img-thumbnail"
-                              src={file.filepath}
-                            />
-                          </div>
-                        );
-                      })}
+                  {/* High Resolution Image */}
+                  <div className="form-group col-md-8">
+                    <label htmlFor={"highResolutionImageFile"}>
+                      High Resolution Image{" "}
+                      <span className="text-danger"> *</span>
+                    </label>
+                    <div className="d-flex gap-2">
+                      <input
+                        type="file"
+                        name="highResolutionImageFile"
+                        id="highResolutionImageFile"
+                        onChange={(evt) => {
+                          handleUploadHighResolutionImage(evt);
+                        }}
+                        className="form-control"
+                      />
+                      {values.highResolutionImage ? (
+                        <Link
+                          to={`${values.highResolutionImage}`}
+                          target="_blank"
+                        >
+                          <img
+                            className="img"
+                            height={43}
+                            width={43}
+                            src={`${values.highResolutionImage}`}
+                          />
+                        </Link>
+                      ) : null}
+                      {values.highResolutionImage ? (
+                        <button
+                          type="button"
+                          className="btn p-1"
+                          onClick={(evt) => {
+                            handleDeleteHighResolutionImage(
+                              evt,
+                              getFileNameFromUrl(values.highResolutionImage)
+                            );
+                          }}
+                        >
+                          <i className="fa fa-trash text-danger"></i>
+                        </button>
+                      ) : null}
                     </div>
+                    {touched.highResolutionImage &&
+                    errors.highResolutionImage ? (
+                      <p className="custom-form-error text-danger">
+                        {errors.highResolutionImage}
+                      </p>
+                    ) : null}
                   </div>
+
+                  {/* <div className="form-group col-md-8">
+                                <label htmlFor={"imagesFile"}>Product Images</label>
+                                <div className="d-flex gap-2">
+                                  <input
+                                    type="file"
+                                    name="imagesFile"
+                                    id="imagesFile"
+                                    onChange={(evt) => {
+                                      handleUploadFile(evt);
+                                    }}
+                                    className="form-control"
+                                    multiple={true}
+                                  />
+                                </div>
+                              </div>
+            
+                              <div className="col-md-12">
+                                <div className="d-flex gap-4">
+                                  {uploadedImages?.map((file: string, index: number) => {
+                                    return (
+                                      <div className="p-image">
+                                        <button
+                                          type="button"
+                                          className="btn btn-danger p-image-remove"
+                                          onClick={(evt) => {
+                                            handleDeleteFile(
+                                              evt,
+                                              getFileNameFromUrl(file),
+                                              index
+                                            );
+                                          }}
+                                        >
+                                          X
+                                        </button>
+                                        <img className="img img-thumbnail" src={file} />
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div> */}
                 </div>
               </div>
             </div>

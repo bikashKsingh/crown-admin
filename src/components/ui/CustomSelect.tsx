@@ -42,6 +42,9 @@ export function CustomSelect(props: PropsType) {
         }}
         value={props.value}
         isMulti={props.isMulti}
+        components={props.components}
+        closeMenuOnSelect={props.closeMenuOnSelect}
+        hideSelectedOptions={props.hideSelectedOptions}
       />
 
       {props.error && props.touched ? (
@@ -68,4 +71,7 @@ type PropsType = {
   handleBlur: (value: boolean) => void;
   options: Option[];
   isMulti?: boolean;
+  components?: any;
+  closeMenuOnSelect?: boolean;
+  hideSelectedOptions?: boolean;
 };

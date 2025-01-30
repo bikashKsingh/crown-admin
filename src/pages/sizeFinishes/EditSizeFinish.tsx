@@ -1,4 +1,5 @@
 import {
+  CustomSelect,
   GoBackButton,
   InputBox,
   OverlayLoading,
@@ -6,20 +7,24 @@ import {
 } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 import {
-  typeSchema,
-  TypeValues,
-  typeInitialValues,
-} from "../../validationSchemas/typeSchema";
+  sizeFinishSchema,
+  SizeFinishValues,
+  sizeFinishInitialValues,
+} from "../../validationSchemas/sizeFinishSchema";
 import { useEffect, useState } from "react";
-import { get, put, validateTextNumber } from "../../utills";
+import { get, put } from "../../utills";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import { default as ReactSelect, components } from "react-select";
 
-export function EditType() {
+export function EditSizeFinish() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [updading, setUpdating] = useState<boolean>(false);
+
+  const [sizes, setSizes] = useState([]);
+  const [finishes, setFinishes] = useState([]);
 
   const {
     values,
@@ -30,14 +35,23 @@ export function EditType() {
     handleSubmit,
     setValues,
     setFieldValue,
+    setFieldTouched,
   } = useFormik({
     onSubmit: async function (
-      values: TypeValues,
-      helpers: FormikHelpers<TypeValues>
+      values: SizeFinishValues,
+      helpers: FormikHelpers<SizeFinishValues>
     ) {
       setUpdating(true);
 
-      const apiResponse = await put(`/types/${id}`, values);
+      let updatedValues = {
+        ...values,
+        size: values?.size?.value,
+        finishes: values?.finishes?.map((item) => {
+          return item?.value;
+        }),
+      };
+
+      const apiResponse = await put(`/sizeFinishes/${id}`, updatedValues);
 
       if (apiResponse?.status == 200) {
         toast.success(apiResponse?.message);
@@ -48,8 +62,8 @@ export function EditType() {
       }
       setUpdating(false);
     },
-    initialValues: typeInitialValues,
-    validationSchema: typeSchema,
+    initialValues: sizeFinishInitialValues,
+    validationSchema: sizeFinishSchema,
   });
 
   // Get Data From Database
@@ -57,7 +71,7 @@ export function EditType() {
     function () {
       async function getData(id: string) {
         setLoading(true);
-        let url = `/types/${id}`;
+        let url = `/sizeFinishes/${id}`;
         const apiResponse = await get(url, true);
         if (apiResponse?.status == 200) {
           const apiData = apiResponse.body;
@@ -66,6 +80,19 @@ export function EditType() {
           delete apiData.createdAt;
           delete apiData.updatedAt;
           delete apiData._id;
+
+          apiData.size = {
+            label: apiData.size?.title,
+            value: apiData.size?._id,
+          };
+
+          apiData.finishes = apiData?.finishes?.map((item: any) => {
+            return {
+              label: item?.shortName,
+              value: item?._id,
+            };
+          });
+
           setValues(apiData);
         } else {
           toast.error(apiResponse?.message);
@@ -79,6 +106,58 @@ export function EditType() {
     [id]
   );
 
+  // get Size
+  useEffect(function () {
+    async function getData() {
+      let url = `/sizes`;
+      const apiResponse = await get(url, true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.title,
+            value: value._id,
+          };
+        });
+        setSizes(modifiedValue);
+      }
+    }
+    getData();
+  }, []);
+
+  // get Finishes
+  useEffect(function () {
+    async function getData() {
+      let url = `/finishes`;
+      const apiResponse = await get(url, true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.shortName,
+            value: value._id,
+          };
+        });
+        setFinishes(modifiedValue);
+      }
+    }
+    getData();
+  }, []);
+
+  const Option = (props: any) => {
+    return (
+      <div style={{ background: "white" }}>
+        <components.Option {...props}>
+          <input
+            type="checkbox"
+            checked={props.isSelected}
+            onChange={() => null}
+            style={{ marginTop: "4px" }}
+          />{" "}
+          <label>{props.label}</label>
+        </components.Option>
+      </div>
+    );
+  };
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -86,7 +165,7 @@ export function EditType() {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex gap-2">
               <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Edit Type</h4>
+              <h4 className="font-weight-bold mb-0">Edit Size & Finish</h4>
             </div>
             {/* <div>
               <button
@@ -108,17 +187,47 @@ export function EditType() {
               <form className="forms-sample" onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="form-group col-md-6">
-                    <InputBox
-                      label="Title"
-                      name="title"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter title"
-                      value={values.title}
+                    <CustomSelect
+                      label="Select Size"
+                      placeholder="Select size"
+                      name="size"
                       required={true}
-                      touched={touched.title}
-                      error={errors.title}
+                      options={sizes}
+                      value={values.size}
+                      error={errors.size}
+                      touched={touched.size}
+                      handleChange={(value) => {
+                        setFieldValue("size", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("size", true);
+                      }}
+                    />
+                  </div>
+
+                  {/* Select Finishes */}
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Finishes"
+                      placeholder="Select finishes"
+                      name="finishes"
+                      required={true}
+                      options={finishes}
+                      value={values.finishes}
+                      error={errors.finishes}
+                      touched={touched.finishes}
+                      handleChange={(value) => {
+                        setFieldValue("finishes", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("finishes", true);
+                      }}
+                      components={{
+                        Option,
+                      }}
+                      closeMenuOnSelect={false}
+                      hideSelectedOptions={false}
+                      isMulti={true}
                     />
                   </div>
 
@@ -162,7 +271,7 @@ export function EditType() {
                   </div>
                 </div>
 
-                <SubmitButton loading={updading} text="Update Type" />
+                <SubmitButton loading={updading} text="Update Size & Finish" />
               </form>
             </div>
           </div>

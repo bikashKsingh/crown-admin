@@ -5,10 +5,11 @@ export const productSchema = Yup.object({
   slug: Yup.string().required().label("Slug"),
   categories: Yup.array().required().label("Categories"),
   subCategories: Yup.array().required().label("Sub Categories"),
-  type: Yup.object().required().label("Type"),
+  decorSeries: Yup.object().required().label("Decor Series"),
+
   sizes: Yup.array().required().label("Sizes"),
 
-  finish: Yup.string().label("Finish"),
+  // finish: Yup.string().label("Finish"),
   decorName: Yup.string().label("Decor Name"),
   decorNumber: Yup.string().label("Decor Number"),
   sku: Yup.string().label("Decor Number"),
@@ -16,12 +17,17 @@ export const productSchema = Yup.object({
   salePrice: Yup.string().label("Sale Price"),
   mrp: Yup.string().label("MRP"),
 
-  defaultImage: Yup.string().required().label("Default Image"),
+  a4Image: Yup.string().required().label("A4 Image"),
+  fullSheetImage: Yup.string().required().label("Full Sheet Image"),
+  highResolutionImage: Yup.string().required().label("High Resolution Image"),
+
   defaultVideo: Yup.string().url().label("Default Image"),
   images: Yup.array().nullable().label("Images"),
 
   descriptions: Yup.string().label("Descriptions"),
   shortDescription: Yup.string().label("Short Descriptions"),
+
+  ralNumber: Yup.string().label("Ral Number"),
 
   metaTitle: Yup.string().label("Meta Title"),
   metaDescription: Yup.string().label("Meta Description"),
@@ -34,10 +40,11 @@ export const productInitialValues: ProductValues = {
   slug: "",
   categories: null,
   subCategories: null,
-  type: null,
+  decorSeries: null,
+
   sizes: null,
 
-  finish: "",
+  // finish: "",
   decorName: "",
   decorNumber: "",
   sku: "",
@@ -45,12 +52,17 @@ export const productInitialValues: ProductValues = {
   salePrice: "0",
   mrp: "0",
 
-  defaultImage: "",
+  a4Image: "",
+  fullSheetImage: "",
+  highResolutionImage: "",
+
   defaultVideo: "",
   images: null,
 
   descriptions: "",
   shortDescription: "",
+
+  ralNumber: "",
 
   metaTitle: "",
   metaDescription: "",
@@ -73,7 +85,7 @@ export interface ProductValues {
         value: string;
       }[]
     | null;
-  type: {
+  decorSeries: {
     label: string;
     value: string;
   } | null;
@@ -84,7 +96,7 @@ export interface ProductValues {
       }[]
     | null;
 
-  finish: string;
+  // finish: string;
   decorName: string;
   decorNumber: string;
   sku: string;
@@ -92,12 +104,17 @@ export interface ProductValues {
   salePrice: string;
   mrp: string;
 
-  defaultImage: string;
+  a4Image: string;
+  fullSheetImage: string;
+  highResolutionImage: string;
+
   defaultVideo: string;
   images: string[] | null;
 
   descriptions: string;
   shortDescription: string;
+
+  ralNumber: string;
 
   metaTitle: string;
   metaDescription: string;

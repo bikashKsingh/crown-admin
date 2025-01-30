@@ -21,6 +21,7 @@ export function InquiryList() {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [status, setStatus] = useState<boolean | string>("");
+  const [inquiryType, setInquiryType] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
@@ -38,6 +39,7 @@ export function InquiryList() {
         let url = `/inquiries?page=${pagination.page}&limit=${pagination.limit}`;
         if (searchQuery) url += `&searchQuery=${searchQuery}`;
         if (status) url += `&inquiryStatus=${status}`;
+        if (inquiryType) url += `&inquiryType=${inquiryType}`;
 
         const apiResponse = await get(url, true);
 
@@ -58,7 +60,14 @@ export function InquiryList() {
 
       getData();
     },
-    [pagination.page, pagination.limit, searchQuery, needReload, status]
+    [
+      pagination.page,
+      pagination.limit,
+      searchQuery,
+      needReload,
+      status,
+      inquiryType,
+    ]
   );
 
   type InquiryStatus = "PENDING" | "RESOLVED";
@@ -67,6 +76,7 @@ export function InquiryList() {
     name: string;
     mobile: string;
     email: string;
+    inquiryType: "ALL" | "PRODUCT" | "CAREER" | "GENERAL";
     createdAt: string;
     inquiryStatus: InquiryStatus;
     id: string;
@@ -111,6 +121,11 @@ export function InquiryList() {
       },
 
       {
+        Header: "INQUIRY TYPE",
+        accessor: "inquiryType",
+      },
+
+      {
         Header: "CREATED AT",
         accessor: "createdAt",
         Cell: ({ value }: any) => {
@@ -149,6 +164,15 @@ export function InquiryList() {
                 <span className="fas fa-pencil-alt" aria-hidden="true"></span>
               </Link>
 
+              <Link
+                className="p-2 bg-light text-warning"
+                to={{
+                  pathname: `/inquiries/details/${value}`,
+                }}
+              >
+                <span className="fas fa-eye" aria-hidden="true"></span>
+              </Link>
+
               <button
                 type="button"
                 className="btn p-2 bg-light"
@@ -175,8 +199,9 @@ export function InquiryList() {
     return records.map((data) => {
       return {
         name: data.name,
-        mobile: data.mobile,
+        mobile: `${data.countryCode}${data.mobile}`,
         email: data.email,
+        inquiryType: data.inquiryType,
         createdAt: data.createdAt,
         inquiryStatus: data.inquiryStatus,
         id: data._id,
@@ -226,6 +251,11 @@ export function InquiryList() {
   // handleSetStatus
   function handleSetStatus(evt: React.ChangeEvent<HTMLInputElement>) {
     setStatus(evt.target.value);
+  }
+
+  // handleSetInquiryType
+  function handleSetInquiryType(evt: React.ChangeEvent<HTMLInputElement>) {
+    setInquiryType(evt.target.value);
   }
 
   return (
@@ -279,6 +309,65 @@ export function InquiryList() {
                       <i className="fas fa-trash-alt text-danger"></i>
                     </button>
                   ) : null}
+
+                  <div className="dropdown">
+                    <a
+                      className="btn p-2 bg-light border"
+                      href="#"
+                      role="button"
+                      id="dropdownMenuLink"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <i className="ti-layers"></i>
+                    </a>
+
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="dropdownMenuLink"
+                    >
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
+                          id="inquiryTypeAll"
+                          value={"ALL"}
+                          name="inquiryType"
+                          onChange={handleSetInquiryType}
+                        />
+                        <label htmlFor="inquiryTypeAll">All</label>
+                      </li>
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
+                          id="inquiryTypeProduct"
+                          value={"PRODUCT"}
+                          name="inquiryType"
+                          onChange={handleSetInquiryType}
+                        />
+                        <label htmlFor="inquiryTypeProduct">Product</label>
+                      </li>
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
+                          id="inquiryTypeCareer"
+                          value={"CAREER"}
+                          name="inquiryType"
+                          onChange={handleSetInquiryType}
+                        />
+                        <label htmlFor="inquiryTypeCareer">Career</label>
+                      </li>
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
+                          id="inquiryTypeGeneral"
+                          value={"GENERAL"}
+                          name="inquiryType"
+                          onChange={handleSetInquiryType}
+                        />
+                        <label htmlFor="inquiryTypeGeneral">General</label>
+                      </li>
+                    </ul>
+                  </div>
 
                   <div className="dropdown">
                     <a

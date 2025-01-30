@@ -28,14 +28,24 @@ export * from "./newsletters/NewsletterList";
 export * from "./newsletters/EditNewsletter";
 
 // Types
-export * from "./types/AddType";
-export * from "./types/TypeList";
-export * from "./types/EditType";
+export * from "./decorSeries/AddDecorSeries";
+export * from "./decorSeries/DecorSeriesList";
+export * from "./decorSeries/EditDecorSeries";
 
 // Sizes
 export * from "./sizes/AddSize";
 export * from "./sizes/SizeList";
 export * from "./sizes/EditSize";
+
+// Finishes
+export * from "./finishes/AddFinish";
+export * from "./finishes/FinishList";
+export * from "./finishes/EditFinish";
+
+// SizeFinishes
+export * from "./sizeFinishes/AddSizeFinish";
+export * from "./sizeFinishes/SizeFinishList";
+export * from "./sizeFinishes/EditSizeFinish";
 
 // Customers
 export * from "./users/AddUser";
@@ -56,6 +66,7 @@ export * from "./inquiries/InquiryDetails";
 
 // Products
 export * from "./products/AddProduct";
+export * from "./products/AddProductsViaCSV";
 export * from "./products/ProductList";
 export * from "./products/EditProduct";
 export * from "./products/ProductDetails";

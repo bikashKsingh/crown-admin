@@ -1,16 +1,16 @@
 import * as Yup from "yup";
 
-export const typeSchema = Yup.object({
+export const decorSeriesSchema = Yup.object({
   title: Yup.string().required().label("Title"),
   status: Yup.string().required().label("Status"),
 });
 
-export const typeInitialValues: TypeValues = {
+export const typeInitialValues: DecorSeriesValues = {
   title: "",
   status: "true",
 };
 
-export interface TypeValues {
+export interface DecorSeriesValues {
   title: string;
   status: string;
 }

@@ -16,7 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
 
-export function TypeList() {
+export function FinishList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -35,7 +35,7 @@ export function TypeList() {
     function () {
       async function getData() {
         setLoading(true);
-        let url = `/types?page=${pagination.page}&limit=${pagination.limit}`;
+        let url = `/finishes?page=${pagination.page}&limit=${pagination.limit}`;
         if (searchQuery) url += `&searchQuery=${searchQuery}`;
         if (status) url += `&status=${status}`;
 
@@ -62,7 +62,8 @@ export function TypeList() {
   );
 
   type Record = {
-    title: string;
+    shortName: string;
+    fullName: string;
     createdAt: string;
     status: boolean;
     id: string;
@@ -92,8 +93,13 @@ export function TypeList() {
       },
 
       {
-        Header: "TITLE",
-        accessor: "title",
+        Header: "SHORT NAME",
+        accessor: "shortName",
+      },
+
+      {
+        Header: "FULL NAME",
+        accessor: "fullName",
       },
 
       {
@@ -128,7 +134,7 @@ export function TypeList() {
               <Link
                 className="p-2 bg-light"
                 to={{
-                  pathname: `/types/edit/${value}`,
+                  pathname: `/finishes/edit/${value}`,
                 }}
               >
                 <span className="fas fa-pencil-alt" aria-hidden="true"></span>
@@ -159,7 +165,8 @@ export function TypeList() {
   const data = React.useMemo(() => {
     return records.map((data) => {
       return {
-        title: data.title,
+        shortName: data.shortName,
+        fullName: data.fullName,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,
@@ -186,9 +193,9 @@ export function TypeList() {
 
     let apiResponse = null;
     if (Array.isArray(recordId)) {
-      apiResponse = await remove(`/types`, recordId);
+      apiResponse = await remove(`/finishes`, recordId);
     } else {
-      apiResponse = await remove(`/types/${recordId}`);
+      apiResponse = await remove(`/finishes/${recordId}`);
     }
 
     if (apiResponse?.status == 200) {
@@ -216,7 +223,7 @@ export function TypeList() {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Check if the Shift key and "A" key are pressed
       if (event.altKey && event.key === "=") {
-        navigate("/types/add");
+        navigate("/finishes/add");
       }
     };
 
@@ -236,16 +243,16 @@ export function TypeList() {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex gap-2">
               <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Type List</h4>
+              <h4 className="font-weight-bold mb-0">Finish List</h4>
             </div>
             <div>
               <Link
                 title="Alt + '+'"
-                to={"/types/add"}
+                to={"/finishes/add"}
                 type="button"
                 className="btn btn-primary text-light"
               >
-                Add Type
+                Add Finish
               </Link>
             </div>
           </div>

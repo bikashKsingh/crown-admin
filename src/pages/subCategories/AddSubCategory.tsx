@@ -37,7 +37,12 @@ export function AddSubCategory() {
     ) {
       setLoading(true);
 
-      const newValue = { ...values, category: values.category?.value };
+      const newValue = {
+        ...values,
+        categories: values.categories?.map((item: any) => {
+          return item.value;
+        }),
+      };
 
       const apiResponse = await post("/subCategories", newValue, true);
 
@@ -141,18 +146,19 @@ export function AddSubCategory() {
                     <CustomSelect
                       label="Select Category"
                       placeholder="Select Category"
-                      name="category"
+                      name="categories"
                       required={true}
                       options={categories}
-                      value={values.category}
-                      error={errors.category}
-                      touched={touched.category}
+                      value={values.categories}
+                      error={errors.categories}
+                      touched={touched.categories}
                       handleChange={(value) => {
-                        setFieldValue("category", value);
+                        setFieldValue("categories", value);
                       }}
                       handleBlur={() => {
-                        setFieldTouched("category", true);
+                        setFieldTouched("categories", true);
                       }}
+                      isMulti={true}
                     />
                   </div>
 

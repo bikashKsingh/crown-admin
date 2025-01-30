@@ -1,18 +1,26 @@
-import { GoBackButton, InputBox, SubmitButton } from "../../components";
-import { FormikHelpers, useFormik } from "formik";
-import { useEffect, useState } from "react";
-import { post, validateTextNumber } from "../../utills";
-import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import {
-  typeInitialValues,
-  typeSchema,
-  TypeValues,
-} from "../../validationSchemas/typeSchema";
+  GoBackButton,
+  InputBox,
+  OverlayLoading,
+  SubmitButton,
+} from "../../components";
+import { FormikHelpers, useFormik } from "formik";
+import {
+  finishSchema,
+  FinishValues,
+  finishInitialValues,
+} from "../../validationSchemas/finishSchema";
+import { useEffect, useState } from "react";
+import { get, put } from "../../utills";
+import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 
-export function AddType() {
+export function EditFinish() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { id } = useParams();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [updading, setUpdating] = useState<boolean>(false);
+
   const {
     values,
     errors,
@@ -20,15 +28,15 @@ export function AddType() {
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldValue,
+    setValues,
   } = useFormik({
     onSubmit: async function (
-      values: TypeValues,
-      helpers: FormikHelpers<TypeValues>
+      values: FinishValues,
+      helpers: FormikHelpers<FinishValues>
     ) {
-      setLoading(true);
+      setUpdating(true);
 
-      const apiResponse = await post("/types", values, true);
+      const apiResponse = await put(`/finishes/${id}`, values);
 
       if (apiResponse?.status == 200) {
         toast.success(apiResponse?.message);
@@ -37,28 +45,38 @@ export function AddType() {
         helpers.setErrors(apiResponse?.errors);
         toast.error(apiResponse?.message);
       }
-      setLoading(false);
+      setUpdating(false);
     },
-    initialValues: typeInitialValues,
-    validationSchema: typeSchema,
+    initialValues: finishInitialValues,
+    validationSchema: finishSchema,
   });
 
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      // Check if the Alt key and Backspace key are pressed
-      if (event.altKey && event.key === "Backspace") {
-        console.log("Alt + Backspace was pressed!");
-        // You can trigger any action here
-        navigate(-1);
+  // Get Data From Database
+  useEffect(
+    function () {
+      async function getData(id: string) {
+        setLoading(true);
+        let url = `/finishes/${id}`;
+        const apiResponse = await get(url, true);
+        if (apiResponse?.status == 200) {
+          const apiData = apiResponse.body;
+          apiData.status = `${apiData.status}`;
+          delete apiData.isDeleted;
+          delete apiData.createdAt;
+          delete apiData.updatedAt;
+          delete apiData._id;
+          setValues(apiData);
+        } else {
+          toast.error(apiResponse?.message);
+        }
+
+        setLoading(false);
       }
-    };
 
-    // Attach the event listener
-    window.addEventListener("keydown", handleKeyPress);
-
-    // Cleanup the event listener on component unmount
-    return () => window.removeEventListener("keydown", handleKeyPress);
-  }, []);
+      if (id) getData(id);
+    },
+    [id]
+  );
 
   return (
     <div className="content-wrapper">
@@ -67,7 +85,7 @@ export function AddType() {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex gap-2">
               <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Add Type</h4>
+              <h4 className="font-weight-bold mb-0">Edit Finish</h4>
             </div>
             {/* <div>
               <button
@@ -80,25 +98,41 @@ export function AddType() {
           </div>
         </div>
       </div>
+      {loading ? <OverlayLoading /> : null}
 
       <div className="row">
         <div className="col-md-12 grid-margin stretch-card">
-          <div className="card rounded-2">
+          <div className="card">
             <div className="card-body">
               <form className="forms-sample" onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="form-group col-md-6">
                     <InputBox
-                      label="Title"
-                      name="title"
+                      label="Short Name"
+                      name="shortName"
                       handleBlur={handleBlur}
                       handleChange={handleChange}
                       type="text"
-                      placeholder="Enter title"
-                      value={values.title}
+                      placeholder="Enter short name"
+                      value={values.shortName}
                       required={true}
-                      touched={touched.title}
-                      error={errors.title}
+                      touched={touched.shortName}
+                      error={errors.shortName}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Full Name"
+                      name="fullName"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="text"
+                      placeholder="Enter full name"
+                      value={values.fullName}
+                      required={true}
+                      touched={touched.fullName}
+                      error={errors.fullName}
                     />
                   </div>
 
@@ -142,7 +176,7 @@ export function AddType() {
                   </div>
                 </div>
 
-                <SubmitButton loading={false} text="Add Requirement" />
+                <SubmitButton loading={updading} text="Update Finish" />
               </form>
             </div>
           </div>

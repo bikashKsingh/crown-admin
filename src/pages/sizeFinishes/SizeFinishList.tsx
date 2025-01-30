@@ -1,11 +1,7 @@
-import {
-  CustomSelect,
-  DataTable,
-  GoBackButton,
-  Pagination,
-} from "../../components";
+import { DataTable, GoBackButton, Pagination } from "../../components";
 import {
   Column,
+  HeaderProps,
   Row,
   TableInstance,
   useFilters,
@@ -16,42 +12,17 @@ import {
 } from "react-table";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
-import Select from "react-select";
-import { styles } from "../../constants/selectStyle";
 
-export function ProductList() {
+export function SizeFinishList() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [status, setStatus] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
-
-  const [categories, setCategories] = useState([]);
-  const [subCategories, setSubCategories] = useState([]);
-  const [types, setDecorSeries] = useState([]);
-  const [sizes, setSizes] = useState([]);
-
-  const [showOption, setShowOption] = useState<boolean>(false);
-
-  type SelectValue = {
-    label: string;
-    value: string;
-  };
-
-  const [selectedCategory, setSelectedCategory] = useState<SelectValue | null>(
-    null
-  );
-  const [selectedSubCategory, setSelectedSubCategory] =
-    useState<SelectValue | null>(null);
-  const [selectedDecorSeries, setSelectedDecorSeries] =
-    useState<SelectValue | null>(null);
-  const [selectedSizes, setSelectedSizes] = useState<SelectValue[] | null>(
-    null
-  );
-
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -64,21 +35,9 @@ export function ProductList() {
     function () {
       async function getData() {
         setLoading(true);
-        let url = `/products?page=${pagination.page}&limit=${pagination.limit}`;
+        let url = `/sizeFinishes?page=${pagination.page}&limit=${pagination.limit}`;
         if (searchQuery) url += `&searchQuery=${searchQuery}`;
         if (status) url += `&status=${status}`;
-        if (selectedCategory?.value)
-          url += `&category=${selectedCategory.value}`;
-        if (selectedSubCategory?.value)
-          url += `&subCategory=${selectedSubCategory.value}`;
-        if (selectedDecorSeries?.value)
-          url += `&decorSeries=${selectedDecorSeries.value}`;
-
-        if (selectedSizes?.length) {
-          for (let size of selectedSizes) {
-            url += `&sizes=${size.value}`;
-          }
-        }
 
         const apiResponse = await get(url, true);
 
@@ -99,110 +58,12 @@ export function ProductList() {
 
       getData();
     },
-    [
-      pagination.page,
-      pagination.limit,
-      searchQuery,
-      needReload,
-      status,
-      selectedCategory,
-      selectedDecorSeries,
-      selectedSubCategory,
-      selectedSizes,
-    ]
+    [pagination.page, pagination.limit, searchQuery, needReload, status]
   );
-
-  // clearFilterOption
-  function handleClearFilter() {
-    setSelectedCategory(null);
-    setSelectedSubCategory(null);
-    setSelectedDecorSeries(null);
-    setSelectedSizes(null);
-  }
-
-  // get category
-  useEffect(function () {
-    async function getData() {
-      const apiResponse = await get("/categories", true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.name,
-            value: value._id,
-          };
-        });
-        setCategories(modifiedValue);
-      }
-    }
-    getData();
-  }, []);
-
-  // get sub category
-  useEffect(
-    function () {
-      async function getData() {
-        let url = `/subCategories`;
-        if (selectedCategory?.value) {
-          url += `?category=${selectedCategory?.value}`;
-        }
-
-        const apiResponse = await get(url, true);
-        if (apiResponse?.status == 200) {
-          const modifiedValue = apiResponse?.body?.map((value: any) => {
-            return {
-              label: value.name,
-              value: value._id,
-            };
-          });
-          setSubCategories(modifiedValue);
-        }
-      }
-      getData();
-    },
-    [selectedCategory?.value]
-  );
-
-  // get Types
-  useEffect(function () {
-    async function getData() {
-      let url = `/decorSeries`;
-
-      const apiResponse = await get(url, true);
-
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setDecorSeries(modifiedValue);
-      }
-    }
-    getData();
-  }, []);
-
-  // get Size
-  useEffect(function () {
-    async function getData() {
-      let url = `/sizes`;
-      const apiResponse = await get(url, true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setSizes(modifiedValue);
-      }
-    }
-    getData();
-  }, []);
 
   type Record = {
-    name: string;
-    a4Image: string;
+    size: string;
+    finishes: any[];
     createdAt: string;
     status: boolean;
     id: string;
@@ -230,21 +91,23 @@ export function ProductList() {
           </div>
         ),
       },
+
       {
-        Header: "",
-        accessor: "a4Image",
-        disableSortBy: true,
-        Cell: ({ value }: any) => {
-          return (
-            <div>
-              <img className="img" src={value} />
-            </div>
-          );
-        },
+        Header: "SIZE",
+        accessor: "size",
       },
       {
-        Header: "NAME",
-        accessor: "name",
+        Header: "FINISHES",
+        accessor: "finishes",
+        Cell: ({ value }: any) => {
+          if (value.length) {
+            if (value.length == 1) {
+              return value[0].shortName;
+            } else {
+              return `${value[0].shortName} and ${value.length - 1} others`;
+            }
+          }
+        },
       },
 
       {
@@ -258,10 +121,9 @@ export function ProductList() {
         Header: "STATUS",
         accessor: "status",
         Cell: ({ value }: any) => {
-          const status: boolean = value;
           return (
             <>
-              {status ? (
+              {value == true ? (
                 <span className="badge bg-success">Active</span>
               ) : (
                 <span className="badge bg-danger">Disabled</span>
@@ -280,22 +142,10 @@ export function ProductList() {
               <Link
                 className="p-2 bg-light"
                 to={{
-                  pathname: `/products/edit/${value}`,
+                  pathname: `/sizeFinishes/edit/${value}`,
                 }}
               >
                 <span className="fas fa-pencil-alt" aria-hidden="true"></span>
-              </Link>
-
-              <Link
-                className="p-2 bg-light"
-                to={{
-                  pathname: `/products/details/${value}`,
-                }}
-              >
-                <span
-                  className="fas fa-eye text-warning"
-                  aria-hidden="true"
-                ></span>
               </Link>
 
               <button
@@ -323,8 +173,8 @@ export function ProductList() {
   const data = React.useMemo(() => {
     return records.map((data) => {
       return {
-        name: data.name,
-        a4Image: data.a4Image,
+        size: data.size?.title,
+        finishes: data.finishes,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,
@@ -351,9 +201,9 @@ export function ProductList() {
 
     let apiResponse = null;
     if (Array.isArray(recordId)) {
-      apiResponse = await remove(`/products`, recordId);
+      apiResponse = await remove(`/sizeFinishes`, recordId);
     } else {
-      apiResponse = await remove(`/products/${recordId}`);
+      apiResponse = await remove(`/sizeFinishes/${recordId}`);
     }
 
     if (apiResponse?.status == 200) {
@@ -376,6 +226,24 @@ export function ProductList() {
     setStatus(evt.target.value);
   }
 
+  // listening for shortcut
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Check if the Shift key and "A" key are pressed
+      if (event.altKey && event.key === "=") {
+        navigate("/sizeFinishes/add");
+      }
+    };
+
+    // Attach the event listener
+    window.addEventListener("keydown", handleKeyPress);
+
+    // Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -383,23 +251,16 @@ export function ProductList() {
           <div className="d-flex justify-content-between align-items-center">
             <div className="d-flex gap-2">
               <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Products</h4>
+              <h4 className="font-weight-bold mb-0">Size Finish List</h4>
             </div>
             <div>
               <Link
-                to={"/products/add"}
+                title="Alt + '+'"
+                to={"/sizeFinishes/add"}
                 type="button"
                 className="btn btn-primary text-light"
               >
-                Add Product
-              </Link>
-
-              <Link
-                to={"/products/addViaCsv"}
-                type="button"
-                className="btn btn-primary text-light"
-              >
-                Add Via CSV
+                Add Size & Finish
               </Link>
             </div>
           </div>
@@ -411,7 +272,7 @@ export function ProductList() {
           <div className="card rounded-2">
             <div className="card-body shadow-none">
               <div className="row mb-2 gy-2">
-                <div className="col-md-8">
+                <div className="col-8">
                   <input
                     placeholder="Serach..."
                     className="form-control py-2"
@@ -421,7 +282,7 @@ export function ProductList() {
                     }
                   />
                 </div>
-                <div className="col-md-4 d-flex gap-2 justify-content-md-end">
+                <div className="col-4 d-flex gap-2 justify-content-end">
                   {/* <button className="btn p-2 bg-light border">
                     <i className="ti-search"></i>
                   </button> */}
@@ -456,7 +317,7 @@ export function ProductList() {
                         <input
                           type="radio"
                           id="all"
-                          value={"All"}
+                          value={"ALL"}
                           name="status"
                           onChange={handleSetStatus}
                         />
@@ -484,88 +345,8 @@ export function ProductList() {
                       </li>
                     </ul>
                   </div>
-
-                  {showOption ? (
-                    <button
-                      className="btn p-2 bg-light border"
-                      onClick={() => {
-                        setShowOption((old) => {
-                          return !old;
-                        });
-                        handleClearFilter();
-                      }}
-                    >
-                      <i className="fas fa-times text-danger"></i>
-                    </button>
-                  ) : (
-                    <button
-                      className="btn p-2 bg-light border"
-                      onClick={() => {
-                        setShowOption((old) => {
-                          return !old;
-                        });
-                      }}
-                    >
-                      <i className="fas fa-angle-down text-info"></i>
-                    </button>
-                  )}
                 </div>
               </div>
-
-              {/* More filter option */}
-              {showOption ? (
-                <div className="row">
-                  <div className="form-group col-md-3">
-                    <Select
-                      placeholder="Select Category"
-                      options={categories}
-                      value={selectedCategory}
-                      onChange={(value) => {
-                        setSelectedCategory(value);
-                      }}
-                      styles={styles}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-3">
-                    <Select
-                      placeholder="Select Sub Category"
-                      options={subCategories}
-                      value={selectedSubCategory}
-                      onChange={(value) => {
-                        setSelectedSubCategory(value);
-                      }}
-                      styles={styles}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-2">
-                    <Select
-                      placeholder="Decor Series"
-                      options={types}
-                      value={selectedDecorSeries}
-                      onChange={(value) => {
-                        setSelectedDecorSeries(value);
-                      }}
-                      styles={styles}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-4">
-                    <Select
-                      placeholder="Select Size"
-                      options={sizes}
-                      value={selectedSizes}
-                      onChange={(value: any) => {
-                        setSelectedSizes(value);
-                      }}
-                      styles={styles}
-                      isMulti={true}
-                    />
-                  </div>
-                </div>
-              ) : null}
-
               <div className="table-responsive">
                 {/* Data Table */}
                 <DataTable

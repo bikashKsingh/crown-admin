@@ -38,7 +38,13 @@ export function EditSubCategory() {
     ) {
       setLoading(true);
 
-      const updateValue = { ...values, category: values.category?.value };
+      const updateValue = {
+        ...values,
+        categories: values?.categories?.map((item) => {
+          return item.value;
+        }),
+        category: undefined,
+      };
 
       const apiResponse = await put(`/subCategories/${id}`, updateValue);
 
@@ -68,10 +74,15 @@ export function EditSubCategory() {
           delete apiData.updatedAt;
           delete apiData._id;
 
-          apiData.category = {
-            label: apiData?.category?.name,
-            value: apiData?.category?._id,
-          };
+          if (apiData?.categories?.length) {
+            apiData.categories = apiData.categories?.map((item: any) => {
+              return {
+                label: item.name,
+                value: item._id,
+              };
+            });
+          }
+
           setValues(apiData);
         } else {
           toast.error(apiResponse?.message);
@@ -161,18 +172,19 @@ export function EditSubCategory() {
                     <CustomSelect
                       label="Select Category"
                       placeholder="Select Category"
-                      name="category"
+                      name="categories"
                       required={true}
                       options={categories}
-                      value={values.category}
-                      error={errors.category}
-                      touched={touched.category}
+                      value={values.categories}
+                      error={errors.categories}
+                      touched={touched.categories}
                       handleChange={(value) => {
-                        setFieldValue("category", value);
+                        setFieldValue("categories", value);
                       }}
                       handleBlur={() => {
-                        setFieldTouched("category", true);
+                        setFieldTouched("categories", true);
                       }}
+                      isMulti={true}
                     />
                   </div>
 

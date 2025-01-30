@@ -70,7 +70,7 @@ export function ProductDetails() {
                         style={{
                           maxHeight: 200,
                         }}
-                        src={productDetails?.defaultImage}
+                        src={productDetails?.a4Image}
                       />
                     </div>
                   </div>
@@ -147,8 +147,10 @@ export function ProductDetails() {
                           </td>
                         </tr>
                         <tr>
-                          <td className="py-3">Type</td>
-                          <td className="py-3">{productDetails?.type.title}</td>
+                          <td className="py-3">Decor Series</td>
+                          <td className="py-3">
+                            {productDetails?.decorSeries.title}
+                          </td>
                           <td className="py-3">Finish</td>
                           <td className="py-3">{productDetails?.finish}</td>
                         </tr>

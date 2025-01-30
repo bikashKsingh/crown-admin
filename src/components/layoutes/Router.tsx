@@ -44,10 +44,20 @@ export function Router() {
       <Route path="/sizes/edit/:id" element={<Pages.EditSize />} />
       <Route path="/sizes" element={<Pages.SizeList />} />
 
+      {/* Finishes */}
+      <Route path="/finishes/add" element={<Pages.AddFinish />} />
+      <Route path="/finishes/edit/:id" element={<Pages.EditFinish />} />
+      <Route path="/finishes" element={<Pages.FinishList />} />
+
+      {/* SizeFinishes */}
+      <Route path="/sizeFinishes/add" element={<Pages.AddSizeFinish />} />
+      <Route path="/sizeFinishes/edit/:id" element={<Pages.EditSizeFinish />} />
+      <Route path="/sizeFinishes" element={<Pages.SizeFinishList />} />
+
       {/* Types */}
-      <Route path="/types/add" element={<Pages.AddType />} />
-      <Route path="/types/edit/:id" element={<Pages.EditType />} />
-      <Route path="/types" element={<Pages.TypeList />} />
+      <Route path="/decorSeries/add" element={<Pages.AddDecorSeries />} />
+      <Route path="/decorSeries/edit/:id" element={<Pages.EditDecorSeries />} />
+      <Route path="/decorSeries" element={<Pages.DecorSeriesList />} />
 
       {/* Users */}
       <Route path="/users/add" element={<Pages.AddUser />} />
@@ -69,6 +79,7 @@ export function Router() {
 
       {/* Products */}
       <Route path="/products/add" element={<Pages.AddProduct />} />
+      <Route path="/products/addViaCsv" element={<Pages.AddProductViaCSV />} />
       <Route path="/products/edit/:id" element={<Pages.EditProduct />} />
       <Route path="/products" element={<Pages.ProductList />} />
       <Route path="/products/details/:id" element={<Pages.ProductDetails />} />
