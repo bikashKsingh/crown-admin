@@ -9,9 +9,7 @@ export const productSchema = Yup.object({
 
   sizes: Yup.array().required().label("Sizes"),
 
-  // finish: Yup.string().label("Finish"),
-  decorName: Yup.string().label("Decor Name"),
-  decorNumber: Yup.string().label("Decor Number"),
+  decorNumber: Yup.string().required().label("Decor Number"),
   sku: Yup.string().label("Decor Number"),
 
   salePrice: Yup.string().label("Sale Price"),
@@ -20,9 +18,6 @@ export const productSchema = Yup.object({
   a4Image: Yup.string().required().label("A4 Image"),
   fullSheetImage: Yup.string().required().label("Full Sheet Image"),
   highResolutionImage: Yup.string().required().label("High Resolution Image"),
-
-  defaultVideo: Yup.string().url().label("Default Image"),
-  images: Yup.array().nullable().label("Images"),
 
   descriptions: Yup.string().label("Descriptions"),
   shortDescription: Yup.string().label("Short Descriptions"),
@@ -44,8 +39,6 @@ export const productInitialValues: ProductValues = {
 
   sizes: null,
 
-  // finish: "",
-  decorName: "",
   decorNumber: "",
   sku: "",
 
@@ -55,9 +48,6 @@ export const productInitialValues: ProductValues = {
   a4Image: "",
   fullSheetImage: "",
   highResolutionImage: "",
-
-  defaultVideo: "",
-  images: null,
 
   descriptions: "",
   shortDescription: "",
@@ -96,8 +86,6 @@ export interface ProductValues {
       }[]
     | null;
 
-  // finish: string;
-  decorName: string;
   decorNumber: string;
   sku: string;
 
@@ -107,9 +95,6 @@ export interface ProductValues {
   a4Image: string;
   fullSheetImage: string;
   highResolutionImage: string;
-
-  defaultVideo: string;
-  images: string[] | null;
 
   descriptions: string;
   shortDescription: string;

@@ -66,7 +66,6 @@ export function EditProduct() {
         }),
         decorSeries: values.decorSeries?.value,
         sizes: values.sizes?.map((item) => item.value),
-        images: uploadedImages || [],
       };
       const apiResponse = await put(`/products/${id}`, newValue);
 
@@ -131,10 +130,6 @@ export function EditProduct() {
                 value: item._id,
               };
             });
-          }
-
-          if (data?.images?.length) {
-            setUploadedImages(data.images);
           }
 
           data.status = `${data.status}`;
@@ -233,87 +228,6 @@ export function EditProduct() {
     }
     getData();
   }, []);
-
-  // handleUploadFile
-  async function handleUploadFile(event: React.ChangeEvent<HTMLInputElement>) {
-    const mimeTypes = ["image/jpeg", "image/png", "image/webp"];
-
-    const files = event.target.files;
-
-    if (!files || files.length === 0) {
-      toast.error("Please select at least one file.");
-      return;
-    }
-
-    const formData = new FormData();
-
-    // Validate MIME type and append valid files to FormData
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-
-      // Check if the file's MIME type is in the allowed list
-      if (!mimeTypes.includes(file.type)) {
-        // if (inputElementName == "kycFile") {
-        //   let kycDocsFiles = [...kycDocuments];
-        //   kycDocuments[index]["error"] = "File type is not allowed";
-        //   return setKycDocumnets(kycDocsFiles);
-        // } else if (inputElementName == "certificateFile") {
-        //   let certificateFields = [...faqsInputFields];
-        //   certificateFields[index]["error"] = "File type is not allowed";
-        //   return setFaqsInputFields(certificateFields);
-        // }
-      }
-    }
-
-    // Append each file to the FormData object
-    for (let i = 0; i < files.length; i++) {
-      formData.append("files", files[i]);
-    }
-
-    try {
-      let url = `${API_URL}/fileUploads`;
-      const apiResponse = await fetch(url, {
-        method: "POST",
-        body: formData,
-      });
-
-      const apiData = await apiResponse.json();
-
-      if (apiData.status == 200) {
-        let images = apiData?.body?.map((item: any) => item.filepath);
-
-        setUploadedImages((old) => {
-          return [...old, ...images];
-        });
-      }
-    } catch (error: any) {
-      toast.error(error?.message);
-    }
-  }
-
-  // handleDeleteFile
-  async function handleDeleteFile(
-    event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string,
-    index: number
-  ) {
-    event.preventDefault();
-    try {
-      const apiResponse = await remove(`/fileUploads/${fileName}`);
-
-      if (apiResponse?.status == 200) {
-        let images = [...uploadedImages];
-        images.splice(index, 1);
-        setUploadedImages(images);
-      } else {
-        let images = [...uploadedImages];
-        images.splice(index, 1);
-        setUploadedImages(images);
-      }
-    } catch (error: any) {
-      toast.error(error?.message);
-    }
-  }
 
   // handleUploadA4Image
   async function handleUploadA4Image(
@@ -762,22 +676,6 @@ export function EditProduct() {
                     />
                   </div>
 
-                  {/* Decor Name */}
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Decor Name"
-                      name="decorName"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter decor name"
-                      value={values.decorName}
-                      required={false}
-                      touched={touched.decorName}
-                      error={errors.decorName}
-                    />
-                  </div>
-
                   {/* Decor Number */}
                   <div className="form-group col-md-6">
                     <InputBox
@@ -1092,47 +990,6 @@ export function EditProduct() {
                       </p>
                     ) : null}
                   </div>
-
-                  {/* <div className="form-group col-md-8">
-                    <label htmlFor={"imagesFile"}>Product Images</label>
-                    <div className="d-flex gap-2">
-                      <input
-                        type="file"
-                        name="imagesFile"
-                        id="imagesFile"
-                        onChange={(evt) => {
-                          handleUploadFile(evt);
-                        }}
-                        className="form-control"
-                        multiple={true}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-md-12">
-                    <div className="d-flex gap-4">
-                      {uploadedImages?.map((file: string, index: number) => {
-                        return (
-                          <div className="p-image">
-                            <button
-                              type="button"
-                              className="btn btn-danger p-image-remove"
-                              onClick={(evt) => {
-                                handleDeleteFile(
-                                  evt,
-                                  getFileNameFromUrl(file),
-                                  index
-                                );
-                              }}
-                            >
-                              X
-                            </button>
-                            <img className="img img-thumbnail" src={file} />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>

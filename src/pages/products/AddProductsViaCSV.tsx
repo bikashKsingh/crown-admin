@@ -361,7 +361,6 @@ export function AddProductViaCSV() {
                             <th>SIZES</th>
                             <th>DECOR SERIES</th>
                             <th>DECOR NUMBER</th>
-                            <th>DECOR NAME</th>
                             <th>RAL NUMBER</th>
                           </tr>
                         </thead>
@@ -402,7 +401,6 @@ export function AddProductViaCSV() {
 
                                 <td>{item?.decorSeries?.title}</td>
                                 <td>{item.decorNumber}</td>
-                                <td>{item.decorName}</td>
                                 <td>{item.ralNumber}</td>
                               </tr>
                             );
@@ -457,7 +455,6 @@ export function AddProductViaCSV() {
                             <th>SIZES</th>
                             <th>DECOR SERIES</th>
                             <th>DECOR NUMBER</th>
-                            <th>DECOR NAME</th>
                             <th>RAL NUMBER</th>
                           </tr>
                         </thead>
@@ -473,7 +470,6 @@ export function AddProductViaCSV() {
 
                                 <td>{item?.decorSeries}</td>
                                 <td>{item.decorNumber}</td>
-                                <td>{item.decorName}</td>
                                 <td>{item.ralNumber}</td>
                               </tr>
                             );
@@ -539,7 +535,6 @@ export function AddProductViaCSV() {
                             <th>SIZES</th>
                             <th>DECOR SERIES</th>
                             <th>DECOR NUMBER</th>
-                            <th>DECOR NAME</th>
                             <th>RAL NUMBER</th>
                           </tr>
                         </thead>
@@ -580,7 +575,6 @@ export function AddProductViaCSV() {
 
                                 <td>{item?.decorSeries?.title}</td>
                                 <td>{item.decorNumber}</td>
-                                <td>{item.decorName}</td>
                                 <td>{item.ralNumber}</td>
                               </tr>
                             );

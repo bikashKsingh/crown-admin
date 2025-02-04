@@ -95,8 +95,6 @@ export function AddProduct() {
         sizes: values.sizes?.map((item: any) => {
           return item.value;
         }),
-
-        images: uploadedImages?.map((item) => item.filepath) || [],
       };
 
       const apiResponse = await post("/products", newValue, true);
@@ -266,35 +264,11 @@ export function AddProduct() {
     }
   }
 
-  // handleDeleteFile
-  async function handleDeleteFile(
-    event: React.MouseEvent<HTMLButtonElement>,
-    fileName: string,
-    index: number
-  ) {
-    event.preventDefault();
-    try {
-      const apiResponse = await remove(`/fileUploads/${fileName}`);
-
-      if (apiResponse?.status == 200) {
-        let images = [...uploadedImages];
-        images.splice(index, 1);
-        setUploadedImages(images);
-      } else {
-        let images = [...uploadedImages];
-        images.splice(index, 1);
-        setUploadedImages(images);
-      }
-    } catch (error: any) {
-      toast.error(error?.message);
-    }
-  }
-
   // handleUploadA4Image
   async function handleUploadA4Image(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const files = event.target.files;
 
@@ -374,7 +348,7 @@ export function AddProduct() {
   async function handleUploadFullSheetImage(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const files = event.target.files;
 
@@ -454,7 +428,7 @@ export function AddProduct() {
   async function handleUploadHighResolutionImage(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const files = event.target.files;
 
@@ -731,22 +705,6 @@ export function AddProduct() {
                     />
                   </div>
 
-                  {/* Decor Name */}
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Decor Name"
-                      name="decorName"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter decor name"
-                      value={values.decorName}
-                      required={false}
-                      touched={touched.decorName}
-                      error={errors.decorName}
-                    />
-                  </div>
-
                   {/* Decor Number */}
                   <div className="form-group col-md-6">
                     <InputBox
@@ -762,7 +720,7 @@ export function AddProduct() {
                       type="text"
                       placeholder="Enter decor number"
                       value={values.decorNumber}
-                      required={false}
+                      required={true}
                       touched={touched.decorNumber}
                       error={errors.decorNumber}
                     />
@@ -1082,47 +1040,6 @@ export function AddProduct() {
                       </p>
                     ) : null}
                   </div>
-
-                  {/* <div className="form-group col-md-8">
-                                <label htmlFor={"imagesFile"}>Product Images</label>
-                                <div className="d-flex gap-2">
-                                  <input
-                                    type="file"
-                                    name="imagesFile"
-                                    id="imagesFile"
-                                    onChange={(evt) => {
-                                      handleUploadFile(evt);
-                                    }}
-                                    className="form-control"
-                                    multiple={true}
-                                  />
-                                </div>
-                              </div>
-            
-                              <div className="col-md-12">
-                                <div className="d-flex gap-4">
-                                  {uploadedImages?.map((file: string, index: number) => {
-                                    return (
-                                      <div className="p-image">
-                                        <button
-                                          type="button"
-                                          className="btn btn-danger p-image-remove"
-                                          onClick={(evt) => {
-                                            handleDeleteFile(
-                                              evt,
-                                              getFileNameFromUrl(file),
-                                              index
-                                            );
-                                          }}
-                                        >
-                                          X
-                                        </button>
-                                        <img className="img img-thumbnail" src={file} />
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              </div> */}
                 </div>
               </div>
             </div>
