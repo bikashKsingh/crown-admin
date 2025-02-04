@@ -319,7 +319,7 @@ export function EditProduct() {
   async function handleUploadA4Image(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const files = event.target.files;
 
@@ -399,7 +399,7 @@ export function EditProduct() {
   async function handleUploadFullSheetImage(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const files = event.target.files;
 
@@ -479,7 +479,7 @@ export function EditProduct() {
   async function handleUploadHighResolutionImage(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const mimeTypes = ["image/png", "image/jpg", "image/jpeg"];
+    const mimeTypes = ["image/png", "image/jpg", "image/jpeg", "image/webp"];
 
     const files = event.target.files;
 

@@ -62,12 +62,40 @@ export function AddProductViaCSV() {
       } else {
         // toast.error(apiResponse?.message);
         setFailedProducts((old) => {
+          newValue.categories = item.categories
+            ?.map((item: any) => {
+              return `${item.slug}`;
+            })
+            .join(",");
+
+          newValue.subCategories = item.subCategories
+            ?.map((item: any) => {
+              return `${item.slug}`;
+            })
+            .join(",");
+
+          newValue.sizes = item.sizes
+            ?.map((item: any) => {
+              return `${item.title}`;
+            })
+            .join(",");
+
+          newValue.decorSeries = item.decorSeries?.title;
+
           return [...old, newValue];
         });
       }
     }
 
     setLoading(false);
+  }
+
+  function camelize(str: string) {
+    return str
+      .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+        return index === 0 ? word.toLowerCase() : word.toUpperCase();
+      })
+      .replace(/\s+/g, "");
   }
 
   const fileChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,13 +110,25 @@ export function AddProductViaCSV() {
       Papa.parse(files, {
         complete: async (results: any) => {
           let keys = results.data[0];
+
           // I want to remove some óíúáé, blan spaces, etc
+          // keys = results.data[0].map((v: any) =>
+          //   v
+          //     // .toLowerCase()
+          //     .replace(/ /g, "_")
+          //     .normalize("NFD")
+          //     .replace(/[\u0300-\u036f]/g, "")
+          //     .toLowerCase()
+          // );
+
           keys = results.data[0].map((v: any) =>
-            v
-              // .toLowerCase()
-              .replace(/ /g, "_")
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
+            camelize(
+              v
+                .toLowerCase()
+                // .replace(/ /g, "_")
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f\*]/g, "") // Added \* to remove asterisks (*)
+            )
           );
 
           let values = results.data.slice(1);
@@ -234,7 +274,7 @@ export function AddProductViaCSV() {
                 className="btn btn-primary text-light"
                 data={createProduct.data}
                 headers={createProduct.headers}
-                filename="products.csv"
+                filename="crown-website-product-uploading.csv"
               >
                 Download CSV
               </CSVLink>
@@ -290,9 +330,9 @@ export function AddProductViaCSV() {
                   <h5
                     className="mb-2 cursor-hand"
                     data-bs-toggle="collapse"
-                    data-bs-target="#metaDetails"
+                    data-bs-target="#productPreview"
                     aria-expanded="false"
-                    aria-controls="metaDetails"
+                    aria-controls="productPreview"
                   >
                     Product Preview
                   </h5>
@@ -300,15 +340,15 @@ export function AddProductViaCSV() {
                     className="btn btn-light p-2"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#metaDetails"
+                    data-bs-target="#productPreview"
                     aria-expanded="false"
-                    aria-controls="metaDetails"
+                    aria-controls="productPreview"
                   >
                     <i className="fa fa-angle-down text-primary" />
                   </button>
                 </div>
 
-                <div className="collapse mt-2" id="metaDetails">
+                <div className="collapse mt-2" id="productPreview">
                   <div className=" shadow-none p-2 mb-3">
                     <div className="col-md-12 table-responsive">
                       <table className="table table-striped table-bordered">
@@ -334,9 +374,9 @@ export function AddProductViaCSV() {
                                 <td>
                                   {item?.categories?.map((item: any) => {
                                     return (
-                                      <>
+                                      <div key={item._id}>
                                         <span>{item.name}</span> <br />
-                                      </>
+                                      </div>
                                     );
                                   })}
                                 </td>
@@ -353,9 +393,9 @@ export function AddProductViaCSV() {
                                 <td>
                                   {item?.sizes?.map((item: any) => {
                                     return (
-                                      <>
+                                      <div key={item._id}>
                                         <span>{item.title}</span> <br />
-                                      </>
+                                      </div>
                                     );
                                   })}
                                 </td>
@@ -386,9 +426,9 @@ export function AddProductViaCSV() {
                   <h5
                     className="mb-2 cursor-hand"
                     data-bs-toggle="collapse"
-                    data-bs-target="#metaDetails"
+                    data-bs-target="#faildUploadingProducts"
                     aria-expanded="false"
-                    aria-controls="metaDetails"
+                    aria-controls="faildUploadingProducts"
                   >
                     Failed Uploading
                   </h5>
@@ -396,15 +436,15 @@ export function AddProductViaCSV() {
                     className="btn btn-light p-2"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#metaDetails"
+                    data-bs-target="#faildUploadingProducts"
                     aria-expanded="false"
-                    aria-controls="metaDetails"
+                    aria-controls="faildUploadingProducts"
                   >
                     <i className="fa fa-angle-down text-primary" />
                   </button>
                 </div>
 
-                <div className="collapse mt-2" id="metaDetails">
+                <div className="collapse mt-2" id="faildUploadingProducts">
                   <div className=" shadow-none p-2 mb-3">
                     <div className="col-md-12 table-responsive">
                       <table className="table table-striped table-bordered">
@@ -424,39 +464,14 @@ export function AddProductViaCSV() {
                         <tbody>
                           {failedProducts?.map((item: any) => {
                             return (
-                              <tr>
+                              <tr key={item._id}>
                                 <td>{item.name}</td>
                                 <td>{item.slug}</td>
-                                <td>
-                                  {item?.categories?.map((item: any) => {
-                                    return (
-                                      <>
-                                        <span>{item.name}</span> <br />
-                                      </>
-                                    );
-                                  })}
-                                </td>
-                                <td>
-                                  {item?.subCategories?.map((item: any) => {
-                                    return (
-                                      <>
-                                        <span>{item.name}</span> <br />
-                                      </>
-                                    );
-                                  })}
-                                </td>
+                                <td>{item?.categories}</td>
+                                <td>{item?.subCategories}</td>
+                                <td>{item?.sizes}</td>
 
-                                <td>
-                                  {item?.sizes?.map((item: any) => {
-                                    return (
-                                      <>
-                                        <span>{item.title}</span> <br />
-                                      </>
-                                    );
-                                  })}
-                                </td>
-
-                                <td>{item?.decorSeries?.title}</td>
+                                <td>{item?.decorSeries}</td>
                                 <td>{item.decorNumber}</td>
                                 <td>{item.decorName}</td>
                                 <td>{item.ralNumber}</td>
@@ -466,6 +481,17 @@ export function AddProductViaCSV() {
                         </tbody>
                       </table>
                     </div>
+                  </div>
+
+                  <div className="">
+                    <CSVLink
+                      className="btn btn-primary text-light"
+                      data={failedProducts}
+                      headers={createProduct.headers}
+                      filename="failed-product-uploading.csv"
+                    >
+                      Export to CSV
+                    </CSVLink>
                   </div>
                 </div>
               </div>
@@ -482,9 +508,9 @@ export function AddProductViaCSV() {
                   <h5
                     className="mb-2 cursor-hand"
                     data-bs-toggle="collapse"
-                    data-bs-target="#metaDetails"
+                    data-bs-target="#uploadedProducts"
                     aria-expanded="false"
-                    aria-controls="metaDetails"
+                    aria-controls="uploadedProducts"
                   >
                     Uploaded Products
                   </h5>
@@ -492,15 +518,15 @@ export function AddProductViaCSV() {
                     className="btn btn-light p-2"
                     type="button"
                     data-bs-toggle="collapse"
-                    data-bs-target="#metaDetails"
+                    data-bs-target="#uploadedProducts"
                     aria-expanded="false"
-                    aria-controls="metaDetails"
+                    aria-controls="uploadedProducts"
                   >
                     <i className="fa fa-angle-down text-primary" />
                   </button>
                 </div>
 
-                <div className="collapse mt-2" id="metaDetails">
+                <div className="collapse mt-2" id="uploadedProducts">
                   <div className=" shadow-none p-2 mb-3">
                     <div className="col-md-12 table-responsive">
                       <table className="table table-striped table-bordered">
@@ -520,24 +546,24 @@ export function AddProductViaCSV() {
                         <tbody>
                           {uploadedProducts?.map((item: any) => {
                             return (
-                              <tr>
+                              <tr key={item._id}>
                                 <td>{item.name}</td>
                                 <td>{item.slug}</td>
                                 <td>
                                   {item?.categories?.map((item: any) => {
                                     return (
-                                      <>
+                                      <div key={item._id}>
                                         <span>{item.name}</span> <br />
-                                      </>
+                                      </div>
                                     );
                                   })}
                                 </td>
                                 <td>
                                   {item?.subCategories?.map((item: any) => {
                                     return (
-                                      <>
+                                      <div key={item._id}>
                                         <span>{item.name}</span> <br />
-                                      </>
+                                      </div>
                                     );
                                   })}
                                 </td>
@@ -545,9 +571,9 @@ export function AddProductViaCSV() {
                                 <td>
                                   {item?.sizes?.map((item: any) => {
                                     return (
-                                      <>
+                                      <div key={item._id}>
                                         <span>{item.title}</span> <br />
-                                      </>
+                                      </div>
                                     );
                                   })}
                                 </td>

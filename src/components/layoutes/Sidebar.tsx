@@ -34,6 +34,13 @@ export function Sidebar() {
           </div>
         </li>
 
+        <li className="nav-item">
+          <Link className="nav-link" to="/media">
+            <i className="ti-image menu-icon"></i>
+            <span className="menu-title">Media</span>
+          </Link>
+        </li>
+
         {/* Categories */}
         <li className="nav-item">
           <a
