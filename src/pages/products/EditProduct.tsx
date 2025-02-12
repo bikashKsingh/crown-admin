@@ -25,7 +25,7 @@ import {
 } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { API_URL } from "../../constants";
+import { API_URL, FILE_URL } from "../../constants";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
@@ -486,6 +486,10 @@ export function EditProduct() {
   // console.log(touched);
   // console.log(values);
 
+  function addUrlToFile(file: any) {
+    return `${FILE_URL}/${file}`;
+  }
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -865,7 +869,7 @@ export function EditProduct() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.a4Image}`}
+                            src={`${addUrlToFile(values.a4Image)}`}
                           />
                         </Link>
                       ) : null}
@@ -913,7 +917,7 @@ export function EditProduct() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.fullSheetImage}`}
+                            src={`${addUrlToFile(values.fullSheetImage)}`}
                           />
                         </Link>
                       ) : null}
@@ -964,7 +968,7 @@ export function EditProduct() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.highResolutionImage}`}
+                            src={`${addUrlToFile(values.highResolutionImage)}`}
                           />
                         </Link>
                       ) : null}

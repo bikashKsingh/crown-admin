@@ -62,8 +62,6 @@ export function AddProductViaCSV() {
       } else {
         // toast.error(apiResponse?.message);
 
-        console.log(apiResponse?.errors);
-
         setFailedProducts((old) => {
           newValue.categories = item.categories
             ?.map((item: any) => {

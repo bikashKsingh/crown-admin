@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { get, post, remove } from "../../utills";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
+import { FILE_URL } from "../../constants";
 
 export function ProductDetails() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export function ProductDetails() {
                         style={{
                           maxHeight: 200,
                         }}
-                        src={productDetails?.a4Image}
+                        src={`${FILE_URL}/${productDetails?.a4Image}`}
                       />
                     </div>
                   </div>

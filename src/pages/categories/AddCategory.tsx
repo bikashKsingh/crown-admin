@@ -16,7 +16,7 @@ import { useState } from "react";
 import { generateSlug, post, remove, validateTextNumber } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "../../constants";
+import { API_URL, FILE_URL } from "../../constants";
 
 export function AddCategory() {
   const navigate = useNavigate();
@@ -129,11 +129,11 @@ export function AddCategory() {
         if (source == "MAIN_IMAGE") {
           setFieldTouched("image", false);
           setFieldError("image", "");
-          setFieldValue("image", apiData.body[0].filepath);
+          setFieldValue("image", apiData.body[0].filename);
         } else {
           setFieldTouched("listingImage", false);
           setFieldError("listingImage", "");
-          setFieldValue("listingImage", apiData.body[0].filepath);
+          setFieldValue("listingImage", apiData.body[0].filename);
         }
       } else {
         if (source == "MAIN_IMAGE") {
@@ -209,6 +209,10 @@ export function AddCategory() {
     const fileName = pathname.substring(pathname.lastIndexOf("/") + 1);
 
     return fileName;
+  }
+
+  function addUrlToFile(file: any) {
+    return `${FILE_URL}/${file}`;
   }
 
   return (
@@ -288,7 +292,7 @@ export function AddCategory() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.image}`}
+                            src={`${addUrlToFile(values.image)}`}
                           />
                         </Link>
                       ) : null}
@@ -297,11 +301,7 @@ export function AddCategory() {
                           type="button"
                           className="btn p-1"
                           onClick={(evt) => {
-                            handleDeleteFile(
-                              evt,
-                              getFileNameFromUrl(values.image),
-                              "MAIN_IMAGE"
-                            );
+                            handleDeleteFile(evt, values.image, "MAIN_IMAGE");
                           }}
                         >
                           <i className="fa fa-trash text-danger"></i>
@@ -452,7 +452,7 @@ export function AddCategory() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.listingImage}`}
+                            src={`${addUrlToFile(values.listingImage)}`}
                           />
                         </Link>
                       ) : null}
@@ -463,7 +463,7 @@ export function AddCategory() {
                           onClick={(evt) => {
                             handleDeleteFile(
                               evt,
-                              getFileNameFromUrl(values.listingImage),
+                              values.listingImage,
                               "LISTING_IMAGE"
                             );
                           }}

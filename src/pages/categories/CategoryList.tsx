@@ -15,6 +15,7 @@ import moment from "moment";
 import { Link, useNavigate } from "react-router-dom";
 import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
+import { FILE_URL } from "../../constants";
 
 export function CategoryList() {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ export function CategoryList() {
         if (status) url += `&status=${status}`;
 
         const apiResponse = await get(url, true);
+
         if (apiResponse?.status == 200) {
           setRecords(apiResponse.body);
           setPagination({
@@ -180,7 +182,7 @@ export function CategoryList() {
       return {
         name: data.name,
         slug: data.slug,
-        image: data.image,
+        image: `${FILE_URL}/${data.image}`,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

@@ -22,7 +22,7 @@ import {
 } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "../../constants";
+import { API_URL, FILE_URL } from "../../constants";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Select from "react-select";
@@ -305,7 +305,7 @@ export function AddProduct() {
       if (apiData.status == 200) {
         setFieldTouched("a4Image", false);
         setFieldError("a4Image", "");
-        setFieldValue("a4Image", apiData.body[0].filepath);
+        setFieldValue("a4Image", apiData.body[0].filename);
       } else {
         setFieldTouched("a4Image", false);
         setFieldError("a4Image", apiData.message);
@@ -385,7 +385,7 @@ export function AddProduct() {
       if (apiData.status == 200) {
         setFieldTouched("fullSheetImage", false);
         setFieldError("fullSheetImage", "");
-        setFieldValue("fullSheetImage", apiData.body[0].filepath);
+        setFieldValue("fullSheetImage", apiData.body[0].filename);
       } else {
         setFieldTouched("fullSheetImage", false);
         setFieldError("fullSheetImage", apiData.message);
@@ -465,7 +465,7 @@ export function AddProduct() {
       if (apiData.status == 200) {
         setFieldTouched("highResolutionImage", false);
         setFieldError("highResolutionImage", "");
-        setFieldValue("highResolutionImage", apiData.body[0].filepath);
+        setFieldValue("highResolutionImage", apiData.body[0].filename);
       } else {
         setFieldTouched("highResolutionImage", false);
         setFieldError("highResolutionImage", apiData.message);
@@ -537,6 +537,10 @@ export function AddProduct() {
     updatedInputFields.splice(index, 1);
     setSizeInputFields(updatedInputFields);
   };
+
+  function addUrlToFile(file: any) {
+    return `${FILE_URL}/${file}`;
+  }
 
   return (
     <div className="content-wrapper">
@@ -915,7 +919,7 @@ export function AddProduct() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.a4Image}`}
+                            src={`${addUrlToFile(values.a4Image)}`}
                           />
                         </Link>
                       ) : null}
@@ -963,7 +967,7 @@ export function AddProduct() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.fullSheetImage}`}
+                            src={`${addUrlToFile(values.fullSheetImage)}`}
                           />
                         </Link>
                       ) : null}
@@ -974,7 +978,7 @@ export function AddProduct() {
                           onClick={(evt) => {
                             handleDeleteFullSheetImage(
                               evt,
-                              getFileNameFromUrl(values.fullSheetImage)
+                              values.fullSheetImage
                             );
                           }}
                         >
@@ -1014,7 +1018,7 @@ export function AddProduct() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.highResolutionImage}`}
+                            src={`${addUrlToFile(values.highResolutionImage)}`}
                           />
                         </Link>
                       ) : null}
@@ -1025,7 +1029,7 @@ export function AddProduct() {
                           onClick={(evt) => {
                             handleDeleteHighResolutionImage(
                               evt,
-                              getFileNameFromUrl(values.highResolutionImage)
+                              values.highResolutionImage
                             );
                           }}
                         >

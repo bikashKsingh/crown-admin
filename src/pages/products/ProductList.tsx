@@ -21,6 +21,7 @@ import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { styles } from "../../constants/selectStyle";
+import { FILE_URL } from "../../constants";
 
 export function ProductList() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -324,7 +325,7 @@ export function ProductList() {
     return records.map((data) => {
       return {
         name: data.name,
-        a4Image: data.a4Image,
+        a4Image: `${FILE_URL}/${data.a4Image}`,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,
