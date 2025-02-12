@@ -99,8 +99,8 @@ export function EditOrder() {
 
   const orderStatus = [
     {
-      label: "ORDER_PLACED",
-      value: "ORDER PLACED",
+      label: "ORDER PLACED",
+      value: "ORDER_PLACED",
     },
     {
       label: "DISPATCHED",

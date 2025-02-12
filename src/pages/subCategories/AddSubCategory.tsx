@@ -72,7 +72,7 @@ export function AddSubCategory() {
   // get category
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/categories", true);
+      const apiResponse = await get("/categories?limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {

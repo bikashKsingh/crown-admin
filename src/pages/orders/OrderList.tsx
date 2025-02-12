@@ -20,7 +20,7 @@ export function OrderList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [status, setStatus] = useState<boolean | string>("");
+  const [orderStatus, setOrderStatus] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
@@ -37,7 +37,7 @@ export function OrderList() {
         setLoading(true);
         let url = `/orders?page=${pagination.page}&limit=${pagination.limit}`;
         if (searchQuery) url += `&searchQuery=${searchQuery}`;
-        if (status) url += `&status=${status}`;
+        if (orderStatus) url += `&orderStatus=${orderStatus}`;
 
         const apiResponse = await get(url, true);
 
@@ -58,7 +58,7 @@ export function OrderList() {
 
       getData();
     },
-    [pagination.page, pagination.limit, searchQuery, needReload, status]
+    [pagination.page, pagination.limit, searchQuery, needReload, orderStatus]
   );
 
   type Record = {
@@ -121,13 +121,25 @@ export function OrderList() {
           return (
             <>
               {value == "ORDER_PLACED" ? (
-                <span className="badge bg-warning">ORDER PLACED</span>
+                <span className="d-flex gap-1">
+                  <span className="rounded fa fa-hourglass-start text-warning"></span>
+                  <span className="text-warning">ORDER PLACED</span>
+                </span>
               ) : value == "DISPATCHED" ? (
-                <span className="badge bg-info">DISPATCHED</span>
+                <span className="d-flex gap-1">
+                  <span className="rounded fa fa-truck text-info"></span>
+                  <span className="text-info">DISPATCHED</span>
+                </span>
               ) : value == "DELIVERED" ? (
-                <span className="badge bg-success">DELIVERED</span>
+                <span className="d-flex gap-1">
+                  <span className="rounded fa fa-check-circle text-success"></span>
+                  <span className="text-success">DELIVERED</span>
+                </span>
               ) : value == "CANCELLED" ? (
-                <span className="badge bg-danger">CANCELLED</span>
+                <span className="d-flex gap-1">
+                  <span className="rounded fa fa-check-circle text-times text-danger"></span>
+                  <span className="text-danger">CANCELLED</span>
+                </span>
               ) : (
                 ""
               )}
@@ -240,9 +252,9 @@ export function OrderList() {
     return selectedData;
   }
 
-  // handleSetStatus
-  function handleSetStatus(evt: React.ChangeEvent<HTMLInputElement>) {
-    setStatus(evt.target.value);
+  // handleSetOrderStatus
+  function handleSetOrderStatus(evt: React.ChangeEvent<HTMLInputElement>) {
+    setOrderStatus(evt.target.value);
   }
 
   return (
@@ -273,14 +285,14 @@ export function OrderList() {
             <div className="card-body shadow-none">
               <div className="row mb-2 gy-2">
                 <div className="col-md-8">
-                  <input
+                  {/* <input
                     placeholder="Serach..."
                     className="form-control py-2"
                     type="serach"
                     onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
                       setSearchQuery(evt.target.value)
                     }
-                  />
+                  /> */}
                 </div>
                 <div className="col-md-4 d-flex gap-2 justify-content-md-end">
                   {/* <button className="btn p-2 bg-light border">
@@ -317,31 +329,53 @@ export function OrderList() {
                         <input
                           type="radio"
                           id="all"
-                          value={"ALL"}
-                          name="status"
-                          onChange={handleSetStatus}
+                          value={"All"}
+                          name="orderStatus"
+                          onChange={handleSetOrderStatus}
                         />
                         <label htmlFor="all">All</label>
                       </li>
                       <li className="d-flex px-3 gap-2">
                         <input
                           type="radio"
-                          id="active"
-                          value={"SUBSCRIBED"}
-                          name="status"
-                          onChange={handleSetStatus}
+                          id="orderPlaced"
+                          value={"ORDER_PLACED"}
+                          name="orderStatus"
+                          onChange={handleSetOrderStatus}
                         />
-                        <label htmlFor="active">Subscribed</label>
+                        <label htmlFor="orderPlaced">ORDER PLACED</label>
                       </li>
                       <li className="d-flex px-3 gap-2">
                         <input
                           type="radio"
-                          id="disabled"
-                          value={"UNSUBSCRIBED"}
-                          name="status"
-                          onChange={handleSetStatus}
+                          id="dispatched"
+                          value={"DISPATCHED"}
+                          name="orderStatus"
+                          onChange={handleSetOrderStatus}
                         />
-                        <label htmlFor="disabled">Unsubscribed</label>
+                        <label htmlFor="dispatched">DISPATCHED</label>
+                      </li>
+
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
+                          id="delivered"
+                          value={"DELIVERED"}
+                          name="orderStatus"
+                          onChange={handleSetOrderStatus}
+                        />
+                        <label htmlFor="delivered">DELIVERED</label>
+                      </li>
+
+                      <li className="d-flex px-3 gap-2">
+                        <input
+                          type="radio"
+                          id="cancelled"
+                          value={"CANCELLED"}
+                          name="orderStatus"
+                          onChange={handleSetOrderStatus}
+                        />
+                        <label htmlFor="cancelled">CANCELLED</label>
                       </li>
                     </ul>
                   </div>

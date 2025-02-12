@@ -26,7 +26,7 @@ import { FILE_URL } from "../../constants";
 export function ProductList() {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [status, setStatus] = useState<boolean | string>("");
+  const [status, setStatus] = useState<boolean | string>("All");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
 

@@ -47,9 +47,9 @@
       }
 
       img {
-        width: calc(#{$sidebar-width-lg} - 168px);
-        max-width: 100%;
-        height: 40px;
+        // width: calc(#{$sidebar-width-lg} - 168px);
+        // max-width: 100%;
+        height: 107px;
         margin: auto;
         vertical-align: middle;
       }
@@ -59,10 +59,11 @@
       padding-left: 0;
       text-align: center;
       img {
-        width: calc(#{$sidebar-width-icon} - 38px);
-        max-width: 100%;
+        // width: calc(#{$sidebar-width-icon} - 38px);
+        // max-width: 100%;
         margin: auto;
-        height: 30px;
+        height: 61px;
+        margin-left: 5px;
       }
     }
   }

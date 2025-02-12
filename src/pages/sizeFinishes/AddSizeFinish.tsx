@@ -80,7 +80,7 @@ export function AddSizeFinish() {
   // get Size
   useEffect(function () {
     async function getData() {
-      let url = `/sizes`;
+      let url = `/sizes?limit=0`;
       const apiResponse = await get(url, true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
@@ -98,7 +98,7 @@ export function AddSizeFinish() {
   // get Finishes
   useEffect(function () {
     async function getData() {
-      let url = `/finishes`;
+      let url = `/finishes?limit=0`;
       const apiResponse = await get(url, true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {

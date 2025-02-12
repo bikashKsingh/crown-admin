@@ -20,7 +20,7 @@ export function FinishList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [status, setStatus] = useState<boolean | string>("");
+  const [status, setStatus] = useState<boolean | string>("All");
   const [needReload, setNeedReload] = useState<boolean>(false);
   const [records, setRecords] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
@@ -309,7 +309,7 @@ export function FinishList() {
                         <input
                           type="radio"
                           id="all"
-                          value={"ALL"}
+                          value={"All"}
                           name="status"
                           onChange={handleSetStatus}
                         />

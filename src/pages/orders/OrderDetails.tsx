@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { get, post, remove } from "../../utills";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
+import { FILE_URL } from "../../constants";
 
 export function OrderDetails() {
   const navigate = useNavigate();
@@ -43,14 +44,40 @@ export function OrderDetails() {
               <GoBackButton />
               <h4 className="font-weight-bold mb-0">Order Details</h4>
             </div>
-            {/* <div>
-                <button
-                  type="button"
-                  className="btn btn-primary btn-icon-text btn-rounded"
-                >
-                  <i className="ti-clipboard btn-icon-prepend"></i>Report
-                </button>
-              </div> */}
+            <div>
+              {/* <button
+                type="button"
+                className="btn btn-primary btn-icon-text btn-rounded"
+              >
+                <i className="fa fa-hourglass-half"></i>{" "}
+                {orderDetails?.orderStatus}
+              </button> */}
+              <>
+                {orderDetails?.orderStatus == "ORDER_PLACED" ? (
+                  <span className="btn btn-warning">
+                    <span className="rounded fa fa-hourglass-start"></span>
+                    <span> ORDER PLACED</span>
+                  </span>
+                ) : orderDetails?.orderStatus == "DISPATCHED" ? (
+                  <span className="btn btn-info">
+                    <span className="rounded fa fa-truck text-light"></span>
+                    <span className="text-light"> DISPATCHED</span>
+                  </span>
+                ) : orderDetails?.orderStatus == "DELIVERED" ? (
+                  <span className="btn btn-success">
+                    <span className="rounded fa fa-check-circle text-light"></span>
+                    <span className="text-light"> DELIVERED</span>
+                  </span>
+                ) : orderDetails?.orderStatus == "CANCELLED" ? (
+                  <span className="d-flex gap-1">
+                    <span className="rounded fa fa-check-circle text-times text-danger"></span>
+                    <span className="text-danger">CANCELLED</span>
+                  </span>
+                ) : (
+                  ""
+                )}
+              </>
+            </div>
           </div>
         </div>
       </div>
@@ -198,7 +225,9 @@ export function OrderDetails() {
                                     <tr>
                                       <td>{++index}</td>
                                       <td>
-                                        <img src={item.defaultImage} />{" "}
+                                        <img
+                                          src={`${FILE_URL}/${item.a4Image}`}
+                                        />{" "}
                                         {item.name}
                                       </td>
                                       <td>{item.qty}</td>

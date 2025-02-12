@@ -8,6 +8,8 @@ import DoughnutChart from "../components/charts/DoughnutChart";
 import { get } from "../utills";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import { Spinner } from "../components/ui/Spinner";
 
 export function Home() {
   const chartContainerStyle: any = {
@@ -31,6 +33,15 @@ export function Home() {
   const [newsletterLoading, setNewsletterLoading] = useState<boolean>(true);
   const [totalNewsletters, setTotalNewsletters] = useState<number>(0);
 
+  const [sizeLoading, setSizeLoading] = useState<boolean>(true);
+  const [totalSizes, setTotalSizes] = useState<number>(0);
+
+  const [finishLoading, setFinishLoading] = useState<boolean>(true);
+  const [totalFinishes, setTotalFinishes] = useState<number>(0);
+
+  const [decorSeriesLoading, setDecorSeriesLoading] = useState<boolean>(true);
+  const [totalDecorSeries, setTotalDecorSeries] = useState<number>(0);
+
   // Get Products
   useEffect(function () {
     async function getData() {
@@ -53,7 +64,7 @@ export function Home() {
   // Get Orders
   useEffect(function () {
     async function getData() {
-      setProductLoading(true);
+      setOrderLoading(true);
       let url = `/orders`;
 
       const apiResponse = await get(url, true);
@@ -63,7 +74,7 @@ export function Home() {
       } else {
         toast.error(apiResponse?.message);
       }
-      setProductLoading(false);
+      setOrderLoading(false);
     }
 
     getData();
@@ -107,6 +118,63 @@ export function Home() {
     getData();
   }, []);
 
+  // Get Sizes
+  useEffect(function () {
+    async function getData() {
+      setSizeLoading(true);
+      let url = `/sizes`;
+
+      const apiResponse = await get(url, true);
+
+      if (apiResponse?.status == 200) {
+        setTotalSizes(apiResponse?.totalRecords);
+      } else {
+        toast.error(apiResponse?.message);
+      }
+      setSizeLoading(false);
+    }
+
+    getData();
+  }, []);
+
+  // Get Finishes
+  useEffect(function () {
+    async function getData() {
+      setFinishLoading(true);
+      let url = `/finishes`;
+
+      const apiResponse = await get(url, true);
+
+      if (apiResponse?.status == 200) {
+        setTotalFinishes(apiResponse?.totalRecords);
+      } else {
+        toast.error(apiResponse?.message);
+      }
+      setFinishLoading(false);
+    }
+
+    getData();
+  }, []);
+
+  // Get DecorSeries
+  useEffect(function () {
+    async function getData() {
+      setDecorSeriesLoading(true);
+      let url = `/decorSeries`;
+
+      const apiResponse = await get(url, true);
+
+      if (apiResponse?.status == 200) {
+        setTotalDecorSeries(apiResponse?.totalRecords);
+      } else {
+        toast.error(apiResponse?.message);
+      }
+      setDecorSeriesLoading(false);
+    }
+
+    getData();
+  }, []);
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -127,89 +195,175 @@ export function Home() {
         </div>
       </div>
       <div className="row">
+        {/* Total Products */}
         <div className="col-md-3 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
-              <p className="card-title text-md-center text-xl-left">
-                Total Products
-              </p>
-              <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">
-                  {totalProducts}
-                </h3>
-                <i className="ti-package icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
-              </div>
-              <p className="mb-0 mt-2 text-danger">
+              <Link to={"/products"} style={{ textDecoration: "none" }}>
+                <p className="card-title text-xl-left">Total Products</p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                    {productLoading ? <Spinner /> : totalProducts}
+                  </h3>
+                  <i className="ti-package icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                </div>
+                {/* <p className="mb-0 mt-2 text-danger">
                 0.12%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
-              </p>
+              </p> */}
+              </Link>
             </div>
           </div>
         </div>
+
+        {/* Total Orders */}
         <div className="col-md-3 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
-              <p className="card-title text-md-center text-xl-left">
-                Total Orders
-              </p>
-              <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">
-                  {totalOrders}
-                </h3>
-                <i className="ti-shopping-cart icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
-              </div>
-              <p className="mb-0 mt-2 text-danger">
+              <Link to={"/orders"} style={{ textDecoration: "none" }}>
+                <p className="card-title  text-xl-left">Total Orders</p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                    {orderLoading ? <Spinner /> : totalOrders}
+                  </h3>
+                  <i className="ti-shopping-cart icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                </div>
+                {/* <p className="mb-0 mt-2 text-danger">
                 0.47%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
-              </p>
+              </p> */}
+              </Link>
             </div>
           </div>
         </div>
+
+        {/* Total Inquiry */}
         <div className="col-md-3 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
-              <p className="card-title text-md-center text-xl-left">
-                Total Inquiry
-              </p>
-              <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">
-                  {totalInquiries}
-                </h3>
-                <PiUsersFourLight className="ti-layers-alt icon-md text-muted mb-0 mb-md-3 mb-xl-0" />
-                {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
-              </div>
-              <p className="mb-0 mt-2 text-success">
+              <Link to={"/inquiries"} style={{ textDecoration: "none" }}>
+                <p className="card-title  text-xl-left">Total Inquiry</p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                    {inquiryLoading ? <Spinner /> : totalInquiries}
+                  </h3>
+                  <PiUsersFourLight className="ti-layers-alt icon-md text-muted mb-0 mb-md-3 mb-xl-0" />
+                  {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
+                </div>
+                {/* <p className="mb-0 mt-2 text-success">
                 64.00%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
-              </p>
+              </p> */}
+              </Link>
             </div>
           </div>
         </div>
+
+        {/* Total Subscribers */}
         <div className="col-md-3 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
-              <p className="card-title text-md-center text-xl-left">
-                Total Subscribers
-              </p>
-              <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0">
-                  {totalNewsletters}
-                </h3>
+              <Link to={"/newsletters"} style={{ textDecoration: "none" }}>
+                <p className="card-title  text-xl-left">Total Subscribers</p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                    {newsletterLoading ? <Spinner /> : totalNewsletters}
+                  </h3>
 
-                <i className="ti-email icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
-              </div>
-              <p className="mb-0 mt-2 text-success">
+                  <i className="ti-email icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                </div>
+                {/* <p className="mb-0 mt-2 text-success">
                 23.00%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
-              </p>
+              </p> */}
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="row">
+        {/* Total Sizes */}
+        <div className="col-md-4 grid-margin stretch-card">
+          <div className="card bg-info">
+            <div className="card-body">
+              <Link to={"/sizes"} style={{ textDecoration: "none" }}>
+                <p className="card-title text-white text-xl-left">
+                  Total Sizes
+                </p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white">
+                    {sizeLoading ? <Spinner /> : totalSizes}
+                  </h3>
+                  <i className="ti-arrows-horizontal icon-md text-white mb-0 mb-md-3 mb-xl-0"></i>
+                </div>
+                {/* <p className="mb-0 mt-2 text-danger">
+                0.47%
+                <span className="text-black ms-1">
+                  <small>(30 days)</small>
+                </span>
+              </p> */}
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Total Finishes */}
+        <div className="col-md-4 grid-margin stretch-card">
+          <div className="card bg-warning">
+            <div className="card-body">
+              <Link to={"/finishes"} style={{ textDecoration: "none" }}>
+                <p className="card-title text-xl-left text-white">
+                  Total Finishes
+                </p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white ">
+                    {finishLoading ? <Spinner /> : totalFinishes}
+                  </h3>
+                  <PiUsersFourLight className="ti-palette icon-md text-white mb-0 mb-md-3 mb-xl-0" />
+                  {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
+                </div>
+                {/* <p className="mb-0 mt-2 text-success">
+                64.00%
+                <span className="text-black ms-1">
+                  <small>(30 days)</small>
+                </span>
+              </p> */}
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Total Decor Series */}
+        <div className="col-md-4 grid-margin stretch-card">
+          <div className="card bg-danger">
+            <div className="card-body">
+              <Link to={"/newsletters"} style={{ textDecoration: "none" }}>
+                <p className="card-title text-white text-xl-left">
+                  Total Decor Series
+                </p>
+                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white">
+                    {decorSeriesLoading ? <Spinner /> : totalDecorSeries}
+                  </h3>
+
+                  <i className="ti-gallery icon-md text-white mb-0 mb-md-3 mb-xl-0"></i>
+                </div>
+                {/* <p className="mb-0 mt-2 text-success">
+                23.00%
+                <span className="text-black ms-1">
+                  <small>(30 days)</small>
+                </span>
+              </p> */}
+              </Link>
             </div>
           </div>
         </div>

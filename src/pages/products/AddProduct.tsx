@@ -41,6 +41,7 @@ export function AddProduct() {
   const [loading, setLoading] = useState<boolean>(false);
 
   type Size = { size: string; finishes: any[]; error: string };
+
   const [sizeInputFields, setSizeInputFields] = useState<Size[]>([
     {
       size: "",
@@ -115,7 +116,7 @@ export function AddProduct() {
   // get category
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/categories", true);
+      const apiResponse = await get("/categories?status=true&limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -133,7 +134,7 @@ export function AddProduct() {
   useEffect(
     function () {
       async function getData() {
-        let url = `/subCategories?limit=100`;
+        let url = `/subCategories?status=true&limit=0`;
 
         if (values.categories?.length) {
           if (values.categories?.length == 1) {
@@ -164,7 +165,7 @@ export function AddProduct() {
   // get Types
   useEffect(function () {
     async function getData() {
-      let url = `/decorSeries`;
+      let url = `/decorSeries?status=true&limit=0`;
 
       const apiResponse = await get(url, true);
 
@@ -184,7 +185,7 @@ export function AddProduct() {
   // get Size
   useEffect(function () {
     async function getData() {
-      let url = `/sizes`;
+      let url = `/sizes?status=true&limit=0`;
       const apiResponse = await get(url, true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
@@ -532,6 +533,7 @@ export function AddProduct() {
       { size: "", finishes: [], error: "" },
     ]);
   };
+
   const handleRemoveSizeField = (index: number) => {
     const updatedInputFields = [...sizeInputFields];
     updatedInputFields.splice(index, 1);

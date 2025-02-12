@@ -146,7 +146,7 @@ export function EditProduct() {
   // get category
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/categories", true);
+      const apiResponse = await get("/categories?status=true&limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -164,7 +164,7 @@ export function EditProduct() {
   useEffect(
     function () {
       async function getData() {
-        let url = `/subCategories?status=true`;
+        let url = `/subCategories?status=true&limit=0`;
         if (values.categories?.length == 1) {
           url += `&category=${values.categories[0]?.value}`;
         } else if ((values.categories?.length as number) > 1) {
@@ -194,7 +194,7 @@ export function EditProduct() {
   // get Types
   useEffect(function () {
     async function getData() {
-      let url = `/decorSeries`;
+      let url = `/decorSeries?status=true&limit=0`;
 
       const apiResponse = await get(url, true);
 
@@ -214,7 +214,7 @@ export function EditProduct() {
   // get Size
   useEffect(function () {
     async function getData() {
-      let url = `/sizes`;
+      let url = `/sizes?status=true&limit=0`;
       const apiResponse = await get(url, true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {

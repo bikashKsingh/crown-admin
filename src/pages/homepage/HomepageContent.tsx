@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { get, post, remove } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from "../../constants";
+import { API_URL, FILE_URL } from "../../constants";
 
 export function HomepageContent() {
   const navigate = useNavigate();
@@ -115,7 +115,7 @@ export function HomepageContent() {
       if (apiData.status == 200) {
         setFieldTouched("aboutusImage", false);
         setFieldError("aboutusImage", "");
-        setFieldValue("aboutusImage", apiData.body[0].filepath);
+        setFieldValue("aboutusImage", apiData.body[0].filename);
       } else {
         setFieldTouched("aboutusImage", false);
         setFieldError("aboutusImage", apiData.message);
@@ -195,7 +195,7 @@ export function HomepageContent() {
       if (apiData.status == 200) {
         setFieldTouched("marketingImage", false);
         setFieldError("marketingImage", "");
-        setFieldValue("marketingImage", apiData.body[0].filepath);
+        setFieldValue("marketingImage", apiData.body[0].filename);
       } else {
         setFieldTouched("marketingImage", false);
         setFieldError("marketingImage", apiData.message);
@@ -245,6 +245,10 @@ export function HomepageContent() {
     const fileName = pathname.substring(pathname.lastIndexOf("/") + 1);
 
     return fileName;
+  }
+
+  function addUrlToFile(file: any) {
+    return `${FILE_URL}/${file}`;
   }
 
   return (
@@ -330,7 +334,7 @@ export function HomepageContent() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.aboutusImage}`}
+                            src={`${addUrlToFile(values.aboutusImage)}`}
                           />
                         </Link>
                       ) : null}
@@ -339,10 +343,7 @@ export function HomepageContent() {
                           type="button"
                           className="btn p-1"
                           onClick={(evt) => {
-                            handleDeleteAboutusImage(
-                              evt,
-                              getFileNameFromUrl(values.aboutusImage)
-                            );
+                            handleDeleteAboutusImage(evt, values.aboutusImage);
                           }}
                         >
                           <i className="fa fa-trash text-danger"></i>
@@ -474,7 +475,7 @@ export function HomepageContent() {
                             className="img"
                             height={43}
                             width={43}
-                            src={`${values.marketingImage}`}
+                            src={`${addUrlToFile(values.marketingImage)}`}
                           />
                         </Link>
                       ) : null}
@@ -485,7 +486,7 @@ export function HomepageContent() {
                           onClick={(evt) => {
                             handleDeleteMarketingImage(
                               evt,
-                              getFileNameFromUrl(values.marketingImage)
+                              values.marketingImage
                             );
                           }}
                         >
