@@ -64,6 +64,7 @@ export function FinishList() {
   type Record = {
     shortName: string;
     fullName: string;
+    priority: number;
     createdAt: string;
     status: boolean;
     id: string;
@@ -100,6 +101,11 @@ export function FinishList() {
       {
         Header: "FULL NAME",
         accessor: "fullName",
+      },
+
+      {
+        Header: "PRIORITY",
+        accessor: "priority",
       },
 
       {
@@ -167,6 +173,7 @@ export function FinishList() {
       return {
         shortName: data.shortName,
         fullName: data.fullName,
+        priority: data.priority,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

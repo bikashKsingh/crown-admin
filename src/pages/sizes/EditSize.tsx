@@ -1,4 +1,5 @@
 import {
+  CustomSelect,
   GoBackButton,
   InputBox,
   OverlayLoading,
@@ -20,6 +21,7 @@ export function EditSize() {
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [updading, setUpdating] = useState<boolean>(false);
+  const [categories, setCategories] = useState([]);
 
   const {
     values,
@@ -29,6 +31,8 @@ export function EditSize() {
     handleChange,
     handleSubmit,
     setValues,
+    setFieldValue,
+    setFieldTouched,
   } = useFormik({
     onSubmit: async function (
       values: SizeValues,
@@ -36,7 +40,12 @@ export function EditSize() {
     ) {
       setUpdating(true);
 
-      const apiResponse = await put(`/sizes/${id}`, values);
+      let newValues = {
+        ...values,
+        categories: values?.categories?.map((item) => item.value),
+      };
+
+      const apiResponse = await put(`/sizes/${id}`, newValues);
 
       if (apiResponse?.status == 200) {
         toast.success(apiResponse?.message);
@@ -65,6 +74,16 @@ export function EditSize() {
           delete apiData.createdAt;
           delete apiData.updatedAt;
           delete apiData._id;
+
+          if (apiData.categories) {
+            apiData.categories = apiData?.categories?.map((item: any) => {
+              return {
+                label: item.name,
+                value: item._id,
+              };
+            });
+          }
+
           setValues(apiData);
         } else {
           toast.error(apiResponse?.message);
@@ -77,6 +96,23 @@ export function EditSize() {
     },
     [id]
   );
+
+  // get category
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/categories?status=true&limit=0", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.name,
+            value: value._id,
+          };
+        });
+        setCategories(modifiedValue);
+      }
+    }
+    getData();
+  }, []);
 
   return (
     <div className="content-wrapper">
@@ -118,6 +154,41 @@ export function EditSize() {
                       required={true}
                       touched={touched.title}
                       error={errors.title}
+                    />
+                  </div>
+
+                  {/* Select Category */}
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Category"
+                      placeholder="Select Category"
+                      name="categories"
+                      required={true}
+                      options={categories}
+                      value={values.categories}
+                      error={errors.categories}
+                      touched={touched.categories}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("categories", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("categories", true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Priority"
+                      name="priority"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter priority"
+                      value={values.priority}
+                      touched={touched.priority}
+                      error={errors.priority}
                     />
                   </div>
 

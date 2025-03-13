@@ -63,6 +63,7 @@ export function SizeList() {
 
   type Record = {
     title: string;
+    priority: number;
     createdAt: string;
     status: boolean;
     id: string;
@@ -94,6 +95,11 @@ export function SizeList() {
       {
         Header: "TITLE",
         accessor: "title",
+      },
+
+      {
+        Header: "PRIORITY",
+        accessor: "priority",
       },
 
       {
@@ -160,6 +166,7 @@ export function SizeList() {
     return records.map((data) => {
       return {
         title: data.title,
+        priority: data.priority,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

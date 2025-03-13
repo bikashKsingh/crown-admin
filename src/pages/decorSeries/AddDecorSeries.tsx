@@ -103,6 +103,20 @@ export function AddDecorSeries() {
                   </div>
 
                   <div className="form-group col-md-6">
+                    <InputBox
+                      label="Priority"
+                      name="priority"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter priority"
+                      value={values.priority}
+                      touched={touched.priority}
+                      error={errors.priority}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
                     <label htmlFor="">Status</label>
                     <div className="d-flex gap-3">
                       <div className="d-flex align-items-center gap-2">

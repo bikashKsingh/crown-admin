@@ -33,7 +33,7 @@ type PropsType = {
   name: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
-  value: string;
+  value: string | number;
   required?: boolean;
   error?: string;
   touched?: boolean;

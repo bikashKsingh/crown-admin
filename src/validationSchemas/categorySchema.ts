@@ -5,6 +5,9 @@ export const categorySchema = Yup.object({
   slug: Yup.string().required().label("Slug"),
   textOverImage: Yup.string().label("Text Over Image"),
   image: Yup.string().required().label("Image"),
+
+  priority: Yup.number().required().label("Priority"),
+
   buttonText: Yup.string().label("Button Text"),
   shortDescription: Yup.string().label("Short Description"),
   metaTitle: Yup.string().label("Meta Title"),
@@ -23,6 +26,9 @@ export const categoryInitialValues: CategoryValues = {
   slug: "",
   textOverImage: "",
   image: "",
+
+  priority: 0,
+
   buttonText: "",
   shortDescription: "",
   metaTitle: "",
@@ -40,6 +46,9 @@ export interface CategoryValues {
   slug: string;
   textOverImage: string;
   image: string;
+
+  priority: number;
+
   buttonText: string;
   shortDescription: string;
   metaTitle: string;

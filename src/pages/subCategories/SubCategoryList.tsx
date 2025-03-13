@@ -68,6 +68,7 @@ export function SubCategoryList() {
   type Record = {
     name: any;
     slug: any;
+    priority: number;
     categories: any;
     createdAt: any;
     status: any;
@@ -97,6 +98,10 @@ export function SubCategoryList() {
       {
         Header: "SLUG",
         accessor: "slug",
+      },
+      {
+        Header: "PRIORITY",
+        accessor: "priority",
       },
       {
         Header: "CATEGORY",
@@ -168,6 +173,7 @@ export function SubCategoryList() {
       return {
         name: data.name,
         slug: data.slug,
+        priority: data.priority,
         categories: data?.categories?.length
           ? `${data.categories[0]?.name} ${
               data.categories?.length > 1

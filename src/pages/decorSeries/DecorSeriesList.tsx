@@ -63,6 +63,7 @@ export function DecorSeriesList() {
 
   type Record = {
     title: string;
+    priority: number;
     createdAt: string;
     status: boolean;
     id: string;
@@ -94,6 +95,10 @@ export function DecorSeriesList() {
       {
         Header: "TITLE",
         accessor: "title",
+      },
+      {
+        Header: "PRIORITY",
+        accessor: "priority",
       },
 
       {
@@ -160,6 +165,7 @@ export function DecorSeriesList() {
     return records.map((data) => {
       return {
         title: data.title,
+        priority: data.priority,
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,

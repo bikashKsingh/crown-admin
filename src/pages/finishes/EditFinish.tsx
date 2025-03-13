@@ -135,6 +135,19 @@ export function EditFinish() {
                       error={errors.fullName}
                     />
                   </div>
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Priority"
+                      name="priority"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter priority"
+                      value={values.priority}
+                      touched={touched.priority}
+                      error={errors.priority}
+                    />
+                  </div>
 
                   <div className="form-group col-md-6">
                     <label htmlFor="">Status</label>

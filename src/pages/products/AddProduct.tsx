@@ -183,22 +183,31 @@ export function AddProduct() {
   }, []);
 
   // get Size
-  useEffect(function () {
-    async function getData() {
-      let url = `/sizes?status=true&limit=0`;
-      const apiResponse = await get(url, true);
-      if (apiResponse?.status == 200) {
-        const modifiedValue = apiResponse?.body?.map((value: any) => {
-          return {
-            label: value.title,
-            value: value._id,
-          };
-        });
-        setSizes(modifiedValue);
+  useEffect(
+    function () {
+      async function getData() {
+        let url = `/sizes?status=true&limit=0`;
+        if (values?.categories?.length) {
+          for (let item of values?.categories) {
+            url += `&categories=${item.value}`;
+          }
+        }
+
+        const apiResponse = await get(url, true);
+        if (apiResponse?.status == 200) {
+          const modifiedValue = apiResponse?.body?.map((value: any) => {
+            return {
+              label: value.title,
+              value: value._id,
+            };
+          });
+          setSizes(modifiedValue);
+        }
       }
-    }
-    getData();
-  }, []);
+      getData();
+    },
+    [values.categories]
+  );
 
   // handleUploadFile
   async function handleUploadFile(event: React.ChangeEvent<HTMLInputElement>) {

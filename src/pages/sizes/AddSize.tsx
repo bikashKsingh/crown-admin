@@ -1,7 +1,12 @@
-import { GoBackButton, InputBox, SubmitButton } from "../../components";
+import {
+  CustomSelect,
+  GoBackButton,
+  InputBox,
+  SubmitButton,
+} from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 import { useEffect, useState } from "react";
-import { post, validateTextNumber } from "../../utills";
+import { get, post, validateTextNumber } from "../../utills";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import {
@@ -13,6 +18,8 @@ import {
 export function AddSize() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
+  const [categories, setCategories] = useState([]);
+
   const {
     values,
     errors,
@@ -21,6 +28,7 @@ export function AddSize() {
     handleChange,
     handleSubmit,
     setFieldValue,
+    setFieldTouched,
   } = useFormik({
     onSubmit: async function (
       values: SizeValues,
@@ -28,8 +36,14 @@ export function AddSize() {
     ) {
       setLoading(true);
 
-      const apiResponse = await post("/sizes", values, true);
+      let newValues = {
+        ...values,
+        categories: values?.categories?.map((item) => {
+          return item.value;
+        }),
+      };
 
+      const apiResponse = await post("/sizes", newValues, true);
       if (apiResponse?.status == 200) {
         toast.success(apiResponse?.message);
         navigate(-1);
@@ -43,6 +57,23 @@ export function AddSize() {
     validationSchema: sizeSchema,
   });
 
+  // get category
+  useEffect(function () {
+    async function getData() {
+      const apiResponse = await get("/categories?status=true&limit=0", true);
+      if (apiResponse?.status == 200) {
+        const modifiedValue = apiResponse?.body?.map((value: any) => {
+          return {
+            label: value.name,
+            value: value._id,
+          };
+        });
+        setCategories(modifiedValue);
+      }
+    }
+    getData();
+  }, []);
+
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
       // Check if the Alt key and Backspace key are pressed
@@ -52,10 +83,8 @@ export function AddSize() {
         navigate(-1);
       }
     };
-
     // Attach the event listener
     window.addEventListener("keydown", handleKeyPress);
-
     // Cleanup the event listener on component unmount
     return () => window.removeEventListener("keydown", handleKeyPress);
   }, []);
@@ -99,6 +128,41 @@ export function AddSize() {
                       required={true}
                       touched={touched.title}
                       error={errors.title}
+                    />
+                  </div>
+
+                  {/* Select Category */}
+                  <div className="form-group col-md-6">
+                    <CustomSelect
+                      label="Select Category"
+                      placeholder="Select Category"
+                      name="categories"
+                      required={true}
+                      options={categories}
+                      value={values.categories}
+                      error={errors.categories}
+                      touched={touched.categories}
+                      isMulti={true}
+                      handleChange={(value) => {
+                        setFieldValue("categories", value);
+                      }}
+                      handleBlur={() => {
+                        setFieldTouched("categories", true);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Priority"
+                      name="priority"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter priority"
+                      value={values.priority}
+                      touched={touched.priority}
+                      error={errors.priority}
                     />
                   </div>
 

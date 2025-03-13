@@ -16,6 +16,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
 
+import { DateRangePicker } from "react-date-range";
+import { enUS } from "date-fns/locale";
+
 export function OrderList() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,6 +31,13 @@ export function OrderList() {
     limit: 10,
     totalRecords: 0,
     totalPages: 0,
+  });
+
+  const [isCalendarVisible, setCalendarVisible] = useState(false);
+  const [selectionRange, setSelectionRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    key: "selection",
   });
 
   // Get Data From Database
@@ -106,7 +116,6 @@ export function OrderList() {
         Header: "EMAIL",
         accessor: "email",
       },
-
       {
         Header: "CREATED AT",
         accessor: "createdAt",
@@ -257,6 +266,10 @@ export function OrderList() {
     setOrderStatus(evt.target.value);
   }
 
+  function handleSelectDateRange(ranges: any) {
+    setSelectionRange(ranges.selection);
+  }
+
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -293,6 +306,89 @@ export function OrderList() {
                       setSearchQuery(evt.target.value)
                     }
                   /> */}
+
+                  {/* Display selected date range */}
+                  <span
+                    style={{
+                      marginTop: "20px",
+                      fontSize: "14px",
+                      cursor: "pointer",
+                      boxShadow: "0px 1px 2px #5a5a5a",
+                      padding: 5,
+                      borderRadius: 10,
+                    }}
+                    onClick={() => {
+                      setCalendarVisible(!isCalendarVisible);
+                    }}
+                  >
+                    <span className="mt-3">
+                      <i className="ti-calendar"></i>
+                    </span>{" "}
+                    {`${selectionRange.startDate.toDateString()} - ${selectionRange.endDate.toDateString()}`}
+                  </span>
+
+                  {isCalendarVisible && (
+                    <div
+                      style={{
+                        marginTop: "10px",
+                        position: "absolute",
+                        left: "20px",
+                        background: "white",
+                        padding: "10px",
+                        boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+                        borderRadius: "8px",
+                        zIndex: 10,
+                      }}
+                    >
+                      <DateRangePicker
+                        ranges={[selectionRange]}
+                        onChange={(ranges) => {
+                          handleSelectDateRange(ranges);
+                        }}
+                        locale={enUS}
+                        minDate={new Date("2024-01-01")}
+                        maxDate={new Date("2028-12-31")}
+                        direction="horizontal"
+                        editableDateInputs={true}
+                        scroll={{ enabled: false }}
+                        dateDisplayFormat="dd/MM/yyyy"
+                        rangeColors={["#4caf50"]} // Customize the highlight color
+                      />
+
+                      <div className="d-flex gap-2 justify-content-end">
+                        <div className="">
+                          <button
+                            className="btn btn-danger p-2"
+                            onClick={() => {
+                              setCalendarVisible(false); // Close calendar
+                              console.log(
+                                "Selected Date Range:",
+                                selectionRange
+                              );
+                            }}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+
+                        {/* Apply Button */}
+                        {/* <div className="">
+                          <button
+                            className="btn btn-success p-2"
+                            onClick={() => {
+                              setCalendarVisible(false);
+                              console.log(
+                                "Selected Date Range:",
+                                selectionRange
+                              );
+                            }}
+                          >
+                            Apply
+                          </button>
+                        </div> */}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="col-md-4 d-flex gap-2 justify-content-md-end">
                   {/* <button className="btn p-2 bg-light border">
@@ -381,6 +477,7 @@ export function OrderList() {
                   </div>
                 </div>
               </div>
+
               <div className="table-responsive">
                 {/* Data Table */}
                 <DataTable

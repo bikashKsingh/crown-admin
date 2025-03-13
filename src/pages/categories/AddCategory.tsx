@@ -272,7 +272,7 @@ export function AddCategory() {
                     />
                   </div>
 
-                  <div className="form-group col-md-8">
+                  <div className="form-group col-md-6">
                     <label htmlFor={"imageFile"}>
                       Category Image <span className="text-danger"> *</span>
                     </label>
@@ -313,6 +313,20 @@ export function AddCategory() {
                         {errors.image}
                       </p>
                     ) : null}
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <InputBox
+                      label="Priority"
+                      name="priority"
+                      handleBlur={handleBlur}
+                      handleChange={handleChange}
+                      type="number"
+                      placeholder="Enter priority"
+                      value={values.priority}
+                      touched={touched.priority}
+                      error={errors.priority}
+                    />
                   </div>
 
                   <div className="form-group col-md-6">
@@ -434,7 +448,8 @@ export function AddCategory() {
 
                   <div className="form-group col-md-8">
                     <label htmlFor={"listingImageFile"}>
-                      Listing Image <span className="text-danger"> *</span>
+                      Listing Image
+                      {/* <span className="text-danger"> *</span> */}
                     </label>
                     <div className="d-flex gap-2">
                       <input

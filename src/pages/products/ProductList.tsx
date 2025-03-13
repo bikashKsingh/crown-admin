@@ -17,7 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { Link } from "react-router-dom";
-import { deleteConfirmation, get, remove } from "../../utills";
+import { addUrlToFile, deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { styles } from "../../constants/selectStyle";
@@ -124,7 +124,7 @@ export function ProductList() {
   // get category
   useEffect(function () {
     async function getData() {
-      const apiResponse = await get("/categories", true);
+      const apiResponse = await get("/categories?status=true&limit=0", true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
           return {
@@ -142,7 +142,7 @@ export function ProductList() {
   useEffect(
     function () {
       async function getData() {
-        let url = `/subCategories`;
+        let url = `/subCategories?status=true&limit=0`;
         if (selectedCategory?.value) {
           url += `?category=${selectedCategory?.value}`;
         }
@@ -166,7 +166,7 @@ export function ProductList() {
   // get Types
   useEffect(function () {
     async function getData() {
-      let url = `/decorSeries`;
+      let url = `/decorSeries?status=true&limit=0`;
 
       const apiResponse = await get(url, true);
 
@@ -186,7 +186,7 @@ export function ProductList() {
   // get Size
   useEffect(function () {
     async function getData() {
-      let url = `/sizes`;
+      let url = `/sizes?status=true&limit=0`;
       const apiResponse = await get(url, true);
       if (apiResponse?.status == 200) {
         const modifiedValue = apiResponse?.body?.map((value: any) => {
@@ -325,7 +325,7 @@ export function ProductList() {
     return records.map((data) => {
       return {
         name: data.name,
-        a4Image: `${FILE_URL}/${data.a4Image}`,
+        a4Image: addUrlToFile(data.a4Image),
         createdAt: data.createdAt,
         status: data.status,
         id: data._id,
