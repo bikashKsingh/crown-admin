@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
 import { createProduct } from "../../csvHelpers/productCsv";
 import { CSVLink } from "react-csv";
+import { DownloadProductCSV } from "../../csvHelpers/DownloadProductCsv";
 
 export function AddProductViaCSV() {
   const navigate = useNavigate();
@@ -276,14 +277,15 @@ export function AddProductViaCSV() {
               <h4 className="font-weight-bold mb-0">Add Product Via CSV</h4>
             </div>
             <div>
-              <CSVLink
+              <DownloadProductCSV />
+              {/* <CSVLink
                 className="btn btn-primary text-light"
                 data={createProduct.data}
                 headers={createProduct.headers}
                 filename="crown-website-product-uploading.csv"
               >
                 Download CSV
-              </CSVLink>
+              </CSVLink> */}
             </div>
           </div>
         </div>

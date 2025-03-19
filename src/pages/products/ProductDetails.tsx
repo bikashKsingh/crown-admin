@@ -1,7 +1,7 @@
 import { GoBackButton, OverlayLoading } from "../../components";
 
 import { useEffect, useState } from "react";
-import { get, post, remove } from "../../utills";
+import { addUrlToFile, get, post, remove } from "../../utills";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { FILE_URL } from "../../constants";
@@ -12,6 +12,7 @@ export function ProductDetails() {
   const [loading, setLoading] = useState<boolean>(true);
   const [productDetails, setProductDetails] = useState<any>({});
   const [productSizes, setProductSizes] = useState<any[]>([]);
+  const [sizeFinishes, setSizeFinishes] = useState<any[]>([]);
 
   // get program details
   useEffect(
@@ -23,6 +24,7 @@ export function ProductDetails() {
           setProductDetails(apiResponse?.body);
           if (apiResponse?.body?.sizes?.length) {
             setProductSizes(apiResponse?.body?.sizes);
+            setSizeFinishes(apiResponse?.body?.sizeFinishes);
           }
         }
         setLoading(false);
@@ -66,13 +68,18 @@ export function ProductDetails() {
                 <div className="card rounded-2">
                   <div className="card-body p-0">
                     <div className="text-center">
-                      <img
-                        className="img-fluid rounded"
-                        style={{
-                          maxHeight: 200,
-                        }}
-                        src={`${FILE_URL}/${productDetails?.a4Image}`}
-                      />
+                      <a
+                        href={addUrlToFile(productDetails?.a4Image)}
+                        target="_blank"
+                      >
+                        <img
+                          className="img-fluid rounded"
+                          style={{
+                            maxHeight: 200,
+                          }}
+                          src={addUrlToFile(productDetails?.a4Image)}
+                        />
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -133,39 +140,49 @@ export function ProductDetails() {
                             </div>
                           </td>
                         </tr>
-                        <tr>
+                        {/* <tr>
                           <td className="py-3">Sizes</td>
                           <td className="py-3" colSpan={3}>
-                            <div className="d-flex gap-1">
-                              {productSizes?.map((item) => {
+                            <div className="">
+                              {sizeFinishes?.map((item) => {
                                 return (
-                                  <span className="badge bg-info rounded">
-                                    {item.title}
-                                  </span>
+                                  <div className="">
+                                    <span className="badge bg-info rounded">
+                                      {item?.size?.title}
+                                    </span>
+                                    <div className="d-flex gap-1 mt-2">
+                                      {item?.finishes?.map((finish) => {
+                                        return (
+                                          <span className="badge bg-warning rounded">
+                                            {finish.shortName}
+                                          </span>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
                                 );
                               })}
                             </div>
                           </td>
-                        </tr>
+                        </tr> */}
                         <tr>
                           <td className="py-3">Decor Series</td>
                           <td className="py-3">
                             {productDetails?.decorSeries.title}
                           </td>
-                          <td className="py-3">Finish</td>
-                          <td className="py-3">{productDetails?.finish}</td>
-                        </tr>
-                        <tr>
-                          <td className="py-3">Decor Name</td>
-                          <td className="py-3">{productDetails?.decorName}</td>
                           <td className="py-3">Decor Number</td>
                           <td className="py-3">
                             {productDetails?.decorNumber}
                           </td>
                         </tr>
                         <tr>
+                          <td>Ral Number</td>
+                          <td>{productDetails?.ralNumber}</td>
+                        </tr>
+                        <tr>
                           <td className="py-3">Product SKU</td>
                           <td className="py-3">{productDetails?.sku}</td>
+
                           <td className="py-3">Status</td>
                           <td className="py-3">
                             {productDetails?.status == true
@@ -175,6 +192,68 @@ export function ProductDetails() {
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Size & Finishes */}
+          <div className="col-md-12">
+            <div className="card rounded-2 mt-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-12 d-flex justify-content-between align-items-center">
+                    <h5
+                      className="mb-2 cursor-hand"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#sizeAndFinishes"
+                      aria-expanded="false"
+                      aria-controls="sizeAndFinishes"
+                    >
+                      Size & Finishes
+                    </h5>
+                    <button
+                      className="btn btn-light p-2"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#sizeAndFinishes"
+                      aria-expanded="false"
+                      aria-controls="sizeAndFinishes"
+                    >
+                      <i className="fa fa-angle-down text-primary" />
+                    </button>
+                  </div>
+
+                  <div className="collapse mt-2 show" id="sizeAndFinishes">
+                    <div className="row mt-2">
+                      <div className="col-md-12">
+                        <div
+                          className="card card-body rounded shadow-none border-0"
+                          style={{ background: "#fafafa" }}
+                        >
+                          {sizeFinishes?.map((item) => {
+                            return (
+                              <div className="mt-2">
+                                <h5 className="">{item?.size?.title}</h5>
+                                <div
+                                  className="d-flex gap-1 mt-2 mb-3"
+                                  style={{ flexWrap: "wrap" }}
+                                >
+                                  {item?.finishes?.map((finish: any) => {
+                                    return (
+                                      <span className="badge bg-warning rounded">
+                                        {finish.fullName}
+                                      </span>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -243,6 +322,97 @@ export function ProductDetails() {
                               ),
                             }}
                           ></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Images */}
+          <div className="col-md-12">
+            <div className="card rounded-2 mt-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-12 d-flex justify-content-between align-items-center">
+                    <h5
+                      className="mb-2 cursor-hand"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#productImages"
+                      aria-expanded="false"
+                      aria-controls="productImages"
+                    >
+                      Product Images
+                    </h5>
+                    <button
+                      className="btn btn-light p-2"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#productImages"
+                      aria-expanded="false"
+                      aria-controls="productImages"
+                    >
+                      <i className="fa fa-angle-down text-primary" />
+                    </button>
+                  </div>
+
+                  <div className="collapse mt-2" id="productImages">
+                    <div className="shadow-none p-2 mb-3 row">
+                      <div className="col-md-4">
+                        <div className="card shadow-none">
+                          <div className="card-body">
+                            <a
+                              href={addUrlToFile(productDetails?.a4Image)}
+                              target="_blank"
+                            >
+                              <img
+                                src={addUrlToFile(productDetails?.a4Image)}
+                                className="card-img-top"
+                              />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-md-4">
+                        <div className="card shadow-none">
+                          <div className="card-body">
+                            <a
+                              href={addUrlToFile(
+                                productDetails?.fullSheetImage
+                              )}
+                              target="_blank"
+                            >
+                              <img
+                                src={addUrlToFile(
+                                  productDetails?.fullSheetImage
+                                )}
+                                className="card-img-top"
+                              />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-md-4">
+                        <div className="card shadow-none">
+                          <div className="card-body">
+                            <a
+                              href={addUrlToFile(
+                                productDetails?.highResolutionImage
+                              )}
+                              target="_blank"
+                            >
+                              <img
+                                src={addUrlToFile(
+                                  productDetails?.highResolutionImage
+                                )}
+                                className="card-img-top"
+                              />
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>

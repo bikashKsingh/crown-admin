@@ -14,6 +14,7 @@ import {
 } from "../../validationSchemas/productSchema";
 import React, { useEffect, useState } from "react";
 import {
+  addUrlToFile,
   generateSlug,
   get,
   post,
@@ -61,7 +62,7 @@ export function EditProduct() {
         categories: values.categories?.map((item) => {
           return item.value;
         }),
-        subCategories: values.subCategories?.map((item) => {
+        subCategories: values?.subCategories?.map((item) => {
           return item.value;
         }),
         decorSeries: values.decorSeries?.value,
@@ -107,13 +108,15 @@ export function EditProduct() {
             });
           }
 
-          if (data.subCategories?.length) {
-            data.subCategories = data.subCategories.map((item: any) => {
-              return {
-                label: item.name,
-                value: item._id,
-              };
-            });
+          if (data?.subCategories) {
+            if (data?.subCategories?.length) {
+              data.subCategories = data.subCategories.map((item: any) => {
+                return {
+                  label: item.name,
+                  value: item._id,
+                };
+              });
+            }
           }
 
           if (data?.decorSeries) {
@@ -486,10 +489,6 @@ export function EditProduct() {
   // console.log(touched);
   // console.log(values);
 
-  function addUrlToFile(file: any) {
-    return `${FILE_URL}/${file}`;
-  }
-
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -624,7 +623,7 @@ export function EditProduct() {
                       label="Select Sub Categories"
                       placeholder="Select Categories"
                       name="subCategories"
-                      required={true}
+                      required={false}
                       options={subCategories}
                       value={values.subCategories}
                       error={errors.subCategories}

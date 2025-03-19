@@ -4,7 +4,7 @@ export const productSchema = Yup.object({
   name: Yup.string().required().label("Name"),
   slug: Yup.string().required().label("Slug"),
   categories: Yup.array().required().label("Categories"),
-  subCategories: Yup.array().required().label("Sub Categories"),
+  subCategories: Yup.array().label("Sub Categories"),
   decorSeries: Yup.object().required().label("Decor Series"),
 
   sizes: Yup.array().required().label("Sizes"),

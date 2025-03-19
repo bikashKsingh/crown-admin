@@ -13,6 +13,7 @@ import {
 } from "../../validationSchemas/productSchema";
 import React, { useEffect, useState } from "react";
 import {
+  addUrlToFile,
   generateSlug,
   get,
   post,
@@ -22,10 +23,9 @@ import {
 } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL, FILE_URL } from "../../constants";
+import { API_URL } from "../../constants";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import Select from "react-select";
 import { default as ReactSelect, components } from "react-select";
 
 export function AddProduct() {
@@ -88,7 +88,7 @@ export function AddProduct() {
         categories: values.categories?.map((item: any) => {
           return item.value;
         }),
-        subCategories: values.subCategories?.map((item: any) => {
+        subCategories: values?.subCategories?.map((item: any) => {
           return item.value;
         }),
         decorSeries: values.decorSeries?.value,
@@ -549,10 +549,6 @@ export function AddProduct() {
     setSizeInputFields(updatedInputFields);
   };
 
-  function addUrlToFile(file: any) {
-    return `${FILE_URL}/${file}`;
-  }
-
   return (
     <div className="content-wrapper">
       <div className="row">
@@ -679,13 +675,13 @@ export function AddProduct() {
                     />
                   </div>
 
-                  {/* Select Sub Category */}
+                  {/* Select Sub Categories */}
                   <div className="form-group col-md-6">
                     <CustomSelect
-                      label="Select Sub Category"
-                      placeholder="Select Category"
+                      label="Select Sub Categories"
+                      placeholder="Select Categories"
                       name="subCategories"
-                      required={true}
+                      required={false}
                       options={subCategories}
                       value={values.subCategories}
                       error={errors.subCategories}

@@ -1,7 +1,7 @@
 import { GoBackButton, OverlayLoading } from "../../components";
 
 import { useEffect, useState } from "react";
-import { get, post, remove } from "../../utills";
+import { addUrlToFile, get, post, remove } from "../../utills";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { FILE_URL } from "../../constants";
@@ -94,29 +94,21 @@ export function OrderDetails() {
                 <div className="card rounded-2">
                   <div className="card-body">
                     <div className="text-center">
-                      {orderDetails.gender == "FEMALE" ? (
-                        <img
-                          className="img"
+                      <div className="d-flex justify-content-center">
+                        <div
+                          className="d-flex align-items-center justify-content-center"
                           style={{
-                            height: 80,
-                            width: 80,
-                            borderRadius: 40,
-                            border: "4px solid green",
+                            height: "80px",
+                            width: "80px",
+                            background: "green",
+                            borderRadius: "40px",
+                            fontSize: "40px",
+                            color: "white",
                           }}
-                          src="/images/placeholders/male-user.jpg"
-                        />
-                      ) : (
-                        <img
-                          className="img"
-                          style={{
-                            height: 80,
-                            width: 80,
-                            borderRadius: 40,
-                            border: "4px solid green",
-                          }}
-                          src="/images/placeholders/female-user.jpg"
-                        />
-                      )}
+                        >
+                          {orderDetails?.name[0]}
+                        </div>
+                      </div>
                       <h6 className="px-0 pt-2">{orderDetails?.name}</h6>
                       <p>
                         <span className="badge bg-warning rounded">
@@ -200,7 +192,7 @@ export function OrderDetails() {
 
                   <div className="collapse mt-2 show" id="productsSection">
                     <div className="row">
-                      <div className="col-md-7">
+                      <div className="col-md-9">
                         <div
                           className="card card-body rounded shadow-none border-0 p-2"
                           style={{ background: "#fff4e6", height: "100%" }}
@@ -212,7 +204,7 @@ export function OrderDetails() {
                                   <strong>SN</strong>
                                 </td>
                                 <td>
-                                  <strong>PRODUCT NAME</strong>
+                                  <strong>PRODUCT</strong>
                                 </td>
                                 <td>
                                   <strong>QTY</strong>
@@ -224,11 +216,28 @@ export function OrderDetails() {
                                   return (
                                     <tr>
                                       <td>{++index}</td>
-                                      <td>
+                                      <td className="d-flex gap-2">
                                         <img
-                                          src={`${FILE_URL}/${item.a4Image}`}
-                                        />{" "}
-                                        {item.name}
+                                          style={{
+                                            height: "80px",
+                                            width: "80px",
+                                          }}
+                                          src={addUrlToFile(item.a4Image)}
+                                        />
+                                        <div className="">
+                                          <p className="p-0 m-0">{item.name}</p>
+                                          <p className="p-0 m-0">
+                                            Decor No : {item.decorNumber} (
+                                            {item?.decorSeries?.title})
+                                          </p>
+                                          <p className="p-0 m-0">
+                                            Category : {item?.category?.name}
+                                          </p>
+                                          <p className="p-0 m-0">
+                                            Sub Category :{" "}
+                                            {item?.subCategory?.name}
+                                          </p>
+                                        </div>
                                       </td>
                                       <td>{item.qty}</td>
                                     </tr>
@@ -240,7 +249,7 @@ export function OrderDetails() {
                         </div>
                       </div>
 
-                      <div className="col-md-5">
+                      <div className="col-md-3">
                         <div
                           className="card card-body rounded shadow-none border-0"
                           style={{ background: "#fff4e6" }}
