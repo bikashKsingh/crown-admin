@@ -199,7 +199,7 @@ export function InquiryList() {
     return records.map((data) => {
       return {
         name: data.name,
-        mobile: `${data.countryCode}${data.mobile}`,
+        mobile: `${data.mobile}`,
         email: data.email,
         inquiryType: data.inquiryType,
         createdAt: data.createdAt,

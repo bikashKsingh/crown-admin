@@ -1,7 +1,7 @@
 import { GoBackButton, OverlayLoading } from "../../components";
 
 import { useEffect, useState } from "react";
-import { get, post, remove } from "../../utills";
+import { addUrlToFile, get, post, remove } from "../../utills";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 
@@ -105,7 +105,7 @@ export function InquiryDetails() {
                       {/* <p>{`${inquiryDetails?.address}, ${inquiryDetails?.locality}, ${inquiryDetails?.city}, ${inquiryDetails?.state}, ${inquiryDetails?.pincode}, ${inquiryDetails?.country}`}</p> */}
                       <div className="d-flex gap-2 justify-content-center mt-3">
                         <Link
-                          to={`tel:${inquiryDetails?.countryCode}${inquiryDetails?.mobile}`}
+                          to={`tel:${inquiryDetails?.mobile}`}
                           className="btn btn-info text-light py-2"
                         >
                           <i className="fa fa-phone"></i>
@@ -287,11 +287,15 @@ export function InquiryDetails() {
                           <div className="col-md-8 mx-auto">
                             <div className="row">
                               <div className="col-md-4 text-center">
-                                <img
-                                  src={inquiryDetails?.product?.defaultImage}
-                                  alt=""
-                                  className="img img-fluid"
-                                />
+                                {inquiryDetails?.product?.a4Image ? (
+                                  <img
+                                    src={addUrlToFile(
+                                      inquiryDetails?.product?.a4Image
+                                    )}
+                                    alt=""
+                                    className="img img-fluid"
+                                  />
+                                ) : null}
                               </div>
                               <div className="col-md-8 table-responsive align-items-center d-flex">
                                 <table className="table table-bordered">
@@ -301,23 +305,25 @@ export function InquiryDetails() {
                                       <td>{inquiryDetails?.product?.name}</td>
                                     </tr>
                                     <tr>
-                                      <td>Type</td>
-                                      <td>{inquiryDetails?.product?.type}</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Finish</td>
-                                      <td>{inquiryDetails?.product?.finish}</td>
-                                    </tr>
-                                    <tr>
-                                      <td>Decor Name</td>
-                                      <td>
-                                        {inquiryDetails?.product?.decorName}
-                                      </td>
-                                    </tr>
-                                    <tr>
                                       <td>Decor Number</td>
                                       <td>
                                         {inquiryDetails?.product?.decorNumber}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Decor Series</td>
+                                      <td>
+                                        {inquiryDetails?.decorSeries?.title}
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>Category</td>
+                                      <td>{inquiryDetails?.category?.name}</td>
+                                    </tr>
+                                    <tr>
+                                      <td>Sub Category</td>
+                                      <td>
+                                        {inquiryDetails?.subCategory?.name}
                                       </td>
                                     </tr>
 
