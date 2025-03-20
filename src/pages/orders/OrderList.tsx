@@ -49,6 +49,10 @@ export function OrderList() {
         if (searchQuery) url += `&searchQuery=${searchQuery}`;
         if (orderStatus) url += `&orderStatus=${orderStatus}`;
 
+        if (selectionRange.startDate)
+          url += `&startDate=${selectionRange.startDate}`;
+        if (selectionRange.endDate) url += `&endDate=${selectionRange.endDate}`;
+
         const apiResponse = await get(url, true);
 
         if (apiResponse?.status == 200) {
@@ -68,7 +72,14 @@ export function OrderList() {
 
       getData();
     },
-    [pagination.page, pagination.limit, searchQuery, needReload, orderStatus]
+    [
+      pagination.page,
+      pagination.limit,
+      searchQuery,
+      needReload,
+      orderStatus,
+      selectionRange,
+    ]
   );
 
   type Record = {
