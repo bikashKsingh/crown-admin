@@ -1,12 +1,10 @@
 import { GoBackButton, OverlayLoading } from "../../components";
 
 import { useEffect, useState } from "react";
-import { addUrlToFile, get, post, remove } from "../../utills";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
+import { addUrlToFile, get } from "../../utills";
+import { Link, useParams } from "react-router-dom";
 
 export function InquiryDetails() {
-  const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState<boolean>(true);
   const [inquiryDetails, setInquiryDetails] = useState<any>({});
@@ -27,22 +25,15 @@ export function InquiryDetails() {
     [id]
   );
 
-  function getSocialUsername(link: string): string {
-    // Remove any trailing slashes
-    link = link.replace(/\/$/, "");
-
-    // Extract the username after the last slash
-    const parts = link.split("/");
-    const username = parts[parts.length - 1];
-    if (username[0] == "@") {
-      return username;
-    } else {
-      return `@${username}`;
-    }
-  }
-
   function handleInquiryType(text: string) {
-    return text == "PRODUCT" ? "Product" : text == "CAREER" ? "Career" : "";
+    if (text == "PRODUCT") return "Product";
+    else if (text == "GENERAL") return "General";
+    else if (text == "CAREER") return "Career";
+    else if (text == "COMPLAINS") return "Complains";
+    else if (text == "EXPORT") return "Export";
+    else if (text == "PRICE") return "Price";
+    else if (text == "SAMPLING") return "Sampling";
+    else if (text == "SUPPLIER") return "Supplier";
   }
 
   return (
@@ -119,105 +110,6 @@ export function InquiryDetails() {
                         </Link>
                       </div>
                     </div>
-
-                    {/*  */}
-                    <div className="mt-3 border-top">
-                      <ul className="list-group list-group-flush">
-                        {/* Facebook */}
-                        {inquiryDetails?.facebook ? (
-                          <li className="list-group-item">
-                            <a
-                              href={inquiryDetails?.facebook}
-                              className="social-link-item"
-                              target="_blank"
-                            >
-                              <div className="social-link-item-icon">
-                                <i className="ti-facebook text-info"></i>
-                                Facebook
-                              </div>
-                              <div className="">
-                                {getSocialUsername(inquiryDetails?.facebook)}
-                              </div>
-                            </a>
-                          </li>
-                        ) : null}
-                        {/* Instagram */}
-                        {inquiryDetails?.instagram ? (
-                          <li className="list-group-item">
-                            <a
-                              href={inquiryDetails?.instagram}
-                              className="social-link-item"
-                              target="_blank"
-                            >
-                              <div className="social-link-item-icon">
-                                <i className="ti-instagram text-success"></i>
-                                Instagram
-                              </div>
-                              <div className="">
-                                {getSocialUsername(inquiryDetails?.instagram)}
-                              </div>
-                            </a>
-                          </li>
-                        ) : null}
-
-                        {/* Twitter */}
-                        {inquiryDetails?.twitter ? (
-                          <li className="list-group-item">
-                            <Link
-                              to={inquiryDetails?.twitter}
-                              className="social-link-item"
-                              target="_blank"
-                            >
-                              <div className="social-link-item-icon">
-                                <i className="ti-twitter text-success"></i>
-                                Twitter
-                              </div>
-                              <div className="">
-                                {getSocialUsername(inquiryDetails?.twitter)}
-                              </div>
-                            </Link>
-                          </li>
-                        ) : null}
-
-                        {/* Linkedin */}
-                        {inquiryDetails?.linkedin ? (
-                          <li className="list-group-item">
-                            <Link
-                              to={inquiryDetails?.linkedin}
-                              className="social-link-item"
-                              target="_blank"
-                            >
-                              <div className="social-link-item-icon">
-                                <i className="ti-linkedin text-dark"></i>
-                                Linkedin
-                              </div>
-                              <div className="">
-                                {getSocialUsername(inquiryDetails?.linkedin)}
-                              </div>
-                            </Link>
-                          </li>
-                        ) : null}
-
-                        {/* Youtube */}
-                        {inquiryDetails?.youtube ? (
-                          <li className="list-group-item">
-                            <Link
-                              to={inquiryDetails?.youtube}
-                              className="social-link-item"
-                              target="_blank"
-                            >
-                              <div className="social-link-item-icon">
-                                <i className="ti-youtube text-danger"></i>
-                                YouTube
-                              </div>
-                              <div className="">
-                                {getSocialUsername(inquiryDetails?.youtube)}
-                              </div>
-                            </Link>
-                          </li>
-                        ) : null}
-                      </ul>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -230,8 +122,12 @@ export function InquiryDetails() {
                     <table className="table table-sm">
                       <tbody>
                         <tr>
-                          <td scope="row">Name</td>
-                          <td>{inquiryDetails?.name}</td>
+                          <td scope="row">Inquiry Type</td>
+                          <td>
+                            <span className="badge bg-primary rounded">
+                              {inquiryDetails?.inquiryType}
+                            </span>
+                          </td>
                         </tr>
                         <tr>
                           <td scope="row">Email</td>
@@ -245,8 +141,55 @@ export function InquiryDetails() {
                           <td scope="row">Country</td>
                           <td>{inquiryDetails?.country}</td>
                         </tr>
+                        {inquiryDetails?.visitorType ? (
+                          <tr>
+                            <td scope="row">Visitor Type</td>
+                            <td>
+                              <span className="badge bg-warning rounded">
+                                {inquiryDetails?.visitorType}
+                              </span>
+                            </td>
+                          </tr>
+                        ) : null}
                       </tbody>
                     </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Inquiry Message */}
+          <div className="col-md-12">
+            <div className="card rounded-2 mt-4">
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-12 d-flex justify-content-between align-items-center">
+                    <h5
+                      className="mb-2 cursor-hand"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#inquiryMessage"
+                      aria-expanded="false"
+                      aria-controls="inquiryMessage"
+                    >
+                      Inquiry Message
+                    </h5>
+                    <button
+                      className="btn btn-light"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#inquiryMessage"
+                      aria-expanded="false"
+                      aria-controls="inquiryMessage"
+                    >
+                      <i className="fa fa-angle-down text-primary" />
+                    </button>
+                  </div>
+
+                  <div className="collapse mt-2 show" id="inquiryMessage">
+                    <div className="card card-body shadow-none p-2">
+                      <p>{inquiryDetails?.message}</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -408,65 +351,6 @@ export function InquiryDetails() {
               </div>
             </div>
           ) : null}
-
-          {/* Trainer Certificates */}
-          {/* <div className="col-md-12">
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12 d-flex justify-content-between align-items-center">
-                    <h5
-                      className="mb-2 cursor-hand"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#trainerCertificates"
-                      aria-expanded="false"
-                      aria-controls="trainerCertificates"
-                    >
-                      Trainer Certificates
-                    </h5>
-                    <button
-                      className="btn btn-light"
-                      type="button"
-                      data-bs-toggle="collapse"
-                      data-bs-target="#trainerCertificates"
-                      aria-expanded="false"
-                      aria-controls="trainerCertificates"
-                    >
-                      <i className="fa fa-angle-down text-primary" />
-                    </button>
-                  </div>
-
-                  <div className="collapse mt-2" id="trainerCertificates">
-                    <div className="card card-body shadow-none p-2">
-                      <table className="table table-sm">
-                        <tbody>
-                          {inquiryDetails?.certificates?.map(
-                            (certificate: any) => {
-                              return (
-                                <tr>
-                                  <td scope="row">{certificate?.title}</td>
-                                  <td>
-                                    <iframe
-                                      src={certificate?.certificateFile}
-                                      width="500"
-                                      height="250"
-                                      frameBorder="0"
-                                    >
-                                      Your browser does not support iframes.
-                                    </iframe>
-                                  </td>
-                                </tr>
-                              );
-                            }
-                          )}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
       )}
     </div>

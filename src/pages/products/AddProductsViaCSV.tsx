@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
 import { createProduct } from "../../csvHelpers/productCsv";
 import { CSVLink } from "react-csv";
-import { DownloadProductCSV } from "../../csvHelpers/DownloadProductCsv";
+import { DownloadProductCSV } from "../../csvHelpers/DownloadProductCSV";
 
 export function AddProductViaCSV() {
   const navigate = useNavigate();
@@ -54,6 +54,8 @@ export function AddProductViaCSV() {
 
       const apiResponse = await post("/products", newValue, true);
 
+      console.log(apiResponse);
+
       if (apiResponse?.status == 200) {
         setUploadedProducts((old) => {
           return [...old, apiResponse.body];
@@ -85,8 +87,11 @@ export function AddProductViaCSV() {
           newValue.decorSeries = item.decorSeries?.title;
 
           newValue.errors = [
-            apiResponse?.errors?.slug,
-            apiResponse?.errors?.name,
+            apiResponse?.errors?.slug || "",
+            apiResponse?.errors?.name || "",
+            apiResponse?.errors?.categories || "",
+            apiResponse?.errors?.decorSeries || "",
+            apiResponse?.errors?.sizes || "",
           ];
 
           return [...old, newValue];
@@ -464,6 +469,7 @@ export function AddProductViaCSV() {
                             <th>DECOR SERIES</th>
                             <th>DECOR NUMBER</th>
                             <th>RAL NUMBER</th>
+                            <th>ERRORS</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -479,6 +485,11 @@ export function AddProductViaCSV() {
                                 <td>{item?.decorSeries}</td>
                                 <td>{item.decorNumber}</td>
                                 <td>{item.ralNumber}</td>
+                                <td>
+                                  {item.errors?.map((item: any) => {
+                                    return `${item}\n`;
+                                  })}
+                                </td>
                               </tr>
                             );
                           })}
