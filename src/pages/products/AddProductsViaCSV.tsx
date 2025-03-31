@@ -54,8 +54,6 @@ export function AddProductViaCSV() {
 
       const apiResponse = await post("/products", newValue, true);
 
-      console.log(apiResponse);
-
       if (apiResponse?.status == 200) {
         setUploadedProducts((old) => {
           return [...old, apiResponse.body];
