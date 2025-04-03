@@ -273,7 +273,7 @@ export function EditProduct() {
       if (apiData.status == 200) {
         setFieldTouched("a4Image", false);
         setFieldError("a4Image", "");
-        setFieldValue("a4Image", apiData.body[0].filepath);
+        setFieldValue("a4Image", apiData.body[0].filename);
       } else {
         setFieldTouched("a4Image", false);
         setFieldError("a4Image", apiData.message);
@@ -353,7 +353,7 @@ export function EditProduct() {
       if (apiData.status == 200) {
         setFieldTouched("fullSheetImage", false);
         setFieldError("fullSheetImage", "");
-        setFieldValue("fullSheetImage", apiData.body[0].filepath);
+        setFieldValue("fullSheetImage", apiData.body[0].filename);
       } else {
         setFieldTouched("fullSheetImage", false);
         setFieldError("fullSheetImage", apiData.message);
@@ -433,7 +433,7 @@ export function EditProduct() {
       if (apiData.status == 200) {
         setFieldTouched("highResolutionImage", false);
         setFieldError("highResolutionImage", "");
-        setFieldValue("highResolutionImage", apiData.body[0].filepath);
+        setFieldValue("highResolutionImage", apiData.body[0].filename);
       } else {
         setFieldTouched("highResolutionImage", false);
         setFieldError("highResolutionImage", apiData.message);
