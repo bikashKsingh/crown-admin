@@ -14,7 +14,6 @@ import { DownloadProductCSV } from "../../csvHelpers/DownloadProductCSV";
 export function AddProductViaCSV() {
   const navigate = useNavigate();
 
-  const [uploadedImages, setUploadedImages] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [subCategories, setSubCategories] = useState<any[]>([]);
   const [decorSeries, setDecorSeries] = useState<any[]>([]);
@@ -26,8 +25,6 @@ export function AddProductViaCSV() {
 
   const [uploadedProducts, setUploadedProducts] = useState<any[]>([]);
   const [failedProducts, setFailedProducts] = useState<any[]>([]);
-
-  type Size = { size: string; finishes: any[]; error: string };
 
   async function handleSubmit() {
     setLoading(true);
@@ -85,11 +82,20 @@ export function AddProductViaCSV() {
           newValue.decorSeries = item.decorSeries?.title;
 
           newValue.errors = [
-            apiResponse?.errors?.slug || "",
             apiResponse?.errors?.name || "",
+            apiResponse?.errors?.slug || "",
             apiResponse?.errors?.categories || "",
+            apiResponse?.errors?.subCategories || "",
             apiResponse?.errors?.decorSeries || "",
             apiResponse?.errors?.sizes || "",
+            apiResponse?.errors?.decorNumber || "",
+            apiResponse?.errors?.a4Image || "",
+            apiResponse?.errors?.fullSheetImage || "",
+            apiResponse?.errors?.highResolutionImage || "",
+            apiResponse?.errors?.descriptions || "",
+            apiResponse?.errors?.shortDescription || "",
+            apiResponse?.errors?.ralNumber || "",
+            apiResponse?.message || "",
           ];
 
           return [...old, newValue];
@@ -153,6 +159,7 @@ export function AddProductViaCSV() {
             if (item.name) {
               if (!item.slug) {
                 item.slug = generateSlug(item.name);
+                item.slug = `${item.slug}-${item.decorNumber}`;
               }
 
               let cats = handleGetCategoryDetails(item.categories);
@@ -345,7 +352,7 @@ export function AddProductViaCSV() {
                     aria-expanded="false"
                     aria-controls="productPreview"
                   >
-                    Product Preview
+                    Product Preview ({`${csvData?.length} Products`})
                   </h5>
                   <button
                     className="btn btn-light p-2"
@@ -439,7 +446,7 @@ export function AddProductViaCSV() {
                     aria-expanded="false"
                     aria-controls="faildUploadingProducts"
                   >
-                    Failed Uploading
+                    Failed Uploading ({`${failedProducts?.length} Products`})
                   </h5>
                   <button
                     className="btn btn-light p-2"
@@ -525,7 +532,7 @@ export function AddProductViaCSV() {
                     aria-expanded="false"
                     aria-controls="uploadedProducts"
                   >
-                    Uploaded Products
+                    Uploaded Products ({`${uploadedProducts?.length} Products`})
                   </h5>
                   <button
                     className="btn btn-light p-2"
