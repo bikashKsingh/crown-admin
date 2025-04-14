@@ -13,6 +13,35 @@ export function Router() {
         element={<Pages.CreateNewPassword />}
       />
 
+      {/* Catalogue Category */}
+      <Route
+        path="/catalogueCategories/add"
+        element={<Pages.AddCatalogueCategory />}
+      />
+
+      <Route
+        path="/catalogueCategories/edit/:id"
+        element={<Pages.EditCatalogueCategory />}
+      />
+
+      <Route
+        path="/catalogueCategories"
+        element={<Pages.CatalogueCategoryList />}
+      />
+
+      {/* Catalogue */}
+      <Route path="/catalogues/add" element={<Pages.AddCatalogue />} />
+      <Route path="/catalogues/edit/:id" element={<Pages.EditCatalogue />} />
+      <Route path="/catalogues" element={<Pages.CatalogueList />} />
+
+      {/* Certificates */}
+      <Route path="/certificates/add" element={<Pages.AddCertificate />} />
+      <Route
+        path="/certificates/edit/:id"
+        element={<Pages.EditCertificate />}
+      />
+      <Route path="/certificates" element={<Pages.CertificateList />} />
+
       {/* Category */}
       <Route path="/categories/add" element={<Pages.AddCategory />} />
       <Route path="/categories/edit/:id" element={<Pages.EditCategory />} />

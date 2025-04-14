@@ -9,10 +9,25 @@ export * from "./categories/AddCategory";
 export * from "./categories/CategoryList";
 export * from "./categories/EditCategory";
 
+// Catalogue Categories
+export * from "./catalogueCategory/AddCatalogueCategory";
+export * from "./catalogueCategory/EditCatalogueCategory";
+export * from "./catalogueCategory/CatalogueCategoryList";
+
+// Catalogue
+export * from "./catalogues/AddCatalogue";
+export * from "./catalogues/EditCatalogue";
+export * from "./catalogues/CatalogueList";
+
 // Carousel
 export * from "./carousel/AddCarousel";
 export * from "./carousel/CarouselList";
 export * from "./carousel/EditCarousel";
+
+// Cretificate
+export * from "./certificates/AddCertificate";
+export * from "./certificates/CertificateList";
+export * from "./certificates/EditCertificate";
 
 // Homepage
 export * from "./homepage/HomepageContent";

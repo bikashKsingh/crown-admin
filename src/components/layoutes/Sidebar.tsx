@@ -11,6 +11,7 @@ export function Sidebar() {
             <span className="menu-title">DASHBOARD</span>
           </Link>
         </li>
+
         <li className="nav-item">
           <a
             className="nav-link"
@@ -65,6 +66,36 @@ export function Sidebar() {
               <li className="nav-item">
                 <Link className="nav-link" to="/subCategories">
                   Sub Categories
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </li>
+
+        {/* Catalogue */}
+        <li className="nav-item">
+          <a
+            className="nav-link"
+            data-bs-toggle="collapse"
+            href="#catalogue"
+            aria-expanded="false"
+            aria-controls="catalogue"
+          >
+            <i className="ti-layers menu-icon"></i>
+            <span className="menu-title">Catalogue</span>
+            <i className="menu-arrow"></i>
+          </a>
+          <div className="collapse" id="catalogue">
+            <ul className="nav flex-column sub-menu">
+              <li className="nav-item">
+                <Link className="nav-link" to="/catalogueCategories">
+                  Catalogue Categories
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to="/catalogues">
+                  Catalogue
                 </Link>
               </li>
             </ul>

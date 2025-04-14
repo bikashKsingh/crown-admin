@@ -3,10 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 export function Header() {
   const navigation = useNavigate();
+
   function handleDesktopSidebar(evt: React.MouseEvent<HTMLElement>) {
     evt.preventDefault();
     document.body.classList.toggle("sidebar-icon-only");
   }
+
   function handleMobileSidebar(evt: React.MouseEvent<HTMLElement>) {
     evt.preventDefault();
     const sidebar = document.getElementById("sidebar");
