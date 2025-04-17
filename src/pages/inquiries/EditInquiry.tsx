@@ -1,7 +1,7 @@
 import {
-  CustomSelect,
   GoBackButton,
   InputBox,
+  OverlayLoading,
   SubmitButton,
   TextareaBox,
 } from "../../components";
@@ -11,17 +11,17 @@ import {
   InquiryValues,
   inquiryInitialValues,
 } from "../../validationSchemas/inquirySchema";
-import React, { useEffect, useState } from "react";
-import { get, post, put, validateText, validateUsername } from "../../utills";
+import { useEffect, useState } from "react";
+import { get, put } from "../../utills";
 import { toast } from "react-toastify";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import moment from "moment";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function EditInquiry() {
   const navigate = useNavigate();
   const { id } = useParams();
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [updating, setUpdating] = useState<boolean>(false);
   const {
     values,
     errors,
@@ -29,19 +29,23 @@ export function EditInquiry() {
     handleBlur,
     handleChange,
     handleSubmit,
-    setFieldTouched,
-    setFieldValue,
-    setFieldError,
-    getFieldProps,
     setValues,
   } = useFormik({
     onSubmit: async function (
       values: InquiryValues,
       helpers: FormikHelpers<InquiryValues>
     ) {
-      setLoading(true);
+      setUpdating(true);
 
-      const apiResponse = await put(`/inquiries/${id}`, values);
+      let updateValue = {
+        name: values.name,
+        email: values.email,
+        country: values.country,
+        message: values.message,
+        inquiryStatus: values.inquiryStatus,
+      };
+
+      const apiResponse = await put(`/inquiries/${id}`, updateValue);
 
       if (apiResponse?.status == 200) {
         toast.success(apiResponse?.message);
@@ -52,7 +56,7 @@ export function EditInquiry() {
         helpers.setErrors(apiResponse?.errors);
         toast.error(apiResponse?.message);
       }
-      setLoading(false);
+      setUpdating(false);
     },
     initialValues: inquiryInitialValues,
     validationSchema: inquirySchema,
@@ -106,6 +110,8 @@ export function EditInquiry() {
           </div>
         </div>
       </div>
+
+      {loading ? <OverlayLoading /> : null}
 
       <div className="row">
         <div className="col-md-12 grid-margin stretch-card">
@@ -226,7 +232,7 @@ export function EditInquiry() {
                   </div>
                 </div>
 
-                <SubmitButton loading={false} text="Update Inquiry" />
+                <SubmitButton loading={updating} text="Update Inquiry" />
               </form>
             </div>
           </div>

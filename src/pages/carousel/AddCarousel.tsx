@@ -1,9 +1,4 @@
-import {
-  GoBackButton,
-  InputBox,
-  SubmitButton,
-  TextareaBox,
-} from "../../components";
+import { GoBackButton, InputBox, SubmitButton } from "../../components";
 import { FormikHelpers, useFormik } from "formik";
 
 import {
@@ -12,14 +7,15 @@ import {
   carouselInitialValues,
 } from "../../validationSchemas/carouselSchema";
 import { useState } from "react";
-import { generateSlug, post, remove, validateTextNumber } from "../../utills";
+import { post, remove } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { API_URL } from "../../constants";
+import { ReactHelmet } from "../../components/ui/ReactHelmet";
 
 export function AddCarousel() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [creating, setCreating] = useState<boolean>(false);
 
   const {
     values,
@@ -36,7 +32,7 @@ export function AddCarousel() {
       values: CarouselValues,
       helpers: FormikHelpers<CarouselValues>
     ) {
-      setLoading(true);
+      setCreating(true);
 
       const apiResponse = await post("/carousels", values, true);
 
@@ -47,7 +43,7 @@ export function AddCarousel() {
         helpers.setErrors(apiResponse?.errors);
         toast.error(apiResponse?.message);
       }
-      setLoading(false);
+      setCreating(false);
     },
     initialValues: carouselInitialValues,
     validationSchema: carouselSchema,
@@ -145,15 +141,17 @@ export function AddCarousel() {
   }
 
   return (
-    <div className="content-wrapper">
-      <div className="row">
-        <div className="col-md-12 grid-margin">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex gap-2">
-              <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Add Carousel</h4>
-            </div>
-            {/* <div>
+    <>
+      <ReactHelmet title="Add Carousel : Crown" description="Add Carousel" />
+      <div className="content-wrapper">
+        <div className="row">
+          <div className="col-md-12 grid-margin">
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex gap-2">
+                <GoBackButton />
+                <h4 className="font-weight-bold mb-0">Add Carousel</h4>
+              </div>
+              {/* <div>
               <button
                 type="button"
                 className="btn btn-primary btn-icon-text btn-rounded"
@@ -161,182 +159,183 @@ export function AddCarousel() {
                 <i className="ti-clipboard btn-icon-prepend"></i>Report
               </button>
             </div> */}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="row">
-        <div className="col-md-12 grid-margin stretch-card">
-          <form className="forms-sample" onSubmit={handleSubmit}>
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Carousel Title"
-                      name="title"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter title"
-                      value={values.title}
-                      required={true}
-                      touched={touched.title}
-                      error={errors.title}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Sub Title"
-                      name="subTitle"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter sub title"
-                      value={values.subTitle}
-                      required={false}
-                      touched={touched.subTitle}
-                      error={errors.subTitle}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-8">
-                    <label htmlFor={"imageFile"}>
-                      Carousel Image <span className="text-danger"> *</span>
-                    </label>
-                    <div className="d-flex gap-2">
-                      <input
-                        type="file"
-                        name="imageFile"
-                        id="imageFile"
-                        onChange={(evt) => {
-                          handleUploadFile(evt);
-                        }}
-                        className="form-control"
+        <div className="row">
+          <div className="col-md-12 grid-margin stretch-card">
+            <form className="forms-sample" onSubmit={handleSubmit}>
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Carousel Title"
+                        name="title"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter title"
+                        value={values.title}
+                        required={true}
+                        touched={touched.title}
+                        error={errors.title}
                       />
-                      {values.image ? (
-                        <Link to={`${values.image}`} target="_blank">
-                          <img
-                            className="img"
-                            height={43}
-                            width={43}
-                            src={`${values.image}`}
-                          />
-                        </Link>
-                      ) : null}
-                      {values.image ? (
-                        <button
-                          type="button"
-                          className="btn p-1"
-                          onClick={(evt) => {
-                            handleDeleteFile(
-                              evt,
-                              getFileNameFromUrl(values.image)
-                            );
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Sub Title"
+                        name="subTitle"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter sub title"
+                        value={values.subTitle}
+                        required={false}
+                        touched={touched.subTitle}
+                        error={errors.subTitle}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-8">
+                      <label htmlFor={"imageFile"}>
+                        Carousel Image <span className="text-danger"> *</span>
+                      </label>
+                      <div className="d-flex gap-2">
+                        <input
+                          type="file"
+                          name="imageFile"
+                          id="imageFile"
+                          onChange={(evt) => {
+                            handleUploadFile(evt);
                           }}
-                        >
-                          <i className="fa fa-trash text-danger"></i>
-                        </button>
+                          className="form-control"
+                        />
+                        {values.image ? (
+                          <Link to={`${values.image}`} target="_blank">
+                            <img
+                              className="img"
+                              height={43}
+                              width={43}
+                              src={`${values.image}`}
+                            />
+                          </Link>
+                        ) : null}
+                        {values.image ? (
+                          <button
+                            type="button"
+                            className="btn p-1"
+                            onClick={(evt) => {
+                              handleDeleteFile(
+                                evt,
+                                getFileNameFromUrl(values.image)
+                              );
+                            }}
+                          >
+                            <i className="fa fa-trash text-danger"></i>
+                          </button>
+                        ) : null}
+                      </div>
+                      {touched.image && errors.image ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.image}
+                        </p>
                       ) : null}
                     </div>
-                    {touched.image && errors.image ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.image}
-                      </p>
-                    ) : null}
-                  </div>
 
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Button Text"
-                      name="buttonText"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Button Text"
-                      value={values.buttonText}
-                      touched={touched.buttonText}
-                      error={errors.buttonText}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Button Link"
-                      name="buttonLink"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Button Link"
-                      value={values.buttonLink}
-                      touched={touched.buttonLink}
-                      error={errors.buttonLink}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-12">
-                    <InputBox
-                      label="Short Description"
-                      name="shortDescription"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter description"
-                      value={values.shortDescription}
-                      touched={touched.shortDescription}
-                      error={errors.shortDescription}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <label htmlFor="">Status</label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="true"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "true"}
-                        />
-                        <label htmlFor="true" className="mt-2">
-                          Active
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="false"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "false"}
-                        />
-                        <label htmlFor="false" className="mt-2">
-                          Disabled
-                        </label>
-                      </div>
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Button Text"
+                        name="buttonText"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Button Text"
+                        value={values.buttonText}
+                        touched={touched.buttonText}
+                        error={errors.buttonText}
+                      />
                     </div>
-                    {errors.status && touched.status ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.status}
-                      </p>
-                    ) : null}
-                  </div>
 
-                  <div className="">
-                    <SubmitButton loading={false} text="Add Carousel" />
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Button Link"
+                        name="buttonLink"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Button Link"
+                        value={values.buttonLink}
+                        touched={touched.buttonLink}
+                        error={errors.buttonLink}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-12">
+                      <InputBox
+                        label="Short Description"
+                        name="shortDescription"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter description"
+                        value={values.shortDescription}
+                        touched={touched.shortDescription}
+                        error={errors.shortDescription}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <label htmlFor="">Status</label>
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="status"
+                            id="true"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.status == "true"}
+                          />
+                          <label htmlFor="true" className="mt-2">
+                            Active
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="status"
+                            id="false"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.status == "false"}
+                          />
+                          <label htmlFor="false" className="mt-2">
+                            Disabled
+                          </label>
+                        </div>
+                      </div>
+                      {errors.status && touched.status ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.status}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="">
+                      <SubmitButton loading={creating} text="Add Carousel" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

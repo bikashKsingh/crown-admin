@@ -1,7 +1,6 @@
 import { DataTable, GoBackButton, Pagination } from "../../components";
 import {
   Column,
-  HeaderProps,
   Row,
   TableInstance,
   useFilters,
@@ -12,16 +11,16 @@ import {
 } from "react-table";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
 
 import { DateRangePicker } from "react-date-range";
 import { enUS } from "date-fns/locale";
+import { ReactHelmet } from "../../components/ui/ReactHelmet";
 
 export function OrderList() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [orderStatus, setOrderStatus] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
@@ -282,15 +281,17 @@ export function OrderList() {
   }
 
   return (
-    <div className="content-wrapper">
-      <div className="row">
-        <div className="col-md-12 grid-margin">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex gap-2">
-              <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Orders</h4>
-            </div>
-            {/* <div>
+    <>
+      <ReactHelmet title="Order List : Crown" description="Order List" />
+      <div className="content-wrapper">
+        <div className="row">
+          <div className="col-md-12 grid-margin">
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex gap-2">
+                <GoBackButton />
+                <h4 className="font-weight-bold mb-0">Orders</h4>
+              </div>
+              {/* <div>
               <Link
                 to={"/orders/add"}
                 type="button"
@@ -299,17 +300,17 @@ export function OrderList() {
                 Add User
               </Link>
             </div> */}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="row">
-        <div className="col-md-12 grid-margin stretch-card ">
-          <div className="card rounded-2">
-            <div className="card-body shadow-none">
-              <div className="row mb-2 gy-2">
-                <div className="col-md-8">
-                  {/* <input
+        <div className="row">
+          <div className="col-md-12 grid-margin stretch-card ">
+            <div className="card rounded-2">
+              <div className="card-body shadow-none">
+                <div className="row mb-2 gy-2">
+                  <div className="col-md-8">
+                    {/* <input
                     placeholder="Serach..."
                     className="form-control py-2"
                     type="serach"
@@ -318,72 +319,72 @@ export function OrderList() {
                     }
                   /> */}
 
-                  {/* Display selected date range */}
-                  <span
-                    style={{
-                      marginTop: "20px",
-                      fontSize: "14px",
-                      cursor: "pointer",
-                      boxShadow: "0px 1px 2px #5a5a5a",
-                      padding: 5,
-                      borderRadius: 10,
-                    }}
-                    onClick={() => {
-                      setCalendarVisible(!isCalendarVisible);
-                    }}
-                  >
-                    <span className="mt-3">
-                      <i className="ti-calendar"></i>
-                    </span>{" "}
-                    {`${selectionRange.startDate.toDateString()} - ${selectionRange.endDate.toDateString()}`}
-                  </span>
-
-                  {isCalendarVisible && (
-                    <div
+                    {/* Display selected date range */}
+                    <span
                       style={{
-                        marginTop: "10px",
-                        position: "absolute",
-                        left: "20px",
-                        background: "white",
-                        padding: "10px",
-                        boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
-                        borderRadius: "8px",
-                        zIndex: 10,
+                        marginTop: "20px",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        boxShadow: "0px 1px 2px #5a5a5a",
+                        padding: 5,
+                        borderRadius: 10,
+                      }}
+                      onClick={() => {
+                        setCalendarVisible(!isCalendarVisible);
                       }}
                     >
-                      <DateRangePicker
-                        ranges={[selectionRange]}
-                        onChange={(ranges) => {
-                          handleSelectDateRange(ranges);
+                      <span className="mt-3">
+                        <i className="ti-calendar"></i>
+                      </span>{" "}
+                      {`${selectionRange.startDate.toDateString()} - ${selectionRange.endDate.toDateString()}`}
+                    </span>
+
+                    {isCalendarVisible && (
+                      <div
+                        style={{
+                          marginTop: "10px",
+                          position: "absolute",
+                          left: "20px",
+                          background: "white",
+                          padding: "10px",
+                          boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+                          borderRadius: "8px",
+                          zIndex: 10,
                         }}
-                        locale={enUS}
-                        minDate={new Date("2024-01-01")}
-                        maxDate={new Date("2028-12-31")}
-                        direction="horizontal"
-                        editableDateInputs={true}
-                        scroll={{ enabled: false }}
-                        dateDisplayFormat="dd/MM/yyyy"
-                        rangeColors={["#4caf50"]} // Customize the highlight color
-                      />
+                      >
+                        <DateRangePicker
+                          ranges={[selectionRange]}
+                          onChange={(ranges) => {
+                            handleSelectDateRange(ranges);
+                          }}
+                          locale={enUS}
+                          minDate={new Date("2024-01-01")}
+                          maxDate={new Date("2028-12-31")}
+                          direction="horizontal"
+                          editableDateInputs={true}
+                          scroll={{ enabled: false }}
+                          dateDisplayFormat="dd/MM/yyyy"
+                          rangeColors={["#4caf50"]} // Customize the highlight color
+                        />
 
-                      <div className="d-flex gap-2 justify-content-end">
-                        <div className="">
-                          <button
-                            className="btn btn-danger p-2"
-                            onClick={() => {
-                              setCalendarVisible(false); // Close calendar
-                              console.log(
-                                "Selected Date Range:",
-                                selectionRange
-                              );
-                            }}
-                          >
-                            Cancel
-                          </button>
-                        </div>
+                        <div className="d-flex gap-2 justify-content-end">
+                          <div className="">
+                            <button
+                              className="btn btn-danger p-2"
+                              onClick={() => {
+                                setCalendarVisible(false); // Close calendar
+                                console.log(
+                                  "Selected Date Range:",
+                                  selectionRange
+                                );
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
 
-                        {/* Apply Button */}
-                        {/* <div className="">
+                          {/* Apply Button */}
+                          {/* <div className="">
                           <button
                             className="btn btn-success p-2"
                             onClick={() => {
@@ -397,119 +398,120 @@ export function OrderList() {
                             Apply
                           </button>
                         </div> */}
+                        </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-                <div className="col-md-4 d-flex gap-2 justify-content-md-end">
-                  {/* <button className="btn p-2 bg-light border">
+                    )}
+                  </div>
+                  <div className="col-md-4 d-flex gap-2 justify-content-md-end">
+                    {/* <button className="btn p-2 bg-light border">
                     <i className="ti-search"></i>
                   </button> */}
-                  {selectedFlatRows.length ? (
-                    <button
-                      className="btn p-2 bg-light border"
-                      onClick={() => {
-                        handleDeleteData(handleSelectedRows());
-                      }}
-                    >
-                      <i className="fas fa-trash-alt text-danger"></i>
-                    </button>
-                  ) : null}
+                    {selectedFlatRows.length ? (
+                      <button
+                        className="btn p-2 bg-light border"
+                        onClick={() => {
+                          handleDeleteData(handleSelectedRows());
+                        }}
+                      >
+                        <i className="fas fa-trash-alt text-danger"></i>
+                      </button>
+                    ) : null}
 
-                  <div className="dropdown">
-                    <a
-                      className="btn p-2 bg-light border"
-                      href="#"
-                      role="button"
-                      id="dropdownMenuLink"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <i className="ti-filter"></i>
-                    </a>
+                    <div className="dropdown">
+                      <a
+                        className="btn p-2 bg-light border"
+                        href="#"
+                        role="button"
+                        id="dropdownMenuLink"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i className="ti-filter"></i>
+                      </a>
 
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownMenuLink"
-                    >
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="all"
-                          value={"All"}
-                          name="orderStatus"
-                          onChange={handleSetOrderStatus}
-                        />
-                        <label htmlFor="all">All</label>
-                      </li>
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="orderPlaced"
-                          value={"ORDER_PLACED"}
-                          name="orderStatus"
-                          onChange={handleSetOrderStatus}
-                        />
-                        <label htmlFor="orderPlaced">ORDER PLACED</label>
-                      </li>
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="dispatched"
-                          value={"DISPATCHED"}
-                          name="orderStatus"
-                          onChange={handleSetOrderStatus}
-                        />
-                        <label htmlFor="dispatched">DISPATCHED</label>
-                      </li>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="dropdownMenuLink"
+                      >
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="all"
+                            value={"All"}
+                            name="orderStatus"
+                            onChange={handleSetOrderStatus}
+                          />
+                          <label htmlFor="all">All</label>
+                        </li>
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="orderPlaced"
+                            value={"ORDER_PLACED"}
+                            name="orderStatus"
+                            onChange={handleSetOrderStatus}
+                          />
+                          <label htmlFor="orderPlaced">ORDER PLACED</label>
+                        </li>
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="dispatched"
+                            value={"DISPATCHED"}
+                            name="orderStatus"
+                            onChange={handleSetOrderStatus}
+                          />
+                          <label htmlFor="dispatched">DISPATCHED</label>
+                        </li>
 
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="delivered"
-                          value={"DELIVERED"}
-                          name="orderStatus"
-                          onChange={handleSetOrderStatus}
-                        />
-                        <label htmlFor="delivered">DELIVERED</label>
-                      </li>
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="delivered"
+                            value={"DELIVERED"}
+                            name="orderStatus"
+                            onChange={handleSetOrderStatus}
+                          />
+                          <label htmlFor="delivered">DELIVERED</label>
+                        </li>
 
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="cancelled"
-                          value={"CANCELLED"}
-                          name="orderStatus"
-                          onChange={handleSetOrderStatus}
-                        />
-                        <label htmlFor="cancelled">CANCELLED</label>
-                      </li>
-                    </ul>
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="cancelled"
+                            value={"CANCELLED"}
+                            name="orderStatus"
+                            onChange={handleSetOrderStatus}
+                          />
+                          <label htmlFor="cancelled">CANCELLED</label>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="table-responsive">
-                {/* Data Table */}
-                <DataTable
-                  getTableBodyProps={getTableProps}
-                  getTableProps={getTableProps}
-                  headerGroups={headerGroups}
-                  rows={rows}
-                  prepareRow={prepareRow}
-                />
-                {/* Pagination */}
-                <Pagination
-                  pagination={pagination}
-                  setPagination={setPagination}
-                  tableName={"table-to-xls"}
-                  csvFileName={"coupons"}
-                />
+                <div className="table-responsive">
+                  {/* Data Table */}
+                  <DataTable
+                    getTableBodyProps={getTableProps}
+                    getTableProps={getTableProps}
+                    headerGroups={headerGroups}
+                    rows={rows}
+                    prepareRow={prepareRow}
+                  />
+                  {/* Pagination */}
+                  <Pagination
+                    pagination={pagination}
+                    setPagination={setPagination}
+                    tableName={"table-to-xls"}
+                    csvFileName={"coupons"}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

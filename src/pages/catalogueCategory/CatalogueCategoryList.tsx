@@ -1,7 +1,6 @@
 import { DataTable, GoBackButton, Pagination } from "../../components";
 import {
   Column,
-  HeaderProps,
   Row,
   TableInstance,
   useFilters,
@@ -12,14 +11,13 @@ import {
 } from "react-table";
 import React, { useEffect, useState } from "react";
 import moment from "moment";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
-import { FILE_URL } from "../../constants";
+import { ReactHelmet } from "../../components/ui/ReactHelmet";
 
 export function CatalogueCategoryList() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [status, setStatus] = useState<boolean | string>("");
   const [needReload, setNeedReload] = useState<boolean>(false);
@@ -245,128 +243,136 @@ export function CatalogueCategoryList() {
   }
 
   return (
-    <div className="content-wrapper">
-      <div className="row">
-        <div className="col-md-12 grid-margin">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex gap-2">
-              <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Category Category List</h4>
-            </div>
-            <div>
-              <Link
-                to={"/catalogueCategories/add"}
-                type="button"
-                className="btn btn-primary text-light"
-              >
-                Add Category
-              </Link>
+    <>
+      <ReactHelmet
+        title="Catalogue Category List : Crown"
+        description="Catalogue Category List"
+      />
+      <div className="content-wrapper">
+        <div className="row">
+          <div className="col-md-12 grid-margin">
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex gap-2">
+                <GoBackButton />
+                <h4 className="font-weight-bold mb-0">
+                  Category Category List
+                </h4>
+              </div>
+              <div>
+                <Link
+                  to={"/catalogueCategories/add"}
+                  type="button"
+                  className="btn btn-primary text-light"
+                >
+                  Add Category
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="row">
-        <div className="col-md-12 grid-margin stretch-card ">
-          <div className="card rounded-2">
-            <div className="card-body shadow-none">
-              <div className="row mb-2 gy-2">
-                <div className="col-8">
-                  <input
-                    placeholder="Serach..."
-                    className="form-control py-2"
-                    type="serach"
-                    onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
-                      setSearchQuery(evt.target.value)
-                    }
-                  />
-                </div>
-                <div className="col-4 d-flex gap-2 justify-content-md-end">
-                  {/* <button className="btn p-2 bg-light border">
+        <div className="row">
+          <div className="col-md-12 grid-margin stretch-card ">
+            <div className="card rounded-2">
+              <div className="card-body shadow-none">
+                <div className="row mb-2 gy-2">
+                  <div className="col-8">
+                    <input
+                      placeholder="Serach..."
+                      className="form-control py-2"
+                      type="serach"
+                      onChange={(evt: React.ChangeEvent<HTMLInputElement>) =>
+                        setSearchQuery(evt.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="col-4 d-flex gap-2 justify-content-md-end">
+                    {/* <button className="btn p-2 bg-light border">
                     <i className="ti-search"></i>
                   </button> */}
-                  {selectedFlatRows.length ? (
-                    <button
-                      className="btn p-2 bg-light border"
-                      onClick={() => {
-                        handleDeleteData(handleSelectedRows());
-                      }}
-                    >
-                      <i className="fas fa-trash-alt text-danger"></i>
-                    </button>
-                  ) : null}
+                    {selectedFlatRows.length ? (
+                      <button
+                        className="btn p-2 bg-light border"
+                        onClick={() => {
+                          handleDeleteData(handleSelectedRows());
+                        }}
+                      >
+                        <i className="fas fa-trash-alt text-danger"></i>
+                      </button>
+                    ) : null}
 
-                  <div className="dropdown">
-                    <a
-                      className="btn p-2 bg-light border"
-                      href="#"
-                      role="button"
-                      id="dropdownMenuLink"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      <i className="ti-filter"></i>
-                    </a>
+                    <div className="dropdown">
+                      <a
+                        className="btn p-2 bg-light border"
+                        href="#"
+                        role="button"
+                        id="dropdownMenuLink"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        <i className="ti-filter"></i>
+                      </a>
 
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="dropdownMenuLink"
-                    >
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="all"
-                          value={"All"}
-                          name="status"
-                          onChange={handleSetStatus}
-                        />
-                        <label htmlFor="all">All</label>
-                      </li>
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="active"
-                          value={"true"}
-                          name="status"
-                          onChange={handleSetStatus}
-                        />
-                        <label htmlFor="active">Active</label>
-                      </li>
-                      <li className="d-flex px-3 gap-2">
-                        <input
-                          type="radio"
-                          id="disabled"
-                          value={"false"}
-                          name="status"
-                          onChange={handleSetStatus}
-                        />
-                        <label htmlFor="disabled">Disabled</label>
-                      </li>
-                    </ul>
+                      <ul
+                        className="dropdown-menu"
+                        aria-labelledby="dropdownMenuLink"
+                      >
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="all"
+                            value={"All"}
+                            name="status"
+                            onChange={handleSetStatus}
+                          />
+                          <label htmlFor="all">All</label>
+                        </li>
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="active"
+                            value={"true"}
+                            name="status"
+                            onChange={handleSetStatus}
+                          />
+                          <label htmlFor="active">Active</label>
+                        </li>
+                        <li className="d-flex px-3 gap-2">
+                          <input
+                            type="radio"
+                            id="disabled"
+                            value={"false"}
+                            name="status"
+                            onChange={handleSetStatus}
+                          />
+                          <label htmlFor="disabled">Disabled</label>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="table-responsive">
-                {/* Data Table */}
-                <DataTable
-                  getTableBodyProps={getTableProps}
-                  getTableProps={getTableProps}
-                  headerGroups={headerGroups}
-                  rows={rows}
-                  prepareRow={prepareRow}
-                />
-                {/* Pagination */}
-                <Pagination
-                  pagination={pagination}
-                  setPagination={setPagination}
-                  tableName={"table-to-xls"}
-                  csvFileName={"coupons"}
-                />
+                <div className="table-responsive">
+                  {/* Data Table */}
+                  <DataTable
+                    getTableBodyProps={getTableProps}
+                    getTableProps={getTableProps}
+                    headerGroups={headerGroups}
+                    rows={rows}
+                    prepareRow={prepareRow}
+                  />
+                  {/* Pagination */}
+                  <Pagination
+                    pagination={pagination}
+                    setPagination={setPagination}
+                    tableName={"table-to-xls"}
+                    csvFileName={"coupons"}
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

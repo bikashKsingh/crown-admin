@@ -102,6 +102,14 @@ export function Sidebar() {
           </div>
         </li>
 
+        {/* Certificate */}
+        <li className="nav-item">
+          <Link className="nav-link" to="/certificates">
+            <i className="ti-crown menu-icon"></i>
+            <span className="menu-title">Certificates</span>
+          </Link>
+        </li>
+
         {/* Pages */}
         <li className="nav-item">
           <a

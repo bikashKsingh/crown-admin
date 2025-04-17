@@ -13,14 +13,15 @@ import {
   categoryInitialValues,
 } from "../../validationSchemas/subCategorySchema";
 import { useEffect, useState } from "react";
-import { generateSlug, get, post, remove } from "../../utills";
+import { addUrlToFile, generateSlug, get, post, remove } from "../../utills";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL, FILE_URL } from "../../constants";
+import { API_URL } from "../../constants";
+import { ReactHelmet } from "../../components/ui/ReactHelmet";
 
 export function AddSubCategory() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [creating, setCreating] = useState<boolean>(false);
   const [categories, setCategories] = useState<any[]>([]);
   const {
     values,
@@ -37,7 +38,7 @@ export function AddSubCategory() {
       values: CategoryValues,
       helpers: FormikHelpers<CategoryValues>
     ) {
-      setLoading(true);
+      setCreating(true);
 
       const newValue = {
         ...values,
@@ -55,7 +56,7 @@ export function AddSubCategory() {
         helpers.setErrors(apiResponse?.errors);
         toast.error(apiResponse?.message);
       }
-      setLoading(false);
+      setCreating(false);
     },
     initialValues: categoryInitialValues,
     validationSchema: categorySchema,
@@ -212,20 +213,21 @@ export function AddSubCategory() {
     }
   }
 
-  function addUrlToFile(file: any) {
-    return `${FILE_URL}/${file}`;
-  }
-
   return (
-    <div className="content-wrapper">
-      <div className="row">
-        <div className="col-md-12 grid-margin">
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex gap-2">
-              <GoBackButton />
-              <h4 className="font-weight-bold mb-0">Add Sub Category</h4>
-            </div>
-            {/* <div>
+    <>
+      <ReactHelmet
+        title="Add Sub Category : Crown"
+        description="Add Sub Category"
+      />
+      <div className="content-wrapper">
+        <div className="row">
+          <div className="col-md-12 grid-margin">
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex gap-2">
+                <GoBackButton />
+                <h4 className="font-weight-bold mb-0">Add Sub Category</h4>
+              </div>
+              {/* <div>
               <button
                 type="button"
                 className="btn btn-primary btn-icon-text btn-rounded"
@@ -233,410 +235,411 @@ export function AddSubCategory() {
                 <i className="ti-clipboard btn-icon-prepend"></i>Report
               </button>
             </div> */}
+            </div>
+          </div>
+        </div>
+
+        <div className="row">
+          <div className="col-md-12 grid-margin stretch-card">
+            <form className="forms-sample" onSubmit={handleSubmit}>
+              <div className="card rounded-2 ">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Category Name"
+                        name="name"
+                        handleBlur={handleBlur}
+                        handleChange={handleTitleChange}
+                        type="text"
+                        placeholder="Enter category name"
+                        value={values.name}
+                        required={true}
+                        touched={touched.name}
+                        error={errors.name}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Category Slug"
+                        name="slug"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter category slug"
+                        value={values.slug}
+                        required={true}
+                        touched={touched.slug}
+                        error={errors.slug}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-8">
+                      <label htmlFor={"imageFile"}>
+                        Category Image
+                        {/* <span className="text-danger"> *</span> */}
+                      </label>
+                      <div className="d-flex gap-2">
+                        <input
+                          type="file"
+                          name="imageFile"
+                          id="imageFile"
+                          onChange={(evt) => {
+                            handleUploadFile(evt, "MAIN_IMAGE");
+                          }}
+                          className="form-control"
+                        />
+                        {values.image ? (
+                          <Link to={`${values.image}`} target="_blank">
+                            <img
+                              className="img"
+                              height={43}
+                              width={43}
+                              src={`${addUrlToFile(values.image)}`}
+                            />
+                          </Link>
+                        ) : null}
+                        {values.image ? (
+                          <button
+                            type="button"
+                            className="btn p-1"
+                            onClick={(evt) => {
+                              handleDeleteFile(evt, values.image, "MAIN_IMAGE");
+                            }}
+                          >
+                            <i className="fa fa-trash text-danger"></i>
+                          </button>
+                        ) : null}
+                      </div>
+                      {touched.image && errors.image ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.image}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <CustomSelect
+                        label="Select Category"
+                        placeholder="Select Category"
+                        name="categories"
+                        required={true}
+                        options={categories}
+                        value={values.categories}
+                        error={errors.categories}
+                        touched={touched.categories}
+                        handleChange={(value) => {
+                          setFieldValue("categories", value);
+                        }}
+                        handleBlur={() => {
+                          setFieldTouched("categories", true);
+                        }}
+                        isMulti={true}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                      <InputBox
+                        label="Priority"
+                        name="priority"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="number"
+                        placeholder="Enter priority"
+                        value={values.priority}
+                        touched={touched.priority}
+                        error={errors.priority}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-12">
+                      <InputBox
+                        label="Short Description"
+                        name="shortDescription"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter description"
+                        value={values.shortDescription}
+                        touched={touched.shortDescription}
+                        error={errors.shortDescription}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-4">
+                      <label htmlFor="">
+                        Status <span className="text-danger">*</span>
+                      </label>
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="status"
+                            id="true"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.status == "true"}
+                          />
+                          <label htmlFor="true" className="mt-2">
+                            Active
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="status"
+                            id="false"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.status == "false"}
+                          />
+                          <label htmlFor="false" className="mt-2">
+                            Disabled
+                          </label>
+                        </div>
+                      </div>
+                      {errors.status && touched.status ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.status}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="form-group col-md-4">
+                      <label htmlFor="">
+                        Is Application <span className="text-danger">*</span>
+                      </label>
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="isApplication"
+                            id="isApplicationTrue"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isApplication == "true"}
+                          />
+                          <label htmlFor="isApplicationTrue" className="mt-2">
+                            Yes
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="isApplication"
+                            id="isApplicationFalse"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isApplication == "false"}
+                          />
+                          <label htmlFor="isApplicationFalse" className="mt-2">
+                            No
+                          </label>
+                        </div>
+                      </div>
+                      {errors.isApplication && touched.isApplication ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.isApplication}
+                        </p>
+                      ) : null}
+                    </div>
+
+                    <div className="form-group col-md-4">
+                      <label htmlFor="">
+                        Add To Navigation <span className="text-danger">*</span>
+                      </label>
+
+                      <div className="d-flex gap-3">
+                        <div className="d-flex align-items-center gap-2">
+                          <input
+                            type="radio"
+                            name="isAddedToNavigation"
+                            id="isAddedToNavigationTrue"
+                            value={"true"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isAddedToNavigation == "true"}
+                          />
+                          <label
+                            htmlFor="isAddedToNavigationTrue"
+                            className="mt-2"
+                          >
+                            Yes
+                          </label>
+                        </div>
+                        <div className="d-flex align-items-center gap-1">
+                          <input
+                            type="radio"
+                            name="isAddedToNavigation"
+                            id="isAddedToNavigationFalse"
+                            value={"false"}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            checked={values.isAddedToNavigation == "false"}
+                          />
+                          <label
+                            htmlFor="isAddedToNavigationFalse"
+                            className="mt-2"
+                          >
+                            No
+                          </label>
+                        </div>
+                      </div>
+                      {errors.isAddedToNavigation &&
+                      touched.isAddedToNavigation ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.isAddedToNavigation}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  {/* <SubmitButton loading={false} text="Add Category" /> */}
+                </div>
+              </div>
+
+              {/* Listing Details */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-2">Listing Details</h5>
+                    </div>
+                    <div className="form-group col-md-12">
+                      <InputBox
+                        label="Listing Title"
+                        name="listingTitle"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter title"
+                        value={values.listingTitle}
+                        touched={touched.listingTitle}
+                        error={errors.listingTitle}
+                      />
+                    </div>
+                    <div className="form-group col-md-12">
+                      <TextareaBox
+                        label="Listing Description"
+                        name="listingDescription"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        placeholder="Enter description"
+                        value={values.listingDescription}
+                        touched={touched.listingDescription}
+                        error={errors.listingDescription}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-8">
+                      <label htmlFor={"listingImageFile"}>Listing Image</label>
+                      <div className="d-flex gap-2">
+                        <input
+                          type="file"
+                          name="listingImageFile"
+                          id="listingImageFile"
+                          onChange={(evt) => {
+                            handleUploadFile(evt, "LISTING_IMAGE");
+                          }}
+                          className="form-control"
+                        />
+                        {values.listingImage ? (
+                          <Link to={`${values.listingImage}`} target="_blank">
+                            <img
+                              className="img"
+                              height={43}
+                              width={43}
+                              src={`${addUrlToFile(values.listingImage)}`}
+                            />
+                          </Link>
+                        ) : null}
+                        {values.listingImage ? (
+                          <button
+                            type="button"
+                            className="btn p-1"
+                            onClick={(evt) => {
+                              handleDeleteFile(
+                                evt,
+                                values.listingImage,
+                                "LISTING_IMAGE"
+                              );
+                            }}
+                          >
+                            <i className="fa fa-trash text-danger"></i>
+                          </button>
+                        ) : null}
+                      </div>
+                      {touched.listingImage && errors.listingImage ? (
+                        <p className="custom-form-error text-danger">
+                          {errors.listingImage}
+                        </p>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* META Details */}
+              <div className="card rounded-2 mt-4">
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-md-12">
+                      <h5 className="mb-2">META Details</h5>
+                    </div>
+                    <div className="form-group col-md-12">
+                      <InputBox
+                        label="Meta Title"
+                        name="metaTitle"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        type="text"
+                        placeholder="Enter meta title"
+                        value={values.metaTitle}
+                        touched={touched.metaTitle}
+                        error={errors.metaTitle}
+                      />
+                    </div>
+                    <div className="form-group col-md-12">
+                      <TextareaBox
+                        label="Meta Description"
+                        name="metaDescription"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        placeholder="Enter meta description"
+                        value={values.metaDescription}
+                        touched={touched.metaDescription}
+                        error={errors.metaDescription}
+                      />
+                    </div>
+
+                    <div className="form-group col-md-12">
+                      <TextareaBox
+                        label="Meta Keywords"
+                        name="metaKeywords"
+                        handleBlur={handleBlur}
+                        handleChange={handleChange}
+                        placeholder="Enter meta keywords (comma saparated values)"
+                        value={values.metaKeywords}
+                        touched={touched.metaKeywords}
+                        error={errors.metaKeywords}
+                      />
+                    </div>
+
+                    <div className="">
+                      <SubmitButton loading={creating} text="Add Category" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-
-      <div className="row">
-        <div className="col-md-12 grid-margin stretch-card">
-          <form className="forms-sample" onSubmit={handleSubmit}>
-            <div className="card rounded-2 ">
-              <div className="card-body">
-                <div className="row">
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Category Name"
-                      name="name"
-                      handleBlur={handleBlur}
-                      handleChange={handleTitleChange}
-                      type="text"
-                      placeholder="Enter category name"
-                      value={values.name}
-                      required={true}
-                      touched={touched.name}
-                      error={errors.name}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Category Slug"
-                      name="slug"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter category slug"
-                      value={values.slug}
-                      required={true}
-                      touched={touched.slug}
-                      error={errors.slug}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-8">
-                    <label htmlFor={"imageFile"}>
-                      Category Image
-                      {/* <span className="text-danger"> *</span> */}
-                    </label>
-                    <div className="d-flex gap-2">
-                      <input
-                        type="file"
-                        name="imageFile"
-                        id="imageFile"
-                        onChange={(evt) => {
-                          handleUploadFile(evt, "MAIN_IMAGE");
-                        }}
-                        className="form-control"
-                      />
-                      {values.image ? (
-                        <Link to={`${values.image}`} target="_blank">
-                          <img
-                            className="img"
-                            height={43}
-                            width={43}
-                            src={`${addUrlToFile(values.image)}`}
-                          />
-                        </Link>
-                      ) : null}
-                      {values.image ? (
-                        <button
-                          type="button"
-                          className="btn p-1"
-                          onClick={(evt) => {
-                            handleDeleteFile(evt, values.image, "MAIN_IMAGE");
-                          }}
-                        >
-                          <i className="fa fa-trash text-danger"></i>
-                        </button>
-                      ) : null}
-                    </div>
-                    {touched.image && errors.image ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.image}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <CustomSelect
-                      label="Select Category"
-                      placeholder="Select Category"
-                      name="categories"
-                      required={true}
-                      options={categories}
-                      value={values.categories}
-                      error={errors.categories}
-                      touched={touched.categories}
-                      handleChange={(value) => {
-                        setFieldValue("categories", value);
-                      }}
-                      handleBlur={() => {
-                        setFieldTouched("categories", true);
-                      }}
-                      isMulti={true}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-6">
-                    <InputBox
-                      label="Priority"
-                      name="priority"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="number"
-                      placeholder="Enter priority"
-                      value={values.priority}
-                      touched={touched.priority}
-                      error={errors.priority}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-12">
-                    <InputBox
-                      label="Short Description"
-                      name="shortDescription"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter description"
-                      value={values.shortDescription}
-                      touched={touched.shortDescription}
-                      error={errors.shortDescription}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-4">
-                    <label htmlFor="">
-                      Status <span className="text-danger">*</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="true"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "true"}
-                        />
-                        <label htmlFor="true" className="mt-2">
-                          Active
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="status"
-                          id="false"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.status == "false"}
-                        />
-                        <label htmlFor="false" className="mt-2">
-                          Disabled
-                        </label>
-                      </div>
-                    </div>
-                    {errors.status && touched.status ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.status}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="form-group col-md-4">
-                    <label htmlFor="">
-                      Is Application <span className="text-danger">*</span>
-                    </label>
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="isApplication"
-                          id="isApplicationTrue"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isApplication == "true"}
-                        />
-                        <label htmlFor="isApplicationTrue" className="mt-2">
-                          Yes
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="isApplication"
-                          id="isApplicationFalse"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isApplication == "false"}
-                        />
-                        <label htmlFor="isApplicationFalse" className="mt-2">
-                          No
-                        </label>
-                      </div>
-                    </div>
-                    {errors.isApplication && touched.isApplication ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.isApplication}
-                      </p>
-                    ) : null}
-                  </div>
-
-                  <div className="form-group col-md-4">
-                    <label htmlFor="">
-                      Add To Navigation <span className="text-danger">*</span>
-                    </label>
-
-                    <div className="d-flex gap-3">
-                      <div className="d-flex align-items-center gap-2">
-                        <input
-                          type="radio"
-                          name="isAddedToNavigation"
-                          id="isAddedToNavigationTrue"
-                          value={"true"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isAddedToNavigation == "true"}
-                        />
-                        <label
-                          htmlFor="isAddedToNavigationTrue"
-                          className="mt-2"
-                        >
-                          Yes
-                        </label>
-                      </div>
-                      <div className="d-flex align-items-center gap-1">
-                        <input
-                          type="radio"
-                          name="isAddedToNavigation"
-                          id="isAddedToNavigationFalse"
-                          value={"false"}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          checked={values.isAddedToNavigation == "false"}
-                        />
-                        <label
-                          htmlFor="isAddedToNavigationFalse"
-                          className="mt-2"
-                        >
-                          No
-                        </label>
-                      </div>
-                    </div>
-                    {errors.isAddedToNavigation &&
-                    touched.isAddedToNavigation ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.isAddedToNavigation}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-
-                {/* <SubmitButton loading={false} text="Add Category" /> */}
-              </div>
-            </div>
-
-            {/* Listing Details */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h5 className="mb-2">Listing Details</h5>
-                  </div>
-                  <div className="form-group col-md-12">
-                    <InputBox
-                      label="Listing Title"
-                      name="listingTitle"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter title"
-                      value={values.listingTitle}
-                      touched={touched.listingTitle}
-                      error={errors.listingTitle}
-                    />
-                  </div>
-                  <div className="form-group col-md-12">
-                    <TextareaBox
-                      label="Listing Description"
-                      name="listingDescription"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      placeholder="Enter description"
-                      value={values.listingDescription}
-                      touched={touched.listingDescription}
-                      error={errors.listingDescription}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-8">
-                    <label htmlFor={"listingImageFile"}>Listing Image</label>
-                    <div className="d-flex gap-2">
-                      <input
-                        type="file"
-                        name="listingImageFile"
-                        id="listingImageFile"
-                        onChange={(evt) => {
-                          handleUploadFile(evt, "LISTING_IMAGE");
-                        }}
-                        className="form-control"
-                      />
-                      {values.listingImage ? (
-                        <Link to={`${values.listingImage}`} target="_blank">
-                          <img
-                            className="img"
-                            height={43}
-                            width={43}
-                            src={`${addUrlToFile(values.listingImage)}`}
-                          />
-                        </Link>
-                      ) : null}
-                      {values.listingImage ? (
-                        <button
-                          type="button"
-                          className="btn p-1"
-                          onClick={(evt) => {
-                            handleDeleteFile(
-                              evt,
-                              values.listingImage,
-                              "LISTING_IMAGE"
-                            );
-                          }}
-                        >
-                          <i className="fa fa-trash text-danger"></i>
-                        </button>
-                      ) : null}
-                    </div>
-                    {touched.listingImage && errors.listingImage ? (
-                      <p className="custom-form-error text-danger">
-                        {errors.listingImage}
-                      </p>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* META Details */}
-            <div className="card rounded-2 mt-4">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-md-12">
-                    <h5 className="mb-2">META Details</h5>
-                  </div>
-                  <div className="form-group col-md-12">
-                    <InputBox
-                      label="Meta Title"
-                      name="metaTitle"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      type="text"
-                      placeholder="Enter meta title"
-                      value={values.metaTitle}
-                      touched={touched.metaTitle}
-                      error={errors.metaTitle}
-                    />
-                  </div>
-                  <div className="form-group col-md-12">
-                    <TextareaBox
-                      label="Meta Description"
-                      name="metaDescription"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      placeholder="Enter meta description"
-                      value={values.metaDescription}
-                      touched={touched.metaDescription}
-                      error={errors.metaDescription}
-                    />
-                  </div>
-
-                  <div className="form-group col-md-12">
-                    <TextareaBox
-                      label="Meta Keywords"
-                      name="metaKeywords"
-                      handleBlur={handleBlur}
-                      handleChange={handleChange}
-                      placeholder="Enter meta keywords (comma saparated values)"
-                      value={values.metaKeywords}
-                      touched={touched.metaKeywords}
-                      error={errors.metaKeywords}
-                    />
-                  </div>
-
-                  <div className="">
-                    <SubmitButton loading={false} text="Add Category" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }

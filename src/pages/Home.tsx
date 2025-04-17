@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import { Spinner } from "../components/ui/Spinner";
+import { ReactHelmet } from "../components/ui/ReactHelmet";
 
 export function Home() {
   const chartContainerStyle: any = {
@@ -176,202 +177,204 @@ export function Home() {
   }, []);
 
   return (
-    <div className="content-wrapper">
-      <div className="row">
-        <div className="col-md-12 grid-margin">
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h4 className="font-weight-bold mb-0">Dashboard</h4>
-            </div>
-            <div>
-              {/* <button
+    <>
+      <ReactHelmet title="Dashboard : Crown" description="Dashboard" />
+      <div className="content-wrapper">
+        <div className="row">
+          <div className="col-md-12 grid-margin">
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h4 className="font-weight-bold mb-0">Dashboard</h4>
+              </div>
+              <div>
+                {/* <button
                 type="button"
                 className="btn btn-primary btn-icon-text btn-rounded"
               >
                 <i className="ti-clipboard btn-icon-prepend"></i>Report
               </button> */}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="row">
-        {/* Total Products */}
-        <div className="col-md-3 grid-margin stretch-card">
-          <div className="card">
-            <div className="card-body">
-              <Link to={"/products"} style={{ textDecoration: "none" }}>
-                <p className="card-title text-xl-left">Total Products</p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
-                    {productLoading ? <Spinner /> : totalProducts}
-                  </h3>
-                  <i className="ti-package icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
-                </div>
-                {/* <p className="mb-0 mt-2 text-danger">
+        <div className="row">
+          {/* Total Products */}
+          <div className="col-md-3 grid-margin stretch-card">
+            <div className="card">
+              <div className="card-body">
+                <Link to={"/products"} style={{ textDecoration: "none" }}>
+                  <p className="card-title text-xl-left">Total Products</p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                      {productLoading ? <Spinner /> : totalProducts}
+                    </h3>
+                    <i className="ti-package icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-danger">
                 0.12%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Total Orders */}
-        <div className="col-md-3 grid-margin stretch-card">
-          <div className="card">
-            <div className="card-body">
-              <Link to={"/orders"} style={{ textDecoration: "none" }}>
-                <p className="card-title  text-xl-left">Total Orders</p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
-                    {orderLoading ? <Spinner /> : totalOrders}
-                  </h3>
-                  <i className="ti-shopping-cart icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
-                </div>
-                {/* <p className="mb-0 mt-2 text-danger">
+          {/* Total Orders */}
+          <div className="col-md-3 grid-margin stretch-card">
+            <div className="card">
+              <div className="card-body">
+                <Link to={"/orders"} style={{ textDecoration: "none" }}>
+                  <p className="card-title  text-xl-left">Total Orders</p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                      {orderLoading ? <Spinner /> : totalOrders}
+                    </h3>
+                    <i className="ti-shopping-cart icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-danger">
                 0.47%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Total Inquiry */}
-        <div className="col-md-3 grid-margin stretch-card">
-          <div className="card">
-            <div className="card-body">
-              <Link to={"/inquiries"} style={{ textDecoration: "none" }}>
-                <p className="card-title  text-xl-left">Total Inquiry</p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
-                    {inquiryLoading ? <Spinner /> : totalInquiries}
-                  </h3>
-                  <PiUsersFourLight className="ti-layers-alt icon-md text-muted mb-0 mb-md-3 mb-xl-0" />
-                  {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
-                </div>
-                {/* <p className="mb-0 mt-2 text-success">
+          {/* Total Inquiry */}
+          <div className="col-md-3 grid-margin stretch-card">
+            <div className="card">
+              <div className="card-body">
+                <Link to={"/inquiries"} style={{ textDecoration: "none" }}>
+                  <p className="card-title  text-xl-left">Total Inquiry</p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                      {inquiryLoading ? <Spinner /> : totalInquiries}
+                    </h3>
+                    <PiUsersFourLight className="ti-layers-alt icon-md text-muted mb-0 mb-md-3 mb-xl-0" />
+                    {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-success">
                 64.00%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Total Subscribers */}
-        <div className="col-md-3 grid-margin stretch-card">
-          <div className="card">
-            <div className="card-body">
-              <Link to={"/newsletters"} style={{ textDecoration: "none" }}>
-                <p className="card-title  text-xl-left">Total Subscribers</p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
-                    {newsletterLoading ? <Spinner /> : totalNewsletters}
-                  </h3>
+          {/* Total Subscribers */}
+          <div className="col-md-3 grid-margin stretch-card">
+            <div className="card">
+              <div className="card-body">
+                <Link to={"/newsletters"} style={{ textDecoration: "none" }}>
+                  <p className="card-title  text-xl-left">Total Subscribers</p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-dark">
+                      {newsletterLoading ? <Spinner /> : totalNewsletters}
+                    </h3>
 
-                  <i className="ti-email icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
-                </div>
-                {/* <p className="mb-0 mt-2 text-success">
+                    <i className="ti-email icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-success">
                 23.00%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="row">
-        {/* Total Sizes */}
-        <div className="col-md-4 grid-margin stretch-card">
-          <div className="card bg-info">
-            <div className="card-body">
-              <Link to={"/sizes"} style={{ textDecoration: "none" }}>
-                <p className="card-title text-white text-xl-left">
-                  Total Sizes
-                </p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white">
-                    {sizeLoading ? <Spinner /> : totalSizes}
-                  </h3>
-                  <i className="ti-arrows-horizontal icon-md text-white mb-0 mb-md-3 mb-xl-0"></i>
-                </div>
-                {/* <p className="mb-0 mt-2 text-danger">
+        <div className="row">
+          {/* Total Sizes */}
+          <div className="col-md-4 grid-margin stretch-card">
+            <div className="card bg-info">
+              <div className="card-body">
+                <Link to={"/sizes"} style={{ textDecoration: "none" }}>
+                  <p className="card-title text-white text-xl-left">
+                    Total Sizes
+                  </p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white">
+                      {sizeLoading ? <Spinner /> : totalSizes}
+                    </h3>
+                    <i className="ti-arrows-horizontal icon-md text-white mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-danger">
                 0.47%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Total Finishes */}
-        <div className="col-md-4 grid-margin stretch-card">
-          <div className="card bg-warning">
-            <div className="card-body">
-              <Link to={"/finishes"} style={{ textDecoration: "none" }}>
-                <p className="card-title text-xl-left text-white">
-                  Total Finishes
-                </p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white ">
-                    {finishLoading ? <Spinner /> : totalFinishes}
-                  </h3>
-                  <PiUsersFourLight className="ti-palette icon-md text-white mb-0 mb-md-3 mb-xl-0" />
-                  {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
-                </div>
-                {/* <p className="mb-0 mt-2 text-success">
+          {/* Total Finishes */}
+          <div className="col-md-4 grid-margin stretch-card">
+            <div className="card bg-warning">
+              <div className="card-body">
+                <Link to={"/finishes"} style={{ textDecoration: "none" }}>
+                  <p className="card-title text-xl-left text-white">
+                    Total Finishes
+                  </p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white ">
+                      {finishLoading ? <Spinner /> : totalFinishes}
+                    </h3>
+                    <PiUsersFourLight className="ti-palette icon-md text-white mb-0 mb-md-3 mb-xl-0" />
+                    {/* <i className="ti-user icon-md text-muted mb-0 mb-md-3 mb-xl-0"></i> */}
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-success">
                 64.00%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Total Decor Series */}
-        <div className="col-md-4 grid-margin stretch-card">
-          <div className="card bg-danger">
-            <div className="card-body">
-              <Link to={"/newsletters"} style={{ textDecoration: "none" }}>
-                <p className="card-title text-white text-xl-left">
-                  Total Decor Series
-                </p>
-                <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
-                  <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white">
-                    {decorSeriesLoading ? <Spinner /> : totalDecorSeries}
-                  </h3>
+          {/* Total Decor Series */}
+          <div className="col-md-4 grid-margin stretch-card">
+            <div className="card bg-danger">
+              <div className="card-body">
+                <Link to={"/newsletters"} style={{ textDecoration: "none" }}>
+                  <p className="card-title text-white text-xl-left">
+                    Total Decor Series
+                  </p>
+                  <div className="d-flex flex-wrap justify-content-between justify-content-md-center justify-content-xl-between align-items-center">
+                    <h3 className="mb-0 mb-md-2 mb-xl-0 order-md-1 order-xl-0 text-white">
+                      {decorSeriesLoading ? <Spinner /> : totalDecorSeries}
+                    </h3>
 
-                  <i className="ti-gallery icon-md text-white mb-0 mb-md-3 mb-xl-0"></i>
-                </div>
-                {/* <p className="mb-0 mt-2 text-success">
+                    <i className="ti-gallery icon-md text-white mb-0 mb-md-3 mb-xl-0"></i>
+                  </div>
+                  {/* <p className="mb-0 mt-2 text-success">
                 23.00%
                 <span className="text-black ms-1">
                   <small>(30 days)</small>
                 </span>
               </p> */}
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Pie & Bar Charts */}
-      <div className="row">
-        {/* <div className="col-lg-6 grid-margin stretch-card">
+        {/* Pie & Bar Charts */}
+        <div className="row">
+          {/* <div className="col-lg-6 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Sales by Plan</h4>
@@ -382,8 +385,8 @@ export function Home() {
           </div>
         </div> */}
 
-        {/* Bar Chart */}
-        {/* <div className="col-lg-6 grid-margin stretch-card">
+          {/* Bar Chart */}
+          {/* <div className="col-lg-6 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Sales details</h4>
@@ -391,11 +394,11 @@ export function Home() {
             </div>
           </div>
         </div> */}
-      </div>
+        </div>
 
-      <div className="row">
-        <div className="col-md-6 grid-margin stretch-card">
-          {/* <div className="card">
+        <div className="row">
+          <div className="col-md-6 grid-margin stretch-card">
+            {/* <div className="card">
             <div className="card-body">
               <p className="card-title">Sales details by Channel</p>
 
@@ -403,8 +406,8 @@ export function Home() {
               <BasicBars />
             </div>
           </div> */}
-        </div>
-        {/* <div className="col-md-6 grid-margin stretch-card">
+          </div>
+          {/* <div className="col-md-6 grid-margin stretch-card">
           <div className="card border-bottom-0">
             <div className="card-body">
               <p className="card-title">Leads Details</p>
@@ -431,9 +434,9 @@ export function Home() {
             <canvas id="order-chart" className="w-100"></canvas>
           </div>
         </div> */}
-      </div>
-      <div className="row">
-        {/* <div className="col-md-6 grid-margin stretch-card">
+        </div>
+        <div className="row">
+          {/* <div className="col-md-6 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
               <p className="card-title mb-0">Top Plans</p>
@@ -488,7 +491,7 @@ export function Home() {
             </div>
           </div>
         </div> */}
-        {/* <div className="col-md-6 grid-margin stretch-card">
+          {/* <div className="col-md-6 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
               <h4 className="card-title">Top Customers</h4>
@@ -496,9 +499,9 @@ export function Home() {
             </div>
           </div>
         </div> */}
-      </div>
-      <div className="row">
-        {/* <div className="col-md-12 grid-margin stretch-card">
+        </div>
+        <div className="row">
+          {/* <div className="col-md-12 grid-margin stretch-card">
           <div className="card position-relative">
             <div className="card-body">
               <p className="card-title">Avarage Sale Reports</p>
@@ -601,7 +604,8 @@ export function Home() {
             </div>
           </div>
         </div> */}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
