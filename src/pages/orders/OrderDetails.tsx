@@ -1,11 +1,12 @@
 import { GoBackButton, OverlayLoading } from "../../components";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { addUrlToFile, get } from "../../utills";
 import { Link, useParams } from "react-router-dom";
 import moment from "moment";
 import { ReactHelmet } from "../../components/ui/ReactHelmet";
 import { usePDF } from "react-to-pdf";
+import { useReactToPrint } from "react-to-print";
 
 export function OrderDetails() {
   const { id } = useParams();
@@ -17,6 +18,10 @@ export function OrderDetails() {
       ?.toLowerCase()
       ?.replaceAll(" ", "-")}.pdf`,
   });
+
+  const contentRef = useRef<HTMLDivElement>(null);
+  const reactToPrintFn = useReactToPrint({ contentRef });
+
   // get order details
   useEffect(
     function () {
@@ -85,7 +90,8 @@ export function OrderDetails() {
                 </>
                 <button
                   className="btn btn-info text-white ms-1"
-                  onClick={() => toPDF()}
+                  // onClick={() => toPDF()}
+                  onClick={() => reactToPrintFn()}
                 >
                   <i className="ti-download"></i> Download Invoice
                 </button>
@@ -352,7 +358,9 @@ export function OrderDetails() {
                     <div
                       className="collapse mt-2 pt-5 show"
                       id="invoiceSection"
-                      ref={targetRef}
+                      // ref={targetRef}
+                      ref={contentRef}
+                      style={{ margin: "40px", padding: "50px" }}
                     >
                       <div className="row">
                         <div className="col-md-6">

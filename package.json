@@ -42,6 +42,7 @@
     "react-select": "^5.8.0",
     "react-table": "^7.8.0",
     "react-to-pdf": "^2.0.0",
+    "react-to-print": "^3.0.6",
     "react-toastify": "^10.0.5",
     "sweetalert2": "^11.12.4",
     "yup": "^1.4.0"
