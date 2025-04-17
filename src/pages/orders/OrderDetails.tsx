@@ -46,7 +46,12 @@ export function OrderDetails() {
 
   return (
     <>
-      <ReactHelmet title="Order Details : Crown" description="Order Details" />
+      <ReactHelmet
+        title={`order-invoice-${orderDetails?.name
+          ?.toLowerCase()
+          ?.replaceAll(" ", "-")}`}
+        description="Order Details"
+      />
       <div className="content-wrapper">
         <div className="row">
           <div className="col-md-12 grid-margin">
