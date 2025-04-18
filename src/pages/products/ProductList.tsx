@@ -21,7 +21,6 @@ import { addUrlToFile, deleteConfirmation, get, remove } from "../../utills";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import { styles } from "../../constants/selectStyle";
-import { FILE_URL } from "../../constants";
 
 export function ProductList() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,7 +54,7 @@ export function ProductList() {
 
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10,
+    limit: 100,
     totalRecords: 0,
     totalPages: 0,
   });
