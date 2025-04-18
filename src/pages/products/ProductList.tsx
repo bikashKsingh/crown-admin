@@ -203,6 +203,7 @@ export function ProductList() {
 
   type Record = {
     name: string;
+    decorNumber: string;
     a4Image: string;
     createdAt: string;
     status: boolean;
@@ -246,6 +247,10 @@ export function ProductList() {
       {
         Header: "NAME",
         accessor: "name",
+      },
+      {
+        Header: "DECOR NUMBER",
+        accessor: "decorNumber",
       },
 
       {
@@ -325,6 +330,7 @@ export function ProductList() {
     return records.map((data) => {
       return {
         name: data.name,
+        decorNumber: data.decorNumber,
         a4Image: addUrlToFile(data.a4Image),
         createdAt: data.createdAt,
         status: data.status,
