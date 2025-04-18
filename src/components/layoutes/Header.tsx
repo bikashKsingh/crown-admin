@@ -47,7 +47,7 @@ export function Header() {
           <span className="ti-view-list"></span>
         </button>
         <ul className="navbar-nav mr-lg-2 search-box-container">
-          <li className="nav-item nav-search d-none d-lg-block">
+          {/* <li className="nav-item nav-search d-none d-lg-block">
             <div className="input-group">
               <div
                 className="input-group-prepend hover-cursor"
@@ -66,10 +66,10 @@ export function Header() {
                 aria-describedby="search"
               />
             </div>
-          </li>
+          </li> */}
         </ul>
         <ul className="navbar-nav navbar-nav-right">
-          <li className="nav-item dropdown me-1">
+          {/* <li className="nav-item dropdown me-1">
             <a
               className="nav-link count-indicator dropdown-toggle d-flex justify-content-center align-items-center"
               id="messageDropdown"
@@ -189,7 +189,7 @@ export function Header() {
                 </div>
               </a>
             </div>
-          </li>
+          </li> */}
           <li className="nav-item nav-profile dropdown">
             <a
               className="nav-link dropdown-toggle"
@@ -197,7 +197,7 @@ export function Header() {
               data-bs-toggle="dropdown"
               id="profileDropdown"
             >
-              <img src="/images/faces/face28.jpg" alt="profile" />
+              <img src="/images/faces/user.png" alt="profile" />
             </a>
             <div
               className="dropdown-menu dropdown-menu-right navbar-dropdown"

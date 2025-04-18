@@ -5,7 +5,7 @@ import { addUrlToFile, get } from "../../utills";
 import { Link, useParams } from "react-router-dom";
 import moment from "moment";
 import { ReactHelmet } from "../../components/ui/ReactHelmet";
-import { usePDF } from "react-to-pdf";
+// import { usePDF } from "react-to-pdf";
 import { useReactToPrint } from "react-to-print";
 
 export function OrderDetails() {
@@ -13,11 +13,11 @@ export function OrderDetails() {
   const [loading, setLoading] = useState<boolean>(true);
   const [orderDetails, setOrderDetails] = useState<any>({});
   const [orderProducts, setOrderProducts] = useState<any[]>([]);
-  const { toPDF, targetRef } = usePDF({
-    filename: `order-invoice-${orderDetails?.name
-      ?.toLowerCase()
-      ?.replaceAll(" ", "-")}.pdf`,
-  });
+  // const { toPDF, targetRef } = usePDF({
+  //   filename: `order-invoice-${orderDetails?.name
+  //     ?.toLowerCase()
+  //     ?.replaceAll(" ", "-")}.pdf`,
+  // });
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });

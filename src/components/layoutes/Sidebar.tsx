@@ -1,6 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export function Sidebar() {
+  const navigation = useNavigate();
+
+  function handelLogout(evt: React.MouseEvent<HTMLElement>) {
+    evt.preventDefault();
+    localStorage.removeItem("token");
+    navigation("/login");
+  }
+
   return (
     <nav className="sidebar sidebar-offcanvas" id="sidebar">
       <ul className="nav">
@@ -232,7 +240,7 @@ export function Sidebar() {
         </li>
 
         <li className="nav-item">
-          <a className="nav-link" href="pages/charts/chartjs.html">
+          <a className="nav-link" href="#" onClick={handelLogout}>
             <i className="ti-power-off menu-icon"></i>
             <span className="menu-title">Logout</span>
           </a>
