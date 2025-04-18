@@ -1,9 +1,4 @@
-import {
-  CustomSelect,
-  DataTable,
-  GoBackButton,
-  Pagination,
-} from "../../components";
+import { DataTable, GoBackButton, Pagination } from "../../components";
 import {
   Column,
   Row,
@@ -23,7 +18,7 @@ import Select from "react-select";
 import { styles } from "../../constants/selectStyle";
 
 export function ProductList() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [status, setStatus] = useState<boolean | string>("All");
   const [needReload, setNeedReload] = useState<boolean>(false);

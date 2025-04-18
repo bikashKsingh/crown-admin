@@ -369,7 +369,7 @@ export function OrderDetails() {
                     >
                       <div className="row">
                         <div className="col-md-6">
-                          <h4 className="mb-4">Order Invoice</h4>
+                          {/* <h4 className="mb-4">Order Invoice</h4> */}
                           <h6>
                             <p className="d-flex gap-2 align-items-center">
                               <span>Order Date : </span>
@@ -381,7 +381,7 @@ export function OrderDetails() {
                               </span>
                             </p>
                           </h6>
-                          <h6>Shop Name : Crown</h6>
+                          {/* <h6>Shop Name : Crown</h6> */}
 
                           <div className="mt-4">
                             <h5>Shipping to</h5>
@@ -486,7 +486,7 @@ export function OrderDetails() {
                             </table>
                           </div>
 
-                          <div className="mt-4">
+                          {/* <div className="mt-4">
                             <p className="text-center">
                               If you require any assistance or have feedback or
                               suggestions about our site you Can email us at{" "}
@@ -501,7 +501,7 @@ export function OrderDetails() {
                             <h6>Email : kanishka@crownlam.com</h6>
                             <h6>https://crownlam.com/</h6>
                             <h6>All copy right reserved © 2025 Crown</h6>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     </div>
