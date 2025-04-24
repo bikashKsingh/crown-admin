@@ -34,8 +34,8 @@ export function OrderList() {
 
   const [isCalendarVisible, setCalendarVisible] = useState(false);
   const [selectionRange, setSelectionRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
     key: "selection",
   });
 
@@ -373,10 +373,10 @@ export function OrderList() {
                               className="btn btn-danger p-2"
                               onClick={() => {
                                 setCalendarVisible(false); // Close calendar
-                                console.log(
-                                  "Selected Date Range:",
-                                  selectionRange
-                                );
+                                // console.log(
+                                //   "Selected Date Range:",
+                                //   selectionRange
+                                // );
                               }}
                             >
                               Cancel
