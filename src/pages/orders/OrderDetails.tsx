@@ -368,7 +368,7 @@ export function OrderDetails() {
                       style={{ margin: "40px", padding: "50px" }}
                     >
                       <div className="row">
-                        <div className="col-md-6">
+                        <div className="col-md-9">
                           {/* <h4 className="mb-4">Order Invoice</h4> */}
                           <h6>
                             <p className="d-flex gap-2 align-items-center">
@@ -409,13 +409,19 @@ export function OrderDetails() {
                                 {orderDetails?.locality
                                   ? `${orderDetails?.locality}, `
                                   : null}
-
-                                {`${orderDetails?.city}, ${orderDetails?.state} - ${orderDetails?.pincode} (${orderDetails?.country})`}
+                                <br />
+                                {`${
+                                  orderDetails?.city
+                                    ? `${orderDetails?.city}, `
+                                    : ""
+                                } ${orderDetails?.state} - ${
+                                  orderDetails?.pincode
+                                } (${orderDetails?.country})`}
                               </p>
                             </div>
                           </div>
                         </div>
-                        <div className="col-md-6 text-end pe-5">
+                        <div className="col-md-3 text-end pe-5">
                           <img
                             src={"/images/logo.png"}
                             style={{ width: "150px" }}
